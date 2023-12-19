@@ -51,8 +51,10 @@ const LINKS = [
   },
 ];
 
-export default function Page() {
-
+export default async function Page() {
+  const users = await fetch("http://localhost:3000/api/user").then((res) => res.json())
+  console.log(users);
+  
   return (
     <main className={styles.main}>
       <div className={styles.description}>
