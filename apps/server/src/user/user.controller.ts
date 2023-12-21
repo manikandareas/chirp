@@ -1,39 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto ,UpdateUserDto} from '@chirp/dto';
 import { ApiResponse } from 'src/typings/apiResponse';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+    @Get(":id")
+    async getUserProfile(@Param("id") id:string ){
+      const user = await this.userService.findById(id)
+      return {
+        statusCode: HttpStatus.OK,
+        data: user
+      }satisfies ApiResponse<typeof user>
+    }
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
   }
 
-  @Get()
-  async findAll() {
-    const users = await this.userService.findAll()
-
-    return {
-      status: HttpStatus.OK,
-      data: users
-    } satisfies ApiResponse<typeof users>
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
-}
