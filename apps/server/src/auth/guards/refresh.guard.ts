@@ -19,7 +19,6 @@ export class RefreshJwtGuard implements CanActivate{
         } catch (error) {
             throw new UnauthorizedException()
         }
-
         return true
     }
 

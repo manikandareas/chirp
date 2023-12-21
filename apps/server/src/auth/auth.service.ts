@@ -13,9 +13,8 @@ const EXPIRE_TIME = 1000 * 60 * 60 * 5
 @Injectable()
 export class AuthService {
     constructor (
-        @Inject(DrizzleAsyncProvider) private db:LibSQLDatabase<typeof schema>
-        ,private readonly userService: UserService
-        ,private readonly jwtService:JwtService
+        private readonly userService: UserService,
+        private readonly jwtService:JwtService
     ){};
 
     async loginUser (loginDto: LoginDto) {
