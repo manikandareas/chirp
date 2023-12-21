@@ -3,6 +3,7 @@ import { Card } from "@repo/ui/card";
 import { Code } from "@repo/ui/code";
 import styles from "./page.module.css";
 import { Button } from "@repo/ui/button";
+import SignInButton from "./common/components/elements/SignInButton";
 
 function Gradient({
   conic,
@@ -52,9 +53,11 @@ const LINKS = [
 ];
 
 export default async function Page() {
-  const users = await fetch("http://localhost:3000/api/user").then((res) => res.json())
+  const users = await fetch("http://localhost:3000/api/user").then((res) =>
+    res.json()
+  );
   console.log(users);
-  
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
@@ -84,6 +87,7 @@ export default async function Page() {
       <Button appName="web" className={styles.button}>
         Click me!
       </Button>
+      <SignInButton/>
 
       <div className={styles.hero}>
         <div className={styles.heroContent}>
