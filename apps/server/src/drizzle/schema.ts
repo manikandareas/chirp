@@ -2,12 +2,10 @@ import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core"
 import { createId } from '@paralleldrive/cuid2'
 import { relations, sql } from "drizzle-orm";
 
-/*****************************************  
+ /*****************************************  
  ************Schemas section***********
  *****************************************
  */
-
-
   
 const createdAt =  text('created_at').default(sql`CURRENT_TIMESTAMP`).notNull()
 export const updatedAt = text('updated_at').default(sql`CURRENT_TIMESTAMP`).notNull()

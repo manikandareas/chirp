@@ -6,6 +6,12 @@ import { config } from 'src/config';
 @Injectable()
 export class RefreshJwtGuard implements CanActivate{
     constructor(private readonly jwtService:JwtService){}
+    /**
+     * Checks if the user can activate the given context.
+     *
+     * @param {ExecutionContext} context - The execution context.
+     * @return {Promise<boolean>} - A promise that resolves to a boolean indicating whether the user can activate the context.
+     */
     async canActivate(context: ExecutionContext):  Promise<boolean>
     {
         const request = context.switchToHttp().getRequest()
@@ -22,6 +28,12 @@ export class RefreshJwtGuard implements CanActivate{
         return true
     }
 
+    /**
+     * Extracts a token from the authorization header of a request.
+     *
+     * @param {Request} request - The request object.
+     * @return {string|undefined} The extracted token or undefined if not found.
+     */
     private extractTokenFromHeader(request: Request) {
         const [type, token] = request.headers.authorization.split(' ') ?? []
         return type === "Refresh" ? token : undefined

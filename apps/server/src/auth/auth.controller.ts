@@ -12,6 +12,14 @@ export class AuthController {
     constructor(private readonly authService: AuthService, private readonly userService:UserService) {}
 
     @Post('register')
+
+    /**
++     * Registers a new user.
++     *
++     * @param {CreateUserDto} createUserDto - The data of the user to be created.
++     * @return {Promise<ApiResponse<typeof user>>} The response object containing the status code and data of the created user.
++     */
+
     async registerUser (@Body() createUserDto:CreateUserDto ){
        const user = await this.userService.registerUser(createUserDto)
        return {
@@ -21,6 +29,14 @@ export class AuthController {
     }
 
     @Post('login')
+
+    /**
+     * Logs in a user.
+     *
+     * @param {LoginDto} loginDto - the login data for the user
+     * @return {Promise<any>} - a promise that resolves to the result of the login operation
+    */
+
     async login (@Body() loginDto:LoginDto){
         return await this.authService.loginUser(loginDto)
     }

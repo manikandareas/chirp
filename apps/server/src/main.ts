@@ -10,6 +10,7 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
     transform:true
   }));
+  
   app.setGlobalPrefix('api')
   await app.listen(+config.serverPort).then(() => console.log(`server started 🚀 on port ${config.serverPort}`))
 }
