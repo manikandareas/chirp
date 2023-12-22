@@ -20,6 +20,7 @@ async function refreshToken(token: JWT): Promise<JWT>{
 }
 
 export const authOptions: NextAuthOptions = {
+    secret: process.env.NEXTAUTH_SECRET,
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -51,6 +52,7 @@ export const authOptions: NextAuthOptions = {
                 if (res.status === 401 || res.status === 400) {
                     return null
                 }
+                console.log("Autentikasi")
                 const user = await res.json()
                 return user
             },

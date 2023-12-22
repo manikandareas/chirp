@@ -1,13 +1,8 @@
 /** @type {import('next').NextConfig} */
-module.exports = {
-  transpilePackages: ["@repo/ui"],
-  // async rewrites ( ) {
-  //   return [
-  //     // Rewrites all API Requests to your Nest server
-  //     {
-  //       source: "/api/:path*",
-  //       destination: "http://localhost:8000/api/:path*"
-  //     }
-  //   ]
-  // }
-};
+const nextConfig = {
+    env: {
+        NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || 'NEXTAUTH_SECRET',
+    }
+}
+
+module.exports = nextConfig
