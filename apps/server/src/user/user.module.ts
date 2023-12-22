@@ -5,8 +5,7 @@ import { drizzleProvider } from 'src/drizzle/drizzle.provider';
 import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  controllers: [UserController],
-  providers: [UserService, ...drizzleProvider, JwtService],
-
+    controllers: [UserController],
+    providers: [UserService, ...drizzleProvider, JwtService],
 })
 export class UserModule {}
