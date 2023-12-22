@@ -1,0 +1,10 @@
+{
+  "extends": "next/core-web-vitals",
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "no-unused-vars" : "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
+    "import/no-unresolved": "error",
+    "import/named": "error"
+  }
+}
