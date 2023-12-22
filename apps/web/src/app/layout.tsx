@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import AuthProvider from '@/common/components/provider/AuthProvider';
 import { ThemeProvider } from '@/common/components/provider/ThemeProvider';
-
-const inter = Inter({ subsets: ['latin'] });
+import { cn } from '@/common/lib/utils';
+import { fontPoppins } from '@/common/lib/fonts';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className={inter.className}>
+            <body className={cn(fontPoppins.className, 'antialiased')}>
                 <AuthProvider>
                     <ThemeProvider
                         attribute="class"
@@ -26,6 +26,7 @@ export default function RootLayout({
                         enableSystem
                         disableTransitionOnChange
                     >
+                        <Toaster />
                         {children}
                     </ThemeProvider>
                 </AuthProvider>
