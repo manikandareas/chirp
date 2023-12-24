@@ -61,7 +61,7 @@ export const posts = sqliteTable('post', {
     id: text('id', { length: 36 })
         .primaryKey()
         .$defaultFn(() => createId()),
-    status: text('status').notNull(),
+    content: text('content').notNull(),
     authorId: text('author_id', { length: 36 }).notNull(),
 
     createdAt,

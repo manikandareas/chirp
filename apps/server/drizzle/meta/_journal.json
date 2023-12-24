@@ -29,6 +29,13 @@
       "when": 1703161071243,
       "tag": "0003_marvelous_wind_dancer",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1703402006807,
+      "tag": "0004_minor_juggernaut",
+      "breakpoints": true
     }
   ]
 }
