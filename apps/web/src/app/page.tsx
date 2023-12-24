@@ -60,7 +60,7 @@ export default async function Home() {
             </div>
             <Link
                 className={cn(buttonVariants({ variant: 'default' }))}
-                href={'api/auth/signin'}
+                href={'auth/signin'}
             >
                 SignIn
             </Link>

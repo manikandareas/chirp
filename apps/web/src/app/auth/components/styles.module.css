@@ -1,0 +1,10 @@
+.image {
+    transition: all 0.2s ease-in-out;
+    filter: brightness(0.7) blur(0.5px);
+}
+
+.image:hover {
+    filter: brightness(1) blur(0);
+    scale: 1.1;
+    rotate: 5deg;
+}

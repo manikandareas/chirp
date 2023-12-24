@@ -18,19 +18,18 @@ import {
 } from '@/common/components/ui/form';
 import { Input } from '@/common/components/ui/input';
 
-import { cn } from '@/common/lib/utils';
-import TitlePage from './TitlePage';
-import { fontSourceCodePro } from '@/common/lib/fonts';
+import TitlePage from '../../components/TitlePage';
 import { toast } from 'sonner';
 import { Separator } from '@/common/components/ui/separator';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
+import SubTitlePage from '../../components/SubTitlePage';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'Invalid email address.' }),
     password: z
         .string()
-        .min(6, { message: 'Password must be at least 6 characters.' }),
+        .min(8, { message: 'Password must be at least 8 characters.' }),
 });
 
 export default function SignInForm() {
@@ -70,10 +69,10 @@ export default function SignInForm() {
         <div className="grid place-items-center">
             <div className="space-y-8 lg:w-1/2 ">
                 <div className="text-center">
-                    <TitlePage>Welcome Back</TitlePage>
-                    <p className={cn(fontSourceCodePro.className)}>
-                        Please enter your details.
-                    </p>
+                    <TitlePage>
+                        Welcome <span className="animate-pulse">Back</span>
+                    </TitlePage>
+                    <SubTitlePage>Please enter your details.</SubTitlePage>
                 </div>
 
                 <Form {...form}>
