@@ -5,6 +5,14 @@ const nextConfig = {
     },
     transpilePackages: ['@chirp/dto'],
     reactStrictMode: true,
+    images: {
+        remotePatterns: [
+            {
+                hostname: "images.unsplash.com",
+                protocol: "https"
+            }
+        ]
+    }
 }
 
 module.exports = nextConfig
