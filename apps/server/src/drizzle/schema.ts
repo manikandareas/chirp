@@ -1,3 +1,9 @@
+/**
+ * This module defines the database schema using the Drizzle ORM for SQLite.
+ * It includes table definitions, column configurations, default values, and relationships between tables.
+ * The schemas are organized into two sections: "Schemas" and "Relations."
+ */
+
 import {
     integer,
     primaryKey,
@@ -12,13 +18,23 @@ import { relations, sql } from 'drizzle-orm';
  *****************************************
  */
 
+/**
+ * Represents the `createdAt` column configuration used for timestamping the creation date of entities.
+ */
 const createdAt = text('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull();
+
+/**
+ * Represents the `updatedAt` column configuration used for timestamping the last update date of entities.
+ */
 export const updatedAt = text('updated_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull();
 
+/**
+ * Represents the 'users' table schema with columns for user information.
+ */
 export const users = sqliteTable('user', {
     id: text('id', { length: 36 })
         .primaryKey()
@@ -38,17 +54,23 @@ export const users = sqliteTable('user', {
     updatedAt,
 });
 
+/**
+ * Represents the 'posts' table schema with columns for post information.
+ */
 export const posts = sqliteTable('post', {
     id: text('id', { length: 36 })
         .primaryKey()
         .$defaultFn(() => createId()),
-    status: text('status').notNull(),
+    content: text('content').notNull(),
     authorId: text('author_id', { length: 36 }).notNull(),
 
     createdAt,
     updatedAt,
 });
 
+/**
+ * Represents the 'images' table schema with columns for image information.
+ */
 export const images = sqliteTable('images', {
     id: integer('id').primaryKey({ autoIncrement: true }),
     url: text('url').notNull(),
@@ -58,6 +80,9 @@ export const images = sqliteTable('images', {
     updatedAt,
 });
 
+/**
+ * Represents the 'likes' table schema with columns for like information.
+ */
 export const likes = sqliteTable(
     'likes',
     {
@@ -82,6 +107,9 @@ export const likes = sqliteTable(
  *****************************************
  */
 
+/**
+ * Defines relationships for the 'users' table, including associations with 'posts' and 'likes'.
+ */
 export const usersRelations = relations(users, ({ many }) => ({
     posts: many(posts, {
         relationName: 'posts',
@@ -91,6 +119,9 @@ export const usersRelations = relations(users, ({ many }) => ({
     }),
 }));
 
+/**
+ * Defines relationships for the 'posts' table, including associations with 'images', 'author', and 'likes'.
+ */
 export const postsRelations = relations(posts, ({ many, one }) => ({
     images: many(images, {
         relationName: 'images',
@@ -105,6 +136,9 @@ export const postsRelations = relations(posts, ({ many, one }) => ({
     }),
 }));
 
+/**
+ * Defines relationships for the 'images' table, including an association with 'post'.
+ */
 export const imagesRelations = relations(images, ({ one }) => ({
     post: one(posts, {
         fields: [images.postId],
@@ -113,6 +147,9 @@ export const imagesRelations = relations(images, ({ one }) => ({
     }),
 }));
 
+/**
+ * Defines relationships for the 'likes' table, including associations with 'post' and 'author'.
+ */
 export const likesRelations = relations(likes, ({ one }) => ({
     post: one(posts, {
         fields: [likes.postId],
