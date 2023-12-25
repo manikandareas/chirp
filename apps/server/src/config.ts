@@ -16,6 +16,8 @@ loadEnv();
  */
 export const getRequired = (env: string) => get(env).required();
 
+export const getOptional = (env: string) => get(env).default('');
+
 /**
  * Configuration object containing various properties for the application settings.
  */
@@ -66,27 +68,27 @@ export const config = {
      * Retrieves the required value of the 'AWS_BUCKET_NAME' environment variable as a string.
      */
     get awsBucketName() {
-        return getRequired('AWS_BUCKET_NAME').asString();
+        return getOptional('AWS_BUCKET_NAME').asString();
     },
 
     /**
      * Retrieves the required value of the 'AWS_REGION' environment variable as a string.
      */
     get awsS3Region() {
-        return getRequired('AWS_S3_REGION').asString();
+        return getOptional('AWS_S3_REGION').asString();
     },
 
     /**
      * Retrieves the required value of the 'AWS_ACCESS_KEY_ID' environment variable as a string.
      */
     get awsAccessKeyId() {
-        return getRequired('AWS_ACCESS_KEY_ID').asString();
+        return getOptional('AWS_ACCESS_KEY_ID').asString();
     },
 
     /**
      * Retrieves the required value of the 'AWS_SECRET_ACCESS_KEY' environment variable as a string.
      */
     get awsSecretAccessKey() {
-        return getRequired('AWS_SECRET_ACCESS_KEY').asString();
+        return getOptional('AWS_SECRET_ACCESS_KEY').asString();
     },
 };
