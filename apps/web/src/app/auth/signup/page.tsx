@@ -1,11 +1,11 @@
 import ChirpPoster from '../components/ChirpPoster';
 import Container from '../components/Container';
-import SignUpForm from './components/SignUpForm';
+import FormTabs from './components/FormTabs';
 
 export default function SignUpPage() {
     return (
         <Container>
-            <SignUpForm />
+            <FormTabs />
             <ChirpPoster variants="right" />
         </Container>
     );

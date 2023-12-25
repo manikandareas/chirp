@@ -32,9 +32,9 @@ import RequiredSign from '@/common/components/elements/RequiredSign';
 import { useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group';
 import { toast } from 'sonner';
-import { CreateUserDto } from '@chirp/dto';
 
 import { registerUser } from '@chirp/api';
+import { signIn } from 'next-auth/react';
 
 const accountSchema = z
     .object({
@@ -60,7 +60,7 @@ const profileSchema = z.object({
 
 type TabsValue = 'account' | 'profile';
 
-export default function SignUpForm() {
+export default function FormTabs() {
     const [tabValue, setTabValue] = useState<TabsValue>('account');
 
     const accountForm = useForm<z.infer<typeof accountSchema>>({
@@ -103,6 +103,12 @@ export default function SignUpForm() {
 
             if (user) {
                 toast.success('Account created successfully!');
+                signIn('credentials', {
+                    email: accountForm.getValues('email'),
+                    password: accountForm.getValues('password'),
+                    redirect: true,
+                    callbackUrl: '/',
+                });
             }
         } catch (error) {
             console.log(error);
@@ -159,9 +165,9 @@ export default function SignUpForm() {
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            {/* <FormDescription>
-                                    This is your public display name.
-                                </FormDescription> */}
+                                            <FormDescription>
+                                                Your Email Address.
+                                            </FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -182,9 +188,14 @@ export default function SignUpForm() {
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            {/* <FormDescription>
-                                    This is your public display name.
-                                </FormDescription> */}
+                                            <FormDescription>
+                                                Ensure that your password is at
+                                                least 8 characters long and
+                                                includes a combination of
+                                                uppercase and lowercase letters,
+                                                numbers, and special characters
+                                                for security purposes.
+                                            </FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -256,8 +267,8 @@ export default function SignUpForm() {
                                                 />
                                             </FormControl>
                                             {/* <FormDescription>
-                                    This is your public display name.
-                                </FormDescription> */}
+            This is your public display name.
+        </FormDescription> */}
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -279,8 +290,8 @@ export default function SignUpForm() {
                                                 />
                                             </FormControl>
                                             {/* <FormDescription>
-                                    This is your public display name.
-                                </FormDescription> */}
+            This is your public display name.
+        </FormDescription> */}
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -321,8 +332,8 @@ export default function SignUpForm() {
                                                 </RadioGroup>
                                             </FormControl>
                                             {/* <FormDescription>
-                                    This is your public display name.
-                                </FormDescription> */}
+            This is your public display name.
+        </FormDescription> */}
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -344,8 +355,8 @@ export default function SignUpForm() {
                                                 />
                                             </FormControl>
                                             {/* <FormDescription>
-                                    This is your public display name.
-                                </FormDescription> */}
+            This is your public display name.
+        </FormDescription> */}
                                             <FormMessage />
                                         </FormItem>
                                     )}
