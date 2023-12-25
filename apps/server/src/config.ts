@@ -16,6 +16,12 @@ loadEnv();
  */
 export const getRequired = (env: string) => get(env).required();
 
+/**
+ * Retrieves the value of the specified environment variable if it exists, or returns an empty string as default.
+ *
+ * @param env - The name of the environment variable to retrieve.
+ * @returns The value of the environment variable or an empty string if not found.
+ */
 export const getOptional = (env: string) => get(env).default('');
 
 /**
