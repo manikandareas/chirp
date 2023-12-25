@@ -1,0 +1,21 @@
+{
+  "name": "@chirp/api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/src/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "@chirp/dto": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.1.3"
+  }
+}

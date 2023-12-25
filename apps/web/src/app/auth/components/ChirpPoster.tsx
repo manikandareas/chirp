@@ -8,21 +8,27 @@ import { FcGoogle } from 'react-icons/fc';
 import styles from './styles.module.css';
 
 type ChirpPosterProps = {
-    variants: 'left' | 'right';
+    variants: keyof typeof chirpPosterVariants;
 };
 
 const chirpPosterVariants = {
-    left: 'rounded-tr-3xl rounded-br-3xl',
-    right: 'rounded-tl-3xl rounded-bl-3xl',
-};
+    left: {
+        className: 'rounded-tr-3xl rounded-br-3xl',
+        dataAos: 'fade-right',
+    },
+    right: {
+        className: 'rounded-tl-3xl rounded-bl-3xl',
+        dataAos: 'fade-left',
+    },
+} as const;
 
-export default function ChirpPoster({ variants }: ChirpPosterProps) {
+export default function ChirpPoster(props: ChirpPosterProps) {
     return (
         <div
-            data-aos="fade-left"
+            data-aos={chirpPosterVariants[props.variants].dataAos}
             className={cn(
                 'hidden md:block border rounded-tr-3xl rounded-br-3xl rounded shadow relative overflow-clip group',
-                chirpPosterVariants[variants]
+                chirpPosterVariants[props.variants].className
             )}
         >
             <Image

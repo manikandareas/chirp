@@ -5,7 +5,9 @@ import AOS from 'aos';
 
 export const AOSInit = () => {
     useEffect(() => {
-        AOS.init({});
+        AOS.init({
+            startEvent: 'DOMContentLoaded',
+        });
     }, []);
 
     return null;

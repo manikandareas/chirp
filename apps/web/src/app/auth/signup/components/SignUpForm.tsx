@@ -31,8 +31,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import RequiredSign from '@/common/components/elements/RequiredSign';
 import { useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group';
+import { toast } from 'sonner';
+import { CreateUserDto } from '@chirp/dto';
 
-const formSchema = z
+import { registerUser } from '@chirp/api';
+
+const accountSchema = z
     .object({
         email: z.string().email({ message: 'Invalid email address.' }),
         password: z
@@ -41,55 +45,78 @@ const formSchema = z
         confirmPassword: z
             .string()
             .min(8, { message: 'Please confirm your password.' }),
-        firstName: z.string().min(3),
-        lastName: z.string().min(3),
-
-        gender: z.enum(['male', 'female']),
-
-        address: z.string().min(3),
     })
     .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords don't match",
         path: ['confirmPassword'],
     });
 
+const profileSchema = z.object({
+    firstName: z.string().min(3),
+    lastName: z.string().min(3),
+    gender: z.enum(['male', 'female']),
+    address: z.string().min(3),
+});
+
 type TabsValue = 'account' | 'profile';
 
 export default function SignUpForm() {
     const [tabValue, setTabValue] = useState<TabsValue>('account');
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const accountForm = useForm<z.infer<typeof accountSchema>>({
+        resolver: zodResolver(accountSchema),
         defaultValues: {
             email: '',
             password: '',
             confirmPassword: '',
-            address: '',
+        },
+    });
+
+    const profileForm = useForm<z.infer<typeof profileSchema>>({
+        resolver: zodResolver(profileSchema),
+        defaultValues: {
             firstName: '',
             lastName: '',
             gender: 'male',
+            address: '',
         },
     });
-    const fieldAccountChecker =
-        form.getValues('email') &&
-        form.getValues('password') &&
-        form.getValues('confirmPassword')
-            ? true
-            : false;
 
     const onTabsChange = (value: string) => {
         setTabValue(value as TabsValue);
     };
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    function onAccountFormSubmit(values: z.infer<typeof accountSchema>) {
         console.log(values);
+        onTabsChange('profile');
+        toast.success('A little more guys, complete your profile!');
+    }
+
+    async function onProfileFormSubmit(values: z.infer<typeof profileSchema>) {
+        try {
+            const user = await registerUser({
+                ...values,
+                email: accountForm.getValues('email'),
+                password: accountForm.getValues('password'),
+                image: '',
+            });
+
+            if (user) {
+                toast.success('Account created successfully!');
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
         <div className="grid place-items-center relative">
             <div className="space-y-8 lg:w-1/2">
                 <div className="text-center">
-                    <TitlePage>Create an account!</TitlePage>
+                    <TitlePage>
+                        Create an account
+                        <span className="animate-pulse">!</span>
+                    </TitlePage>
                     <SubTitlePage>Let's jump to chirp worlds!</SubTitlePage>
                 </div>
 
@@ -108,14 +135,17 @@ export default function SignUpForm() {
                             </TabsTrigger>
                         </div>
                     </TabsList>
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="mx-auto"
-                        >
-                            <TabsContent value="account" className="space-y-6">
+                    <TabsContent value="account" className="space-y-6">
+                        <Form {...accountForm}>
+                            <form
+                                onSubmit={accountForm.handleSubmit(
+                                    onAccountFormSubmit
+                                )}
+                                className="mx-auto space-y-6"
+                                data-aos="fade up"
+                            >
                                 <FormField
-                                    control={form.control}
+                                    control={accountForm.control}
                                     name="email"
                                     render={({ field }) => (
                                         <FormItem>
@@ -137,7 +167,7 @@ export default function SignUpForm() {
                                     )}
                                 />
                                 <FormField
-                                    control={form.control}
+                                    control={accountForm.control}
                                     name="password"
                                     render={({ field }) => (
                                         <FormItem>
@@ -160,7 +190,7 @@ export default function SignUpForm() {
                                     )}
                                 />
                                 <FormField
-                                    control={form.control}
+                                    control={accountForm.control}
                                     name="confirmPassword"
                                     render={({ field }) => (
                                         <FormItem>
@@ -183,17 +213,23 @@ export default function SignUpForm() {
                                     )}
                                 />
                                 <Button
-                                    type="button"
-                                    onClick={() => setTabValue('profile')}
+                                    type="submit"
+                                    // onClick={() => setTabValue('profile')}
                                     className="w-full"
-                                    disabled={fieldAccountChecker}
                                 >
                                     Continue
                                 </Button>
-                            </TabsContent>
-                            <TabsContent
-                                value="profile"
-                                className="space-y-6 relative"
+                            </form>
+                        </Form>
+                    </TabsContent>
+                    <TabsContent value="profile" className="relative">
+                        <Form {...profileForm}>
+                            <form
+                                onSubmit={profileForm.handleSubmit(
+                                    onProfileFormSubmit
+                                )}
+                                className="mx-auto space-y-6"
+                                data-aos="fade up"
                             >
                                 <Button
                                     variant={'ghost'}
@@ -204,7 +240,7 @@ export default function SignUpForm() {
                                     <IoIosArrowRoundBack size={24} />
                                 </Button>
                                 <FormField
-                                    control={form.control}
+                                    control={profileForm.control}
                                     name="firstName"
                                     render={({ field }) => (
                                         <FormItem>
@@ -227,7 +263,7 @@ export default function SignUpForm() {
                                     )}
                                 />
                                 <FormField
-                                    control={form.control}
+                                    control={profileForm.control}
                                     name="lastName"
                                     render={({ field }) => (
                                         <FormItem>
@@ -250,7 +286,7 @@ export default function SignUpForm() {
                                     )}
                                 />
                                 <FormField
-                                    control={form.control}
+                                    control={profileForm.control}
                                     name="gender"
                                     render={({ field }) => (
                                         <FormItem>
@@ -292,7 +328,7 @@ export default function SignUpForm() {
                                     )}
                                 />
                                 <FormField
-                                    control={form.control}
+                                    control={profileForm.control}
                                     name="address"
                                     render={({ field }) => (
                                         <FormItem>
@@ -317,9 +353,9 @@ export default function SignUpForm() {
                                 <Button type="submit" className="w-full">
                                     Create Account
                                 </Button>
-                            </TabsContent>
-                        </form>
-                    </Form>
+                            </form>
+                        </Form>
+                    </TabsContent>
                 </Tabs>
             </div>
         </div>
