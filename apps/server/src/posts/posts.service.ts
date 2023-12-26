@@ -1,23 +1,15 @@
-import { S3Client } from '@aws-sdk/client-s3';
-import { Upload } from '@aws-sdk/lib-storage';
 import { CreatePostDto, UpdatePostDto } from '@chirp/dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { LibSQLDatabase } from 'drizzle-orm/libsql';
-import { config } from 'src/config';
+import { AwsService } from 'src/aws/aws.service';
 import { DrizzleAsyncProvider } from 'src/drizzle/drizzle.provider';
 import * as schema from '../drizzle/schema';
 
 @Injectable()
 export class PostsService {
-    private readonly s3Client = new S3Client({
-        region: config.awsS3Region,
-        credentials: {
-            accessKeyId: config.awsAccessKeyId,
-            secretAccessKey: config.awsSecretAccessKey,
-        },
-    });
     constructor(
-        @Inject(DrizzleAsyncProvider) private db: LibSQLDatabase<typeof schema>
+        @Inject(DrizzleAsyncProvider) private db: LibSQLDatabase<typeof schema>,
+        private readonly awsService: AwsService
     ) {}
 
     /**
@@ -33,29 +25,13 @@ export class PostsService {
             .values(createPostDto)
             .returning();
 
+        //* if there is an image when posting
         let imageUploaded;
         if (images) {
-            const uploadParams = {
-                Bucket: config.awsBucketName,
-                Key: images.originalname,
-                Body: images.buffer,
-            };
-
-            const parallelUploads3 = new Upload({
-                client: this.s3Client,
-                tags: [], // optional tags
-                queueSize: 4, // optional concurrency configuration
-                leavePartsOnError: false, // optional manually handle dropped parts
-                params: uploadParams,
-            });
-
-            const progressCallback = (progress) => {
-                console.log(progress);
-            };
-
-            parallelUploads3.on('httpUploadProgress', progressCallback);
-
-            const image = await parallelUploads3.done();
+            const image = await this.awsService.uploadToS3(
+                images.originalname,
+                images.buffer
+            );
 
             imageUploaded = await this.db
                 .insert(schema.images)
