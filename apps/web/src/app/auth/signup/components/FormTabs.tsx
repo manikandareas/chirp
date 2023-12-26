@@ -32,9 +32,18 @@ import RequiredSign from '@/common/components/elements/RequiredSign';
 import { useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group';
 import { toast } from 'sonner';
+import { IoMdInformationCircleOutline } from 'react-icons/io';
 
 import { registerUser } from '@chirp/api';
 import { signIn } from 'next-auth/react';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from '@/common/components/ui/tooltip';
+
+import { useAuthStore } from '@chirp/zustand';
 
 const accountSchema = z
     .object({
@@ -109,6 +118,8 @@ export default function FormTabs() {
                     redirect: true,
                     callbackUrl: '/',
                 });
+                // setAuthStore(...user.data)
+                console.log(user);
             }
         } catch (error) {
             console.log(error);
@@ -181,21 +192,51 @@ export default function FormTabs() {
                                                 Password
                                                 <RequiredSign />
                                             </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="********"
-                                                    type="password"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            <FormDescription>
-                                                Ensure that your password is at
-                                                least 8 characters long and
-                                                includes a combination of
-                                                uppercase and lowercase letters,
-                                                numbers, and special characters
-                                                for security purposes.
-                                            </FormDescription>
+                                            <div className="relative">
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="********"
+                                                        type="password"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger asChild>
+                                                            <Button
+                                                                className="absolute -right-8 top-1/2 -translate-y-1/2"
+                                                                variant={
+                                                                    'ghost'
+                                                                }
+                                                            >
+                                                                <IoMdInformationCircleOutline
+                                                                    size={24}
+                                                                />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <p className="max-w-sm">
+                                                                Ensure that your
+                                                                password is at
+                                                                least 8
+                                                                characters long
+                                                                and includes a
+                                                                combination of
+                                                                uppercase and
+                                                                lowercase
+                                                                letters,
+                                                                numbers, and
+                                                                special
+                                                                characters for
+                                                                security
+                                                                purposes.
+                                                            </p>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
+                                            </div>
+                                            <FormDescription></FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
