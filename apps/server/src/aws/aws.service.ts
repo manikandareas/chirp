@@ -25,6 +25,7 @@ export class AwsService {
             Bucket: config.awsBucketName,
             Key: key,
             Body: body,
+            ContentType: 'image/jpeg',
         };
 
         const parallelUploadS3 = new Upload({
