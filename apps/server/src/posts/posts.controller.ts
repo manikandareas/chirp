@@ -21,6 +21,13 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 export class PostsController {
     constructor(private readonly postsService: PostsService) {}
 
+    /**
+     * Creates a new post with the given data and images.
+     *
+     * @param {CreatePostDto} createPostDto - The data for creating the post.
+     * @param {Express.Multer.File} images - The images to be uploaded (optional).
+     * @return {Promise<{ statusCode: number, data: any }>} - The response object containing the status code and data.
+     */
     @UseGuards(JwtGuard)
     @Post()
     @UseInterceptors(FileInterceptor('images'))
@@ -41,9 +48,19 @@ export class PostsController {
         } satisfies ApiResponse<typeof post>;
     }
 
+    /**
+     * Retrieves all the data.
+     *
+     * @return {Promise<{ statusCode: number, data: any }>} The response objects.
+     */
+    @UseGuards(JwtGuard)
     @Get()
-    findAll() {
-        return this.postsService.findAll();
+    async findAll() {
+        const postsData = await this.postsService.findAll();
+        return {
+            statusCode: 200,
+            data: postsData,
+        } satisfies ApiResponse<typeof postsData>;
     }
 
     @Get(':id')

@@ -1,5 +1,6 @@
 import { CreatePostDto, UpdatePostDto } from '@chirp/dto';
 import { Inject, Injectable } from '@nestjs/common';
+import { desc } from 'drizzle-orm';
 import { LibSQLDatabase } from 'drizzle-orm/libsql';
 import { AwsService } from 'src/aws/aws.service';
 import { DrizzleAsyncProvider } from 'src/drizzle/drizzle.provider';
@@ -7,6 +8,12 @@ import * as schema from '../drizzle/schema';
 
 @Injectable()
 export class PostsService {
+    /**
+     * Constructor for the class PostsService.
+     *
+     * @param {LibSQLDatabase<typeof schema>} db - The injected DrizzleAsyncProvider instance for database access.
+     * @param {AwsService} awsService - The AwsService instance for AWS related operations.
+     */
     constructor(
         @Inject(DrizzleAsyncProvider) private db: LibSQLDatabase<typeof schema>,
         private readonly awsService: AwsService
@@ -48,8 +55,19 @@ export class PostsService {
         };
     }
 
-    findAll() {
-        return `This action returns all posts`;
+    /**
+     * Retrieves all posts from the database sorted from newest by date created.
+     *
+     * @return {Promise<Post[]>} An array of post objects.
+     */
+    async findAll() {
+        const posts = await this.db.query.images.findMany({
+            with: {
+                post: true,
+            },
+            orderBy: [desc(schema.images.createdAt)],
+        });
+        return posts;
     }
 
     findOne(id: number) {
