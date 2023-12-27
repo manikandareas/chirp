@@ -1,18 +1,13 @@
+'use client';
 import Image from 'next/image';
-import { CreateUserDto } from '@chirp/dto';
-import { getServerSession } from 'next-auth/next';
-import { authOptions } from './api/auth/[...nextauth]/route';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { cn } from '@/common/lib/utils';
 import { buttonVariants } from '@/common/components/ui/button';
 import { ModeToggle } from '@/common/components/elements/ModeToggle';
+import { useAuthStore } from '@chirp/zustand';
 
-let name;
-
-export default async function Home() {
-    const session = await getServerSession(authOptions);
-
+export default function Home() {
+    const { user } = useAuthStore();
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
             <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -41,10 +36,8 @@ export default async function Home() {
                     </a>
                 </div>
             </div>
-            {session?.user ? (
-                <h1 className="text-3xl text-white">
-                    Welcome {session?.user?.name}
-                </h1>
+            {user?.name ? (
+                <h1 className="text-3xl text-white">Welcome {user.name}</h1>
             ) : (
                 <h1 className="text-3xl text-white">Welcome Guest</h1>
             )}

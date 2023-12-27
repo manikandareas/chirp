@@ -7,6 +7,7 @@ import { fontPoppins } from '@/common/lib/fonts';
 import { Toaster } from 'sonner';
 import { AOSInit } from '@/common/components/provider/AOSInit';
 import 'aos/dist/aos.css';
+import { AuthListener } from '@/common/components/provider/AuthListener';
 
 export const metadata: Metadata = {
     title: {
@@ -26,6 +27,7 @@ export default function RootLayout({
             <body className={cn(fontPoppins.className, 'antialiased')}>
                 <AOSInit />
                 <AuthProvider>
+                    <AuthListener />
                     <ThemeProvider
                         attribute="class"
                         defaultTheme="system"
