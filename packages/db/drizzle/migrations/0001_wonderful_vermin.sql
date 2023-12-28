@@ -5,5 +5,4 @@
                   https://stackoverflow.com/questions/2083543/modify-a-columns-type-in-sqlite3
 
  Due to that we don't generate migration automatically and it has to be done manually
-*/--> statement-breakpoint
-ALTER TABLE users ADD `email` text NOT NULL;
+*/

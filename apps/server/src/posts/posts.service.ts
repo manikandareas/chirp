@@ -1,10 +1,10 @@
 import { CreatePostDto, UpdatePostDto } from '@chirp/dto';
 import { Inject, Injectable } from '@nestjs/common';
 import { desc } from 'drizzle-orm';
-import { LibSQLDatabase } from 'drizzle-orm/libsql';
 import { AwsService } from 'src/aws/aws.service';
 import { DrizzleAsyncProvider } from 'src/drizzle/drizzle.provider';
-import * as schema from '../drizzle/schema';
+import * as schema from '@chirp/db';
+import { LibSQLDatabase } from 'drizzle-orm/libsql';
 
 @Injectable()
 export class PostsService {

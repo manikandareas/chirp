@@ -1,18 +1,10 @@
 import NextAuth from 'next-auth';
+import { InferSelectModel } from '@chirp/db/drizzle-orm';
+import * as schema from '@chirp/db';
 
 declare module 'next-auth' {
     interface Session {
-        user: {
-            id: string;
-            name: string;
-            username: string;
-            firstName: string;
-            lastName: string;
-            email: string;
-            image: string;
-            gender: 'male' | 'female';
-            address: string;
-        };
+        user: User;
         backendTokens: {
             accessToken: string;
             refreshToken: string;
@@ -22,20 +14,11 @@ declare module 'next-auth' {
 }
 
 import { JWT } from 'next-auth/jwt';
+import { User } from '../typings/user';
 
 declare module 'next-auth/jwt' {
     interface JWT {
-        user: {
-            id: string;
-            name: string;
-            username: string;
-            firstName: string;
-            lastName: string;
-            email: string;
-            image: string;
-            gender: 'male' | 'female';
-            address: string;
-        };
+        user: User;
         backendTokens: {
             accessToken: string;
             refreshToken: string;

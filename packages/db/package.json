@@ -2,11 +2,23 @@
   "name": "@chirp/db",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "db:generate": "drizzle-kit generate:sqlite",
+    "db:push": "drizzle-kit push:sqlite",
+    "build": "tsc && drizzle-kit generate:sqlite"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@chirp/dto": "workspace:*",
+    "@paralleldrive/cuid2": "^2.2.2",
+    "drizzle-orm": "^0.29.1"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.20.7",
+    "typescript": "5.1.3"
+  }
 }

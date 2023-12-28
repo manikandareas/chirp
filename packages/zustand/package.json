@@ -7,11 +7,14 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc -w"
-  },  
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@chirp/db": "workspace:*",
+    "@chirp/dto": "workspace:*",
+    "drizzle-orm": "^0.29.1",
     "react": "^18.2.0",
     "zustand": "^4.4.7"
   },

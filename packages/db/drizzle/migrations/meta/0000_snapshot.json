@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "234164a6-e4f2-4b45-b85e-c70baa653426",
-  "prevId": "a2a602b3-3b05-4a4f-90e7-bfa811b6d8a1",
+  "id": "b429687f-c181-4720-a25c-0e2d396f6248",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "images": {
       "name": "images",
@@ -160,6 +160,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "first_name": {
           "name": "first_name",
           "type": "text",
@@ -172,6 +179,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "dob": {
+          "name": "dob",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "email": {
@@ -227,6 +241,13 @@
         }
       },
       "indexes": {
+        "user_username_unique": {
+          "name": "user_username_unique",
+          "columns": [
+            "username"
+          ],
+          "isUnique": true
+        },
         "user_email_unique": {
           "name": "user_email_unique",
           "columns": [
@@ -244,8 +265,6 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"post\".\"status\"": "\"post\".\"content\""
-    }
+    "columns": {}
   }
 }

@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { DrizzleAsyncProvider } from 'src/drizzle/drizzle.provider';
 import { LibSQLDatabase } from 'drizzle-orm/libsql';
-import * as schema from '../drizzle/schema';
-import { CreateUserDto, UpdateUserDto } from '@chirp/dto';
 import { hash } from 'bcrypt';
+import * as schema from '@chirp/db';
+import { CreateUserDto, UpdateUserDto } from '@chirp/dto';
 import { eq } from 'drizzle-orm';
 import { combinerName, nullishObjectChecker } from 'src/lib/utils';
 

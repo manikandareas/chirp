@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "a2a602b3-3b05-4a4f-90e7-bfa811b6d8a1",
-  "prevId": "56e8486a-15ff-4da2-9de6-6f48e10bde9a",
+  "id": "3000efff-49d0-4c08-815b-c402984c49fa",
+  "prevId": "b429687f-c181-4720-a25c-0e2d396f6248",
   "tables": {
     "images": {
       "name": "images",
@@ -107,8 +107,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "status": {
-          "name": "status",
+        "content": {
+          "name": "content",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -160,6 +160,13 @@
           "notNull": true,
           "autoincrement": false
         },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "first_name": {
           "name": "first_name",
           "type": "text",
@@ -172,6 +179,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "dob": {
+          "name": "dob",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "email": {
@@ -206,7 +220,7 @@
           "name": "address",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "created_at": {
@@ -227,6 +241,13 @@
         }
       },
       "indexes": {
+        "user_username_unique": {
+          "name": "user_username_unique",
+          "columns": [
+            "username"
+          ],
+          "isUnique": true
+        },
         "user_email_unique": {
           "name": "user_email_unique",
           "columns": [

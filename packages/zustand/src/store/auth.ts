@@ -1,24 +1,25 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import * as schema from "@chirp/db";
 
-type User = {
-  id: string;
-  name: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  image: string;
-  gender: "male" | "female" | null;
-  address: string;
-};
+/*
+ * Getting library from @chirp/db pacakage
+ */
+import { InferSelectModel } from "drizzle-orm";
 
-type BackendTokens = {
+/*
+ * Getting type from @chirp/db schema
+ */
+
+export type User = Omit<InferSelectModel<typeof schema.users>, "password">;
+
+export type BackendTokens = {
   accessToken: string;
   refreshToken: string;
   expiresIn: number | null;
 };
 
-type AuthSlice = {
+export type AuthSlice = {
   user: User | null;
   backendTokens: BackendTokens | null;
   onSignInSuccess: (
@@ -27,31 +28,11 @@ type AuthSlice = {
   onSignOutSuccess: () => void;
 };
 
-const defaultValue = {
-  user: {
-    id: "",
-    username: "",
-    firstName: "",
-    lastName: "",
-    name: "",
-    email: "",
-    image: "",
-    gender: null,
-    address: "",
-  },
-
-  backendTokens: {
-    accessToken: "",
-    refreshToken: "",
-    expiresIn: null,
-  },
-};
-
 export const useAuthStore = create<AuthSlice>()(
   persist(
     (set, get) => ({
-      user: defaultValue.user,
-      backendTokens: defaultValue.backendTokens,
+      user: null,
+      backendTokens: null,
 
       onSignInSuccess: ({ user, backendTokens }) =>
         set({

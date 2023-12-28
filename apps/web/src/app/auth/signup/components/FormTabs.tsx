@@ -32,45 +32,30 @@ import RequiredSign from '@/common/components/elements/RequiredSign';
 import { useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group';
 import { toast } from 'sonner';
-import { IoMdInformationCircleOutline } from 'react-icons/io';
 
 import { registerUser } from '@chirp/api';
 import { signIn } from 'next-auth/react';
+import Loading from '@/common/components/ui/loading';
+import { accountSchema } from '../form/account';
+import { profileSchema } from '../form/profile';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/common/components/ui/tooltip';
-
-import { useAuthStore } from '@chirp/zustand';
-
-const accountSchema = z
-    .object({
-        email: z.string().email({ message: 'Invalid email address.' }),
-        password: z
-            .string()
-            .min(8, { message: 'Password must be at least 8 characters.' }),
-        confirmPassword: z
-            .string()
-            .min(8, { message: 'Please confirm your password.' }),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Passwords don't match",
-        path: ['confirmPassword'],
-    });
-
-const profileSchema = z.object({
-    firstName: z.string().min(3),
-    lastName: z.string().min(3),
-    gender: z.enum(['male', 'female']),
-    address: z.string().min(3),
-});
+    CustomDatePicker,
+    DateField,
+} from '@/common/components/elements/BirthDayPicker';
 
 type TabsValue = 'account' | 'profile';
 
 export default function FormTabs() {
     const [tabValue, setTabValue] = useState<TabsValue>('account');
+
+    const [submmittingFormIsLoading, setSubmmittingFormIsLoading] =
+        useState<boolean>(false);
+
+    const [dateOfBirth, setDateOfBirth] = useState({
+        day: 0,
+        month: 0,
+        year: 0,
+    });
 
     const accountForm = useForm<z.infer<typeof accountSchema>>({
         resolver: zodResolver(accountSchema),
@@ -84,8 +69,10 @@ export default function FormTabs() {
     const profileForm = useForm<z.infer<typeof profileSchema>>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
+            username: '',
             firstName: '',
             lastName: '',
+            dob: '',
             gender: 'male',
             address: '',
         },
@@ -102,14 +89,15 @@ export default function FormTabs() {
     }
 
     async function onProfileFormSubmit(values: z.infer<typeof profileSchema>) {
+        setSubmmittingFormIsLoading(true);
         try {
             const user = await registerUser({
                 ...values,
+                image: '',
+                dob: `${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}`,
                 email: accountForm.getValues('email'),
                 password: accountForm.getValues('password'),
-                image: '',
             });
-
             if (user) {
                 toast.success('Account created successfully!');
                 signIn('credentials', {
@@ -118,11 +106,11 @@ export default function FormTabs() {
                     redirect: true,
                     callbackUrl: '/',
                 });
-                // setAuthStore(...user.data)
-                console.log(user);
             }
         } catch (error) {
-            console.log(error);
+            toast.error('Upps... Something went wrong!');
+        } finally {
+            setSubmmittingFormIsLoading(false);
         }
     }
 
@@ -140,7 +128,7 @@ export default function FormTabs() {
                 <Tabs
                     value={tabValue}
                     onValueChange={onTabsChange}
-                    className="w-[400px] mx-auto"
+                    className=" mx-auto"
                 >
                     <TabsList className="bg-transparent" asChild>
                         <div className="absolute top-1/2 -translate-y-1/2 right-4 flex flex-col">
@@ -192,51 +180,21 @@ export default function FormTabs() {
                                                 Password
                                                 <RequiredSign />
                                             </FormLabel>
-                                            <div className="relative">
-                                                <FormControl>
-                                                    <Input
-                                                        placeholder="********"
-                                                        type="password"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-
-                                                <TooltipProvider>
-                                                    <Tooltip>
-                                                        <TooltipTrigger asChild>
-                                                            <Button
-                                                                className="absolute -right-8 top-1/2 -translate-y-1/2"
-                                                                variant={
-                                                                    'ghost'
-                                                                }
-                                                            >
-                                                                <IoMdInformationCircleOutline
-                                                                    size={24}
-                                                                />
-                                                            </Button>
-                                                        </TooltipTrigger>
-                                                        <TooltipContent>
-                                                            <p className="max-w-sm">
-                                                                Ensure that your
-                                                                password is at
-                                                                least 8
-                                                                characters long
-                                                                and includes a
-                                                                combination of
-                                                                uppercase and
-                                                                lowercase
-                                                                letters,
-                                                                numbers, and
-                                                                special
-                                                                characters for
-                                                                security
-                                                                purposes.
-                                                            </p>
-                                                        </TooltipContent>
-                                                    </Tooltip>
-                                                </TooltipProvider>
-                                            </div>
-                                            <FormDescription></FormDescription>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="********"
+                                                    type="password"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Ensure that your password is at
+                                                least 8 characters long and
+                                                includes a combination of
+                                                uppercase and lowercase letters,
+                                                numbers, and special characters
+                                                for security purposes.
+                                            </FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -257,18 +215,15 @@ export default function FormTabs() {
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            {/* <FormDescription>
-                                    This is your public display name.
-                                </FormDescription> */}
+                                            <FormDescription>
+                                                Enter your password again
+                                                correctly.
+                                            </FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-                                <Button
-                                    type="submit"
-                                    // onClick={() => setTabValue('profile')}
-                                    className="w-full"
-                                >
+                                <Button type="submit" className="w-full">
                                     Continue
                                 </Button>
                             </form>
@@ -293,50 +248,76 @@ export default function FormTabs() {
                                 </Button>
                                 <FormField
                                     control={profileForm.control}
-                                    name="firstName"
+                                    name="username"
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>
-                                                First Name
+                                                Username
                                                 <RequiredSign />
                                             </FormLabel>
                                             <FormControl>
                                                 <Input
-                                                    placeholder="John"
+                                                    placeholder="johnxixi13"
                                                     type="text"
                                                     {...field}
                                                 />
                                             </FormControl>
-                                            {/* <FormDescription>
-            This is your public display name.
-        </FormDescription> */}
+                                            <FormDescription>
+                                                This is your public display
+                                                username.
+                                            </FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
-                                <FormField
-                                    control={profileForm.control}
-                                    name="lastName"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Last Name
-                                                <RequiredSign />
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="Doe"
-                                                    type="text"
-                                                    {...field}
-                                                />
-                                            </FormControl>
-                                            {/* <FormDescription>
+                                <div className="flex gap-x-2 w-full">
+                                    <FormField
+                                        control={profileForm.control}
+                                        name="firstName"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    First Name
+                                                    <RequiredSign />
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="John"
+                                                        type="text"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                {/* <FormDescription>
             This is your public display name.
         </FormDescription> */}
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={profileForm.control}
+                                        name="lastName"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    Last Name
+                                                    <RequiredSign />
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        placeholder="Doe"
+                                                        type="text"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                {/* <FormDescription>
+            This is your public display name.
+        </FormDescription> */}
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
                                 <FormField
                                     control={profileForm.control}
                                     name="gender"
@@ -381,6 +362,29 @@ export default function FormTabs() {
                                 />
                                 <FormField
                                     control={profileForm.control}
+                                    name="dob"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Date of Birth</FormLabel>
+                                            <FormControl>
+                                                <CustomDatePicker
+                                                    label="Pick a date"
+                                                    onChange={(e) =>
+                                                        setDateOfBirth({
+                                                            day: e.day,
+                                                            month: e.month,
+                                                            year: e.year,
+                                                        })
+                                                    }
+                                                >
+                                                    <DateField />
+                                                </CustomDatePicker>
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={profileForm.control}
                                     name="address"
                                     render={({ field }) => (
                                         <FormItem>
@@ -402,9 +406,20 @@ export default function FormTabs() {
                                         </FormItem>
                                     )}
                                 />
-                                <Button type="submit" className="w-full">
-                                    Create Account
-                                </Button>
+                                {submmittingFormIsLoading ? (
+                                    <Button
+                                        type="submit"
+                                        className="text-center w-full"
+                                        disabled
+                                        aria-disabled
+                                    >
+                                        <Loading /> Loading...
+                                    </Button>
+                                ) : (
+                                    <Button type="submit" className="w-full">
+                                        Create Account
+                                    </Button>
+                                )}
                             </form>
                         </Form>
                     </TabsContent>
