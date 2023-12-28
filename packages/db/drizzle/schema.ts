@@ -51,7 +51,7 @@ export const users = sqliteTable("user", {
 
   image: text("image"),
   gender: text("gender", { enum: ["male", "female"] }).notNull(),
-  address: text("address").notNull(),
+  address: text("address"),
 
   createdAt,
   updatedAt,

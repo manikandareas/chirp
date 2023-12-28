@@ -15,6 +15,13 @@
       "when": 1703740669959,
       "tag": "0001_wonderful_vermin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1703780691253,
+      "tag": "0002_sticky_ken_ellis",
+      "breakpoints": true
     }
   ]
 }
