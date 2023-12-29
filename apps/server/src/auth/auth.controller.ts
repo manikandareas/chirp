@@ -1,16 +1,17 @@
-import { LoginDto } from '@chirp/dto';
-import { ApiResponse } from 'src/typings/apiResponse';
-import { CreateUserDto } from '@chirp/dto';
+import { CreateUserDto, LoginDto } from '@chirp/dto';
 import {
     Body,
     Controller,
+    Get,
     HttpStatus,
     Post,
+    Query,
     Request,
     UseGuards,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { ApiResponse } from 'src/typings/apiResponse';
 import { UserService } from 'src/user/user.service';
+import { AuthService } from './auth.service';
 import { RefreshJwtGuard } from './guards/refresh.guard';
 
 @Controller('auth')
@@ -21,7 +22,6 @@ export class AuthController {
     ) {}
 
     @Post('register')
-
     /**
 +     * Registers a new user.
 +     *
@@ -36,8 +36,26 @@ export class AuthController {
         } satisfies ApiResponse<typeof user>;
     }
 
-    @Post('login')
+    @Get('checkAvailability')
+    /**
+     * Checks the availability of a username and email.
+     *
+     * @param {string} username - The username to check availability for.
+     * @param {string} email - The email to check availability for.
+     * @return {Promise<ApiResponse<typeof user>>} - The availability check result.
+     */
+    async checkAvailability(
+        @Query('username') username: string,
+        @Query('email') email: string
+    ) {
+        const user = await this.userService.checkAvailability(username, email);
+        return {
+            statusCode: HttpStatus.OK,
+            data: user,
+        } satisfies ApiResponse<typeof user>;
+    }
 
+    @Post('login')
     /**
      * Logs in a user.
      *
