@@ -29,11 +29,11 @@ import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import RequiredSign from '@/common/components/elements/RequiredSign';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group';
 import { toast } from 'sonner';
 
-import { checkAvailabilityEmail, registerUser } from '@chirp/api';
+import { registerUser } from '@chirp/api';
 import { signIn } from 'next-auth/react';
 import Loading from '@/common/components/ui/loading';
 import { accountSchema } from '../form/account';
@@ -42,9 +42,9 @@ import {
     CustomDatePicker,
     DateField,
 } from '@/common/components/elements/BirthDayPicker';
-import { useDebouncedCallback } from 'use-debounce';
 import useAvailabilityEmail from '../services/useAvailabilityEmail';
 import useAvaibilityUsername from '../services/useAvailabilityUsername';
+import AuthPrompt from '../../components/AuthPrompt';
 
 type TabsValue = 'account' | 'profile';
 
@@ -123,7 +123,7 @@ export default function FormTabs() {
 
     return (
         <div className="grid place-items-center relative">
-            <div className="space-y-8 lg:w-1/2">
+            <div className="space-y-8 lg:max-w-lg max-w-[90%]">
                 <div className="text-center">
                     <TitlePage>
                         Create an account
@@ -135,7 +135,7 @@ export default function FormTabs() {
                 <Tabs
                     value={tabValue}
                     onValueChange={onTabsChange}
-                    className=" mx-auto"
+                    className="mx-auto"
                 >
                     <TabsList className="bg-transparent" asChild>
                         <div className="absolute top-1/2 -translate-y-1/2 right-4 flex flex-col">
@@ -431,6 +431,8 @@ export default function FormTabs() {
                         </Form>
                     </TabsContent>
                 </Tabs>
+
+                <AuthPrompt variant="signin" />
             </div>
         </div>
     );

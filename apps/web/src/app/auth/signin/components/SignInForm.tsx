@@ -26,6 +26,7 @@ import Link from 'next/link';
 import SubTitlePage from '../../components/SubTitlePage';
 import { useState } from 'react';
 import Loading from '@/common/components/ui/loading';
+import AuthPrompt from '../../components/AuthPrompt';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'Invalid email address.' }),
@@ -79,7 +80,7 @@ export default function SignInForm() {
 
     return (
         <div className="grid place-items-center">
-            <div className="space-y-8 lg:w-1/2 ">
+            <div className="space-y-8 lg:max-w-lg max-w-[90%] w-full">
                 <div className="text-center">
                     <TitlePage>
                         Welcome <span className="animate-pulse">Back</span>
@@ -91,6 +92,7 @@ export default function SignInForm() {
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-8"
+                        data-aos="fade up"
                     >
                         <FormField
                             control={form.control}
@@ -163,12 +165,7 @@ export default function SignInForm() {
                     </Button>
                 </div>
 
-                <div className="text-center text-sm">
-                    Don't have any account?{' '}
-                    <Link href={'/auth/signup'} className="text-blue-500">
-                        Sign Up
-                    </Link>
-                </div>
+                <AuthPrompt variant="signup" />
             </div>
         </div>
     );
