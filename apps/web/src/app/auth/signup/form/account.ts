@@ -13,4 +13,8 @@ export const accountSchema = z
     .refine((data) => data.password === data.confirmPassword, {
         message: "Passwords don't match",
         path: ['confirmPassword'],
+    })
+    .refine((data) => data.password.trim().length > 8, {
+        message: 'Please use strong password!',
+        path: ['password'],
     });
