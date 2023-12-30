@@ -17,7 +17,7 @@ export const axiosInstance = axios.create({
 export const api = axios.create({
   baseURL,
 
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  },
+  // headers: {
+  //   Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  // },
 });

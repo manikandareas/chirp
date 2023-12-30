@@ -29,11 +29,11 @@ import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import RequiredSign from '@/common/components/elements/RequiredSign';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group';
 import { toast } from 'sonner';
 
-import { registerUser } from '@chirp/api';
+import { checkAvailabilityEmail, registerUser } from '@chirp/api';
 import { signIn } from 'next-auth/react';
 import Loading from '@/common/components/ui/loading';
 import { accountSchema } from '../form/account';
@@ -42,6 +42,9 @@ import {
     CustomDatePicker,
     DateField,
 } from '@/common/components/elements/BirthDayPicker';
+import { useDebouncedCallback } from 'use-debounce';
+import useAvailabilityEmail from '../services/useAvailabilityEmail';
+import useAvaibilityUsername from '../services/useAvailabilityUsername';
 
 type TabsValue = 'account' | 'profile';
 
@@ -77,6 +80,10 @@ export default function FormTabs() {
             address: '',
         },
     });
+
+    useAvailabilityEmail({ accountForm });
+
+    useAvaibilityUsername({ profileForm });
 
     const onTabsChange = (value: string) => {
         setTabValue(value as TabsValue);
