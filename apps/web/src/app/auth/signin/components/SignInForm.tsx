@@ -56,11 +56,9 @@ export default function SignInForm() {
                         redirect: true,
                         callbackUrl: '/',
                     });
-
-                    if (!signInResponse?.ok) {
+                    if (signInResponse?.error) {
                         throw new Error('Unable to sign in');
                     }
-
                     resolve(true);
                 } catch (error) {
                     reject();
