@@ -24,6 +24,7 @@ export default function FormCreatePost() {
 
     const handlePostSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        // Comment gapenting
         mutate({
             authorId: user?.id!,
             content: contentState,
