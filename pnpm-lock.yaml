@@ -41,6 +41,9 @@ importers:
       '@libsql/client':
         specifier: 0.4.0-pre.5
         version: 0.4.0-pre.5
+      '@neondatabase/serverless':
+        specifier: ^0.6.1
+        version: 0.6.1
       '@nestjs/common':
         specifier: ^10.0.0
         version: 10.3.0(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.14)(rxjs@7.8.1)
@@ -70,10 +73,13 @@ importers:
         version: 3.3.0
       drizzle-orm:
         specifier: ^0.29.1
-        version: 0.29.1(@libsql/client@0.4.0-pre.5)
+        version: 0.29.1(@libsql/client@0.4.0-pre.5)(@neondatabase/serverless@0.6.1)(postgres@3.4.3)
       env-var:
         specifier: ^7.4.0
         version: 7.4.1
+      postgres:
+        specifier: ^3.4.3
+        version: 3.4.3
       reflect-metadata:
         specifier: ^0.1.13
         version: 0.1.14
@@ -349,7 +355,7 @@ importers:
         version: 2.2.2
       drizzle-orm:
         specifier: ^0.29.1
-        version: 0.29.1(@libsql/client@0.4.0-pre.5)
+        version: 0.29.1(@libsql/client@0.4.0-pre.5)(@neondatabase/serverless@0.6.1)(postgres@3.4.3)
     devDependencies:
       drizzle-kit:
         specifier: ^0.20.7
@@ -443,7 +449,7 @@ importers:
         version: link:../dto
       drizzle-orm:
         specifier: ^0.29.1
-        version: 0.29.1(@libsql/client@0.4.0-pre.5)
+        version: 0.29.1(@libsql/client@0.4.0-pre.5)(@neondatabase/serverless@0.6.1)(postgres@3.4.3)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -2796,6 +2802,12 @@ packages:
 
   /@neon-rs/load@0.0.4:
     resolution: {integrity: sha512-kTPhdZyTQxB+2wpiRcFWrDcejc4JI6tkPuS7UZCG4l6Zvc5kU/gGQ/ozvHTh1XR5tS+UlfAfGuPajjzQjCiHCw==}
+    dev: false
+
+  /@neondatabase/serverless@0.6.1:
+    resolution: {integrity: sha512-rZIyWf27WxH4eW0ZRDQT2PxUJH3AphNVEnO4x1AGjBW6XrguH3ChLokup0gNGrX8cxDbP0UyduI7qdy4OLos+A==}
+    dependencies:
+      '@types/pg': 8.6.6
     dev: false
 
   /@nestjs/cli@10.2.1(esbuild@0.19.10):
@@ -5803,6 +5815,14 @@ packages:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: true
 
+  /@types/pg@8.6.6:
+    resolution: {integrity: sha512-O2xNmXebtwVekJDD+02udOncjVcMZQuTEQEMpKJ0ZRf5E7/9JJX3izhKUcUifBkyKpljyUM6BTgy2trmviKlpw==}
+    dependencies:
+      '@types/node': 20.5.2
+      pg-protocol: 1.6.0
+      pg-types: 2.2.0
+    dev: false
+
   /@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
@@ -7806,7 +7826,7 @@ packages:
       - utf-8-validate
     dev: true
 
-  /drizzle-orm@0.29.1(@libsql/client@0.4.0-pre.5):
+  /drizzle-orm@0.29.1(@libsql/client@0.4.0-pre.5)(@neondatabase/serverless@0.6.1)(postgres@3.4.3):
     resolution: {integrity: sha512-yItc4unfHnk8XkDD3/bdC63vdboTY7e7I03lCF1OJYABXSIfQYU9BFTQJXMMovVeb3T1/OJWwfW/70T1XPnuUA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -7869,6 +7889,8 @@ packages:
         optional: true
     dependencies:
       '@libsql/client': 0.4.0-pre.5
+      '@neondatabase/serverless': 0.6.1
+      postgres: 3.4.3
     dev: false
 
   /eastasianwidth@0.2.0:
@@ -11708,6 +11730,26 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  /pg-int8@1.0.1:
+    resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==}
+    engines: {node: '>=4.0.0'}
+    dev: false
+
+  /pg-protocol@1.6.0:
+    resolution: {integrity: sha512-M+PDm637OY5WM307051+bsDia5Xej6d9IR4GwJse1qA1DIhiKlksvrneZOYQq42OM+spubpcNYEo2FcKQrDk+Q==}
+    dev: false
+
+  /pg-types@2.2.0:
+    resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==}
+    engines: {node: '>=4'}
+    dependencies:
+      pg-int8: 1.0.1
+      postgres-array: 2.0.0
+      postgres-bytea: 1.0.0
+      postgres-date: 1.0.7
+      postgres-interval: 1.2.0
+    dev: false
+
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
 
@@ -11797,6 +11839,33 @@ packages:
       nanoid: 3.3.7
       picocolors: 1.0.0
       source-map-js: 1.0.2
+
+  /postgres-array@2.0.0:
+    resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
+    engines: {node: '>=4'}
+    dev: false
+
+  /postgres-bytea@1.0.0:
+    resolution: {integrity: sha512-xy3pmLuQqRBZBXDULy7KbaitYqLcmxigw14Q5sj8QBVLqEwXfeybIKVWiqAXTlcvdvb0+xkOtDbfQMOf4lST1w==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
+  /postgres-date@1.0.7:
+    resolution: {integrity: sha512-suDmjLVQg78nMK2UZ454hAG+OAW+HQPZ6n++TNDUX+L0+uUlLywnoxJKDou51Zm+zTCjrCl0Nq6J9C5hP9vK/Q==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
+  /postgres-interval@1.2.0:
+    resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      xtend: 4.0.2
+    dev: false
+
+  /postgres@3.4.3:
+    resolution: {integrity: sha512-iHJn4+M9vbTdHSdDzNkC0crHq+1CUdFhx+YqCE+SqWxPjm+Zu63jq7yZborOBF64c8pc58O5uMudyL1FQcHacA==}
+    engines: {node: '>=12'}
+    dev: false
 
   /preact-render-to-string@5.2.6(preact@10.19.3):
     resolution: {integrity: sha512-JyhErpYOvBV1hEPwIxc/fHWXPfnEGdRKxc8gFdAZ7XV4tlzyzG847XAyEZqoDnynP88akM4eaHcSOzNcLWFguw==}

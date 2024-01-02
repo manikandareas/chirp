@@ -1,6 +1,6 @@
 {
-  "id": "d12f3792-9bf3-469d-923a-94ac3165c698",
-  "prevId": "3adde9ec-dc3e-4c71-808e-17f663c0bbbc",
+  "id": "a0cccf66-9f33-4143-828b-5b8db4d59c7d",
+  "prevId": "84e554b7-73fd-419c-88df-7f08c3536f8e",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -126,7 +126,7 @@
         },
         "full_name": {
           "name": "full_name",
-          "type": "varchar(50)",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },

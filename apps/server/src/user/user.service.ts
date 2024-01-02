@@ -1,23 +1,23 @@
 import {
+    BadRequestException,
     ConflictException,
-    Inject,
     Injectable,
     NotFoundException,
-    BadRequestException,
 } from '@nestjs/common';
-import { DrizzleAsyncProvider } from 'src/drizzle/drizzle.provider';
-import { LibSQLDatabase } from 'drizzle-orm/libsql';
-import { hash } from 'bcrypt';
+
 import * as schema from '@chirp/db';
 import { CreateUserDto, UpdateUserDto } from '@chirp/dto';
+import { hash } from 'bcrypt';
 import { eq } from 'drizzle-orm';
+import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { DrizzleService } from 'src/drizzle/drizzle.service';
 import { combinerName, nullishObjectChecker } from 'src/lib/utils';
 
 @Injectable()
 export class UserService {
-    constructor(
-        @Inject(DrizzleAsyncProvider) private db: LibSQLDatabase<typeof schema>
-    ) {}
+    constructor(private readonly drizzle: DrizzleService) {}
+
+    private readonly db: NeonHttpDatabase<typeof schema> = this.drizzle.getDb();
     /**
      * Registers a new user.
      *
@@ -29,17 +29,18 @@ export class UserService {
 
         if (user) throw new ConflictException('email already exist');
         // Combine first and last_name for name
-        const name = combinerName(
+        const fullName = combinerName(
             user,
             createUserDto.firstName,
             createUserDto.lastName
         );
-
+        console.log({ createUserDto });
         const createdUsers = await this.db
             .insert(schema.users)
             .values({
                 ...createUserDto,
-                name,
+                avatarUrl: `https://ui-avatars.com/api/?name=${fullName}`,
+                fullName,
                 password: await hash(createUserDto.password, 10),
             })
             .returning();
@@ -125,7 +126,7 @@ export class UserService {
         if (!nullishObjectChecker(updateUserDto))
             throw new BadRequestException();
         // Combine first and last_name for name
-        const name = combinerName(
+        const fullName = combinerName(
             user,
             updateUserDto.firstName,
             updateUserDto.lastName
@@ -136,7 +137,7 @@ export class UserService {
             .set({
                 ...user,
                 ...updateUserDto,
-                name: name ? name : user.name,
+                fullName: fullName ? fullName : user.fullName,
             })
             .where(eq(schema.users.id, id))
             .returning();

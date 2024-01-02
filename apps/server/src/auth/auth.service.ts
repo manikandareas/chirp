@@ -32,7 +32,7 @@ export class AuthService {
         const payload = {
             username: user.email,
             sub: {
-                name: user.name,
+                name: user.fullName,
             },
         };
 

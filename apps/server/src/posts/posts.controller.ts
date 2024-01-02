@@ -8,11 +8,10 @@ import {
     ParseFilePipeBuilder,
     Patch,
     Post,
-    UploadedFile,
     UploadedFiles,
     UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiResponse } from 'src/typings/apiResponse';
 import { PostsService } from './posts.service';
 

@@ -1,24 +1,19 @@
 import { CreatePostDto, UpdatePostDto } from '@chirp/dto';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { desc } from 'drizzle-orm';
 import { AwsService } from 'src/aws/aws.service';
-import { DrizzleAsyncProvider } from 'src/drizzle/drizzle.provider';
 import * as schema from '@chirp/db';
-import { LibSQLDatabase } from 'drizzle-orm/libsql';
+
+import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { DrizzleService } from 'src/drizzle/drizzle.service';
 
 @Injectable()
 export class PostsService {
-    /**
-     * Constructor for the class PostsService.
-     *
-     * @param {LibSQLDatabase<typeof schema>} db - The injected DrizzleAsyncProvider instance for database access.
-     * @param {AwsService} awsService - The AwsService instance for AWS related operations.
-     */
     constructor(
-        @Inject(DrizzleAsyncProvider) private db: LibSQLDatabase<typeof schema>,
+        private readonly drizzle: DrizzleService,
         private readonly awsService: AwsService
     ) {}
-
+    private readonly db: NeonHttpDatabase<typeof schema> = this.drizzle.getDb();
     /**
      * Creates a new post with the given data and optional images.
      *
@@ -34,7 +29,6 @@ export class PostsService {
             .insert(schema.posts)
             .values(createPostDto)
             .returning();
-
         //* if there is an image when posting
         let imageUploaded;
         if (images) {
@@ -73,6 +67,8 @@ export class PostsService {
             },
             orderBy: [desc(schema.posts.updatedAt)],
         });
+
+        return posts;
     }
 
     findOne(id: number) {
