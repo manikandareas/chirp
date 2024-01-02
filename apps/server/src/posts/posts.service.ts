@@ -26,7 +26,10 @@ export class PostsService {
      * @param {Express.Multer.File} images - Optional images to be uploaded with the post.
      * @return {Promise<{ createdPost: any, imageUploaded?: any }>} - A promise that resolves to an object containing the created post and optionally the uploaded image.
      */
-    async create(createPostDto: CreatePostDto, images?: Express.Multer.File) {
+    async create(
+        createPostDto: CreatePostDto,
+        images?: Array<Express.Multer.File>
+    ) {
         const createdPost = await this.db
             .insert(schema.posts)
             .values(createPostDto)
@@ -35,24 +38,22 @@ export class PostsService {
         //* if there is an image when posting
         let imageUploaded;
         if (images) {
-            const image = await this.awsService.uploadToS3(
-                images.originalname,
-                images.buffer
-            );
-
-            imageUploaded = await this.db
-                .insert(schema.images)
-                .values({
-                    url: image.Location,
-                    postId: createdPost[0].id,
-                })
-                .returning();
+            for (const image of images) {
+                const imageLocation = await this.awsService.uploadToS3(
+                    image.originalname,
+                    image.buffer
+                );
+                imageUploaded = await this.db
+                    .insert(schema.images)
+                    .values({
+                        url: imageLocation.Location,
+                        postId: createdPost[0].id,
+                    })
+                    .returning();
+            }
         }
 
-        return {
-            createdPost,
-            imageUploaded: imageUploaded ? imageUploaded : undefined,
-        };
+        return { createdPost, imageUploaded: imageUploaded ?? undefined };
     }
 
     /**
@@ -72,7 +73,6 @@ export class PostsService {
             },
             orderBy: [desc(schema.posts.updatedAt)],
         });
-        return posts;
     }
 
     findOne(id: number) {
