@@ -22,6 +22,62 @@
       "when": 1703780691253,
       "tag": "0002_sticky_ken_ellis",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1704171578989,
+      "tag": "0003_far_shocker",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1704171714600,
+      "tag": "0004_romantic_celestials",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1704171861861,
+      "tag": "0005_aberrant_nebula",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1704172590167,
+      "tag": "0006_rapid_exiles",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1704172603620,
+      "tag": "0007_furry_ted_forrester",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1704172649278,
+      "tag": "0008_yummy_red_ghost",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1704172801543,
+      "tag": "0009_chemical_pride",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1704175782505,
+      "tag": "0010_mature_queen_noir",
+      "breakpoints": true
     }
   ]
 }

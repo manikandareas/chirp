@@ -9,13 +9,12 @@ import {
     Patch,
     Post,
     UploadedFile,
-    UseGuards,
+    UploadedFiles,
     UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { ApiResponse } from 'src/typings/apiResponse';
 import { PostsService } from './posts.service';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -28,18 +27,18 @@ export class PostsController {
      * @param {Express.Multer.File} images - The images to be uploaded (optional).
      * @return {Promise<{ statusCode: number, data: any }>} - The response object containing the status code and data.
      */
-    @UseGuards(JwtGuard)
+    // @UseGuards(JwtGuard)
     @Post()
-    @UseInterceptors(FileInterceptor('images'))
+    @UseInterceptors(FilesInterceptor('images'))
     async create(
         @Body() createPostDto: CreatePostDto,
-        @UploadedFile(
+        @UploadedFiles(
             new ParseFilePipeBuilder()
                 .addFileTypeValidator({ fileType: /(jpg|jpeg|png)$/ })
                 .addMaxSizeValidator({ maxSize: 1000000 })
                 .build({ fileIsRequired: false })
         )
-        images: Express.Multer.File
+        images: Array<Express.Multer.File>
     ) {
         const post = await this.postsService.create(createPostDto, images);
         return {
