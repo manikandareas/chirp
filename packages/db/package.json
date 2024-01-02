@@ -5,9 +5,9 @@
   "main": "./dist/index.js",
   "types": "./index.ts",
   "scripts": {
-    "db:generate": "drizzle-kit generate:sqlite",
-    "db:push": "drizzle-kit push:sqlite",
-    "build": "tsc && drizzle-kit generate:sqlite"
+    "db:generate": "drizzle-kit generate:pg",
+    "db:push": "drizzle-kit push:pg",
+    "build": "tsc && drizzle-kit generate:pg && drizzle-kit push:pg"
   },
   "keywords": [],
   "author": "",

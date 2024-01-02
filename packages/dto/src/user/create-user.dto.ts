@@ -50,10 +50,6 @@ export class CreateUserDto {
   @MinLength(8)
   password: string;
 
-  @IsOptional()
-  @IsString()
-  image: string;
-
   @IsNotEmpty()
   @IsEnum(["male", "female"])
   gender: "male" | "female";
