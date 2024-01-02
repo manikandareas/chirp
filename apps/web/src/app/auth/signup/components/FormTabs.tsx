@@ -42,8 +42,6 @@ import {
     CustomDatePicker,
     DateField,
 } from '@/common/components/elements/BirthDayPicker';
-import useAvailabilityEmail from '../services/useAvailabilityEmail';
-import useAvaibilityUsername from '../services/useAvailabilityUsername';
 import AuthPrompt from '../../components/AuthPrompt';
 
 type TabsValue = 'account' | 'profile';
@@ -81,10 +79,6 @@ export default function FormTabs() {
         },
     });
 
-    useAvailabilityEmail({ accountForm });
-
-    useAvaibilityUsername({ profileForm });
-
     const onTabsChange = (value: string) => {
         setTabValue(value as TabsValue);
     };
@@ -96,29 +90,42 @@ export default function FormTabs() {
     }
 
     async function onProfileFormSubmit(values: z.infer<typeof profileSchema>) {
-        setSubmmittingFormIsLoading(true);
-        try {
-            const user = await registerUser({
-                ...values,
-                image: '',
-                dob: `${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}`,
-                email: accountForm.getValues('email'),
-                password: accountForm.getValues('password'),
+        const promise = () =>
+            new Promise(async (resolve, reject) => {
+                setSubmmittingFormIsLoading(true);
+
+                try {
+                    const user = await registerUser({
+                        ...values,
+                        image: '',
+                        dob: `${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}`,
+                        email: accountForm.getValues('email'),
+                        password: accountForm.getValues('password'),
+                    });
+                    if (user) {
+                        signIn('credentials', {
+                            email: accountForm.getValues('email'),
+                            password: accountForm.getValues('password'),
+                            redirect: true,
+                            callbackUrl: '/',
+                        });
+                    }
+                    resolve(true);
+                } catch (error) {
+                    reject();
+                } finally {
+                    setSubmmittingFormIsLoading(false);
+                }
             });
-            if (user) {
-                toast.success('Account created successfully!');
-                signIn('credentials', {
-                    email: accountForm.getValues('email'),
-                    password: accountForm.getValues('password'),
-                    redirect: true,
-                    callbackUrl: '/',
-                });
-            }
-        } catch (error) {
-            toast.error('Upps... Something went wrong!');
-        } finally {
-            setSubmmittingFormIsLoading(false);
-        }
+
+        toast.promise(promise, {
+            loading: 'Loading...',
+            success: () => {
+                profileForm.reset();
+                return `Hey welcome to chirp world dude!`;
+            },
+            error: () => 'Upps... Something went wrong!',
+        });
     }
 
     return (

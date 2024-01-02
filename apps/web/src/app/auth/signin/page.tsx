@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import ChirpPoster from '../components/ChirpPoster';
 import SignInForm from './components/SignInForm';
-import Container from '../components/Container';
+import AuthContainer from '../components/AuthContainer';
 
 export const metadata: Metadata = {
     title: 'Sign in ',
@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 
 export default function SignInPage() {
     return (
-        <Container>
+        <AuthContainer>
             <ChirpPoster variants="left" />
             <SignInForm />
-        </Container>
+        </AuthContainer>
     );
 }

@@ -28,7 +28,7 @@ export class PostsController {
      * @param {Express.Multer.File} images - The images to be uploaded (optional).
      * @return {Promise<{ statusCode: number, data: any }>} - The response object containing the status code and data.
      */
-    @UseGuards(JwtGuard)
+    // @UseGuards(JwtGuard)
     @Post()
     @UseInterceptors(FileInterceptor('images'))
     async create(
@@ -53,7 +53,11 @@ export class PostsController {
      *
      * @return {Promise<{ statusCode: number, data: any }>} The response objects.
      */
-    @UseGuards(JwtGuard)
+
+    /**
+     * Removing JWT Guard from this Routes
+     * @author Vito
+     */
     @Get()
     async findAll() {
         const postsData = await this.postsService.findAll();

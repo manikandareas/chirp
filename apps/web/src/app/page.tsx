@@ -1,9 +1,15 @@
 import Layout from './components/Layout';
+import FormCreatePost from './components/form-post/FormCreatePost';
+import { FormPostProvider } from './context/FormPostProvider';
 
 export default function Home() {
     return (
         <Layout>
-            <div className="h-[200vh] border"></div>
+            <main className="h-[200vh] border-x overflow-clip">
+                <FormPostProvider>
+                    <FormCreatePost />
+                </FormPostProvider>
+            </main>
         </Layout>
     );
 }

@@ -61,11 +61,16 @@ export class PostsService {
      * @return {Promise<Post[]>} An array of post objects.
      */
     async findAll() {
-        const posts = await this.db.query.images.findMany({
+        /**
+         *Fixing line 69 from db.query.images to db.query.posts
+         * @author Vito
+         */
+
+        const posts = await this.db.query.posts.findMany({
             with: {
-                post: true,
+                images: true,
             },
-            orderBy: [desc(schema.images.createdAt)],
+            orderBy: [desc(schema.posts.updatedAt)],
         });
         return posts;
     }
