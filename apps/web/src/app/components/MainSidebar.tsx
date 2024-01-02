@@ -1,65 +1,54 @@
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from '@/common/components/ui/avatar';
-import { Button, buttonVariants } from '@/common/components/ui/button';
+import { buttonVariants } from '@/common/components/ui/button';
 import { mainSidebarMenus } from '@/common/constant/mainSidebar';
 import { cn } from '@/common/lib/utils';
-import { MenuIcon, MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { FaXTwitter } from 'react-icons/fa6';
+import { LiaFeatherSolid } from 'react-icons/lia';
+import UserWizard from './UserWizard';
 
 export default function MainSidebar() {
     const menuActiveStyle = 'text-white';
     return (
-        <aside className="w-[17.188rem] h-screen max-h-screen sticky top-0 py-1 space-y-1.5 overflow-hidden">
-            <header className="px-4">
-                <Link
-                    href={'/'}
-                    className={cn(
-                        buttonVariants({ size: 'icon', variant: 'ghost' }),
-                        'rounded-full'
-                    )}
-                >
-                    <FaXTwitter size={30} />
-                </Link>
-            </header>
-
-            <div className="flex flex-col gap-3">
-                {mainSidebarMenus.map((menu, idx) => (
+        <aside className="xl:w-[17.188rem] w-20 h-screen max-h-screen sticky top-0 py-1 overflow-hidden">
+            <div className="space-y-1.5">
+                <header className="xl:px-3 xl:block flex justify-center">
                     <Link
-                        key={menu.label}
-                        href={menu.href}
+                        href={'/'}
                         className={cn(
-                            'flex items-center gap-4 px-4 py-3 text-xl font-thin rounded-full w-fit hover:bg-neutral-900 text-muted-foreground',
-                            idx === 0 && menuActiveStyle
+                            buttonVariants({ size: 'icon', variant: 'ghost' }),
+                            'rounded-full'
                         )}
                     >
-                        <menu.icon />
-                        <span>{menu.label}</span>
+                        <FaXTwitter size={30} />
                     </Link>
-                ))}
-                <button className="bg-sky-500 hover:bg-sky-400 w-[90%] p-3 rounded-full text-white">
-                    Post
-                </button>
-            </div>
+                </header>
 
-            <div className="absolute bottom-4 w-full mr-8 max-w-[98%]">
-                <div className="flex justify-between items-center p-4 hover hover:bg-neutral-900 rounded-full cursor-pointer">
-                    <div className="flex gap-4 items-center">
-                        <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                        <div className="leading-tight">
-                            <h1>Manik a</h1>
-                            <h2 className="text-muted-foreground">
-                                @manikxixi
-                            </h2>
-                        </div>
-                    </div>
-                    <MoreHorizontal />
+                <div className="flex flex-col items-center xl:items-start gap-y-3">
+                    {mainSidebarMenus.map((menu, idx) => (
+                        <Link
+                            key={menu.label}
+                            href={menu.href}
+                            className={cn(
+                                'flex items-center sm:gap-x-4 sm:px-4 py-3 px-3 text-xl font-thin rounded-full sm:w-fit hover:bg-neutral-900 text-white/80',
+                                idx === 0 && menuActiveStyle
+                            )}
+                        >
+                            <menu.icon />
+                            <span className="hidden xl:block">
+                                {menu.label}
+                            </span>
+                        </Link>
+                    ))}
+                    <button className="bg-sky-500 hover:bg-sky-400 xl:w-[90%] p-3 hidden xl:block rounded-full text-white">
+                        Post
+                    </button>
+                    <button className="bg-sky-500 hover:bg-sky-400 w-fit p-2 rounded-full text-white xl:hidden">
+                        <LiaFeatherSolid size={24} />
+                    </button>
+                </div>
+
+                <div className="absolute bottom-4 w-full mr-8 sm:max-w-[98%] sm:block flex justify-center">
+                    <UserWizard />
                 </div>
             </div>
         </aside>

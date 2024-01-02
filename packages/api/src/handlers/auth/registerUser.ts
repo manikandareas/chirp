@@ -1,6 +1,10 @@
-import { axiosInstance } from "../../lib";
 import { CreateUserDto } from "@chirp/dto";
 import { ApiResponse } from "../../typings";
+import axios from "axios";
+
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:8000/api",
+});
 
 export const registerUser = async (
   payload: CreateUserDto
@@ -17,6 +21,7 @@ export const checkAvailabilityEmail = async (
   email: string
 ): Promise<boolean> => {
   const url = "/auth/checkAvailability";
+
   try {
     const response = await axiosInstance.get(`${url}?email=${email}`);
 
@@ -25,7 +30,7 @@ export const checkAvailabilityEmail = async (
     }
     return true;
   } catch (error) {
-    throw new Error("Error checking email");
+    return false;
   }
 };
 
@@ -41,6 +46,6 @@ export const checkAvailabilityUsername = async (
     }
     return true;
   } catch (error) {
-    throw new Error("Error checking username");
+    return false;
   }
 };

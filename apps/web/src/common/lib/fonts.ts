@@ -8,6 +8,7 @@ import {
 export const fontPoppins = Poppins({
     weight: ['300', '500', '700'],
     subsets: ['latin'],
+    variable: '--font-poppins',
 });
 
 export const fontBebasNeue = Bebas_Neue({
