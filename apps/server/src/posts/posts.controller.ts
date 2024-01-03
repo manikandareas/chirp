@@ -51,7 +51,7 @@ export class PostsController {
     /**
      * Retrieves all the data.
      *
-     * @return {Promise<{ statusCode: number, data: any }>} The response objects.
+     * @return {Promise<{ statusCode: number, data: any }>} The response object containing the status code and data.
      */
     @UseGuards(JwtGuard)
     @Get()
@@ -63,9 +63,19 @@ export class PostsController {
         } satisfies ApiResponse<typeof postsData>;
     }
 
+    /**
+     * Find one by ID.
+     *
+     * @param {string} id - The ID of the item to find.
+     * @return {ApiResponse<typeof postData>} - The response object containing the status code and data.
+     */
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.postsService.findOne(id);
+    async findOneById(@Param('id') id: string) {
+        const postData = await this.postsService.findOneById(id);
+        return {
+            statusCode: 200,
+            data: postData,
+        } satisfies ApiResponse<typeof postData>;
     }
 
     @Patch(':id')
