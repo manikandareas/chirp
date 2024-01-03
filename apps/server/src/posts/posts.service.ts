@@ -56,14 +56,26 @@ export class PostsService {
      * @return {Promise<Post[]>} An array of post objects.
      */
     async findAll() {
-        /**
-         *Fixing line 69 from db.query.images to db.query.posts
-         * @author Vito
-         */
-
         const posts = await this.db.query.posts.findMany({
+            columns: {
+                authorId: false,
+            },
             with: {
-                images: true,
+                images: {
+                    columns: {
+                        postId: false,
+                    },
+                },
+                author: {
+                    columns: {
+                        id: true,
+                        fullName: true,
+                        firstName: true,
+                        lastName: true,
+                        username: true,
+                        avatarUrl: true,
+                    },
+                },
             },
             orderBy: [desc(schema.posts.updatedAt)],
         });
@@ -71,7 +83,7 @@ export class PostsService {
         return posts;
     }
 
-    findOne(id: number) {
+    findOne(id: string) {
         return `This action returns a #${id} post`;
     }
 
