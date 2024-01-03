@@ -134,14 +134,27 @@ export class PostsService {
             },
         });
 
-        if (imageUrlToBeDeleted) {
-            for (const image of imageUrlToBeDeleted) {
-                await this.awsService.deleteFromS3(image.key);
-            }
+        await Promise.all([
+            this.deleteImagesFromS3(imageUrlToBeDeleted),
+            this.deletePostFromDatabase(id),
+        ]);
+    }
+
+    async deleteImagesFromS3(
+        images: {
+            key: string;
+        }[]
+    ) {
+        if (images.length > 0) {
+            await Promise.all(
+                images.map(async ({ key }) => {
+                    await this.awsService.deleteFromS3(key);
+                })
+            );
         }
+    }
+
+    async deletePostFromDatabase(id: string) {
         await this.db.delete(schema.posts).where(eq(schema.posts.id, id));
-        return {
-            message: 'Delete Post Success!!',
-        };
     }
 }
