@@ -51,7 +51,7 @@ export class PostsService {
     }
 
     /**
-     * Retrieves all posts from the database sorted from newest by date created.
+     * Retrieves all posts from the database sorted from newest by date updated.
      *
      * @return {Promise<Post[]>} An array of post objects.
      */
@@ -83,8 +83,39 @@ export class PostsService {
         return posts;
     }
 
-    findOne(id: string) {
-        return `This action returns a #${id} post`;
+    /**
+     * Finds a post by its ID.
+     *
+     * @param {string} id - The ID of the post to find.
+     * @return {Promise} - A promise that resolves to the post data.
+     */
+    async findOneById(id: string) {
+        const postDataById = await this.db.query.posts.findFirst({
+            where: (posts, { eq }) => eq(posts.id, id),
+            columns: {
+                authorId: false,
+            },
+            with: {
+                images: {
+                    columns: {
+                        postId: false,
+                    },
+                },
+                author: {
+                    columns: {
+                        id: true,
+                        fullName: true,
+                        firstName: true,
+                        lastName: true,
+                        username: true,
+                        avatarUrl: true,
+                    },
+                },
+            },
+        });
+
+        console.log(postDataById);
+        return postDataById;
     }
 
     update(id: number, updatePostDto: UpdatePostDto) {
