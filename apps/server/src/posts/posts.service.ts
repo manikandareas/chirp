@@ -27,7 +27,8 @@ export class PostsService {
     ) {
         const createdPost = await this.db
             .insert(schema.posts)
-            .values(createPostDto);
+            .values(createPostDto)
+            .returning();
         //* if there is an image when posting
         if (images) {
             for (const image of images) {
@@ -44,7 +45,7 @@ export class PostsService {
         }
 
         return {
-            message: 'success',
+            message: 'Create Post Success!',
         };
     }
 
@@ -125,7 +126,22 @@ export class PostsService {
         return updatedPost;
     }
 
-    async remove(key: string) {
-        return '';
+    async remove(id: string) {
+        const imageUrlToBeDeleted = await this.db.query.images.findMany({
+            where: (image, { eq }) => eq(image.postId, id),
+            columns: {
+                key: true,
+            },
+        });
+
+        if (imageUrlToBeDeleted) {
+            for (const image of imageUrlToBeDeleted) {
+                await this.awsService.deleteFromS3(image.key);
+            }
+        }
+        await this.db.delete(schema.posts).where(eq(schema.posts.id, id));
+        return {
+            message: 'Delete Post Success!!',
+        };
     }
 }
