@@ -71,21 +71,32 @@ export class PostsController {
      */
     @Get(':id')
     async findOneById(@Param('id') id: string) {
-        const postData = await this.postsService.findOneById(id);
+        const postDataById = await this.postsService.findOneById(id);
         return {
             statusCode: 200,
-            data: postData,
-        } satisfies ApiResponse<typeof postData>;
+            data: postDataById,
+        } satisfies ApiResponse<typeof postDataById>;
     }
 
     @UseGuards(JwtGuard)
     @Patch(':id')
-    update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-        return this.postsService.update(id, updatePostDto);
+    async update(
+        @Param('id') id: string,
+        @Body() updatePostDto: UpdatePostDto
+    ) {
+        const updatedPost = await this.postsService.update(id, updatePostDto);
+        return {
+            statusCode: 200,
+            data: updatedPost,
+        } satisfies ApiResponse<typeof updatedPost>;
     }
 
-    @Delete(':key')
-    remove(@Param('key') key: string) {
-        return this.postsService.remove(key);
+    @Delete(':id')
+    async remove(@Param('id') id: string) {
+        const deletedPost = await this.postsService.remove(id);
+        return {
+            statusCode: 200,
+            data: deletedPost,
+        } satisfies ApiResponse<typeof deletedPost>;
     }
 }
