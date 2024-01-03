@@ -2,7 +2,6 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
-  IsOptional,
   IsString,
   Matches,
   MinLength,
@@ -54,7 +53,7 @@ export class CreateUserDto {
   @IsEnum(["male", "female"])
   gender: "male" | "female";
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
   address: string;
 }
