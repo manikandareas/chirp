@@ -4,26 +4,32 @@ import { useApiClient } from "../../providers";
 import { useQuery } from "@tanstack/react-query";
 
 type PostsPromise = {
-  statusCode: number;
   data: {
-    id: number;
+    id: string;
     createdAt: string;
     updatedAt: string;
-    url: string;
-    postId: string;
-    post: {
-      id: string;
-      content: string;
-      authorId: string;
+    content: string;
+    images: {
+      id: number;
       createdAt: string;
       updatedAt: string;
+      key: string;
+      url: string;
+    }[];
+    author: {
+      id: string;
+      fullName: string;
+      firstName: string;
+      lastName: string;
+      username: string;
+      avatarUrl: string;
     };
   }[];
 };
 
 export const getPosts: ApiFn<object, AxiosPromise<PostsPromise>> = (
   {},
-  { axios = defaultAxios },
+  { axios = defaultAxios }
 ) => {
   return axios.get("/posts");
 };
@@ -38,7 +44,7 @@ export const useGetPostsQuery = ({ config }: UseGetPostsQueryOption = {}) => {
   const { axios } = useApiClient();
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ["posts"],
-    queryFn: () => getPosts({}, { axios }),
+    queryFn: async () => await getPosts({}, { axios }),
     ...config,
   });
 };

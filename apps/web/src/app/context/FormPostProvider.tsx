@@ -1,5 +1,11 @@
 'use client';
-import { Dispatch, FC, PropsWithChildren, SetStateAction } from 'react';
+import {
+    Dispatch,
+    type ElementRef,
+    FC,
+    PropsWithChildren,
+    SetStateAction,
+} from 'react';
 import React from 'react';
 
 export type FormPostContextOptions = {
@@ -9,6 +15,7 @@ export type FormPostContextOptions = {
     setFilesURL: Dispatch<SetStateAction<string[]>>;
     contentState: string;
     setContentState: Dispatch<SetStateAction<string>>;
+    textAreaRef: React.RefObject<HTMLTextAreaElement>;
 };
 
 const FormPostContext = React.createContext<FormPostContextOptions | null>(
@@ -24,6 +31,8 @@ export const FormPostProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
 
     const [contentState, setContentState] = React.useState<string>('');
 
+    const textAreaRef = React.useRef<ElementRef<'textarea'>>(null);
+
     return (
         <FormPostContext.Provider
             value={{
@@ -33,6 +42,7 @@ export const FormPostProvider: FC<PropsWithChildren<{}>> = ({ children }) => {
                 setFilesURL,
                 contentState,
                 setContentState,
+                textAreaRef,
             }}
         >
             {children}

@@ -8,7 +8,7 @@ import { Toaster } from 'sonner';
 import { AOSInit } from '@/common/components/provider/AOSInit';
 import 'aos/dist/aos.css';
 import { AuthListener } from '@/common/components/provider/AuthListener';
-import ReactQueryProvider from '@chirp/api/src/providers/ReactQueryProvider';
+import ReactQueryProvider from '@/common/components/provider/ReactQueryProvider';
 import ApiClientProvider from '@/common/components/provider/ApiClientProvider';
 
 export const metadata: Metadata = {

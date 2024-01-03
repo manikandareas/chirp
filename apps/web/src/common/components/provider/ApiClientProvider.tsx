@@ -10,6 +10,7 @@ export default function ApiClientProvider({
     const axiosManager = new AxiosManager();
     return (
         <ApiClientProviderDefault axiosInstance={axiosManager.axios}>
+            {/* @ts-ignore */}
             {children}
         </ApiClientProviderDefault>
     );

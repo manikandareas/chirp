@@ -73,6 +73,7 @@ export class PostsController {
     @Get()
     async findAll() {
         const postsData = await this.postsService.findAll();
+
         return {
             statusCode: 200,
             data: postsData,

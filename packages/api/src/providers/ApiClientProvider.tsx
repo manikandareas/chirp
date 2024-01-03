@@ -16,7 +16,7 @@ export const ApiClientProvider: React.FC<
   const api = React.useCallback(
     async <T extends unknown>(axiosPromise: AxiosPromise<T>) =>
       await axiosPromise.then(({ data }) => data),
-    [],
+    []
   );
 
   const value = {

@@ -97,7 +97,6 @@ export default function FormTabs() {
                 try {
                     const user = await registerUser({
                         ...values,
-                        image: '',
                         dob: `${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}`,
                         email: accountForm.getValues('email'),
                         password: accountForm.getValues('password'),

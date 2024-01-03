@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
 });
 
 export const registerUser = async (
-  payload: CreateUserDto
+  payload: Omit<CreateUserDto, "bio">
 ): Promise<ApiResponse | undefined> => {
   try {
     const response = await axiosInstance.post("/auth/register", payload);

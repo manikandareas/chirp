@@ -1,4 +1,5 @@
 'use client';
+import { cn } from '@/common/lib/utils';
 import { ImageIcon } from 'lucide-react';
 import { ChangeEvent, Dispatch, SetStateAction, useEffect } from 'react';
 
@@ -30,21 +31,35 @@ export default function InputImage(props: InputImageProps) {
         }
     }, [props.filesInputState]);
     return (
-        <div className="p-2 rounded-full group/inputFiles hover:bg-sky-500/10">
+        <div className="group/inputFiles grid place-items-center">
             <label
                 htmlFor="filesInput"
-                className="cursor-pointer group-hover/inputFiles:"
+                title="Media"
+                className={cn(
+                    'cursor-pointer group-hover/inputFiles:bg-sky-500/10 p-2 rounded-full',
+                    {
+                        'group-hover/inputFiles:bg-neutral-400/10 cursor-not-allowed':
+                            props.filesInputState.length === 4,
+                    }
+                )}
+                aria-disabled={props.filesInputState.length === 4}
             >
-                <ImageIcon size={20} className="text-sky-500" />
+                <ImageIcon
+                    size={20}
+                    className={cn('text-sky-500', {
+                        'text-neutral-400': props.filesInputState.length === 4,
+                    })}
+                />
+                <input
+                    onChange={handleInputFileChange}
+                    type="file"
+                    id="filesInput"
+                    name="filesInput"
+                    accept="image/*"
+                    className="sr-only"
+                    disabled={props.filesInputState.length === 4}
+                />
             </label>
-            <input
-                onChange={handleInputFileChange}
-                type="file"
-                id="filesInput"
-                name="filesInput"
-                accept="image/*"
-                className="sr-only"
-            />
         </div>
     );
 }

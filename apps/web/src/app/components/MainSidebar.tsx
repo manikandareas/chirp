@@ -9,7 +9,7 @@ import UserWizard from './UserWizard';
 export default function MainSidebar() {
     const menuActiveStyle = 'text-white';
     return (
-        <aside className="xl:w-[17.188rem] w-20 h-screen max-h-screen sticky top-0 py-1 overflow-hidden">
+        <aside className="xl:w-[17.188rem] w-20 h-screen max-h-screen sticky top-0 py-1 overflow-hidden z-50">
             <div className="space-y-1.5">
                 <header className="xl:px-3 xl:block flex justify-center">
                     <Link

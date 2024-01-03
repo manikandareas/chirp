@@ -11,6 +11,10 @@ const nextConfig = {
             {
                 hostname: "images.unsplash.com",
                 protocol: "https"
+            },
+            {
+                hostname: "chirp-app-images.s3.ap-southeast-1.amazonaws.com",
+                protocol: "https"
             }
         ]
     },

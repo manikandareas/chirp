@@ -3,10 +3,14 @@ import { useFormPost } from '@/app/context/FormPostProvider';
 import UserAvatar from '@/common/components/elements/UserAvatar';
 import { Button } from '@/common/components/ui/button';
 import { useAuthStore } from '@chirp/zustand';
-import { ChangeEvent, FormEvent } from 'react';
-import InputImage from './InputImage';
+import { FormEvent } from 'react';
 import { useCreatePostMutation } from '@chirp/api';
 import FormPreviewImage from './FormPreviewImage';
+import TextArea from './TextArea';
+import RiibbonMenu from './RibbonMenu';
+import { toast } from 'sonner';
+import Loading from '@/common/components/ui/loading';
+import { queryClient } from '@/common/components/provider/ReactQueryProvider';
 
 export default function FormCreatePost() {
     const user = useAuthStore((state) => state.user);
@@ -15,24 +19,35 @@ export default function FormCreatePost() {
         filesInputState,
         setFilesInputState,
         filesURL,
-        setFilesURL,
         contentState,
         setContentState,
     } = useFormPost();
 
-    const { mutate } = useCreatePostMutation();
+    const { mutateAsync, isPending } = useCreatePostMutation({
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['posts'],
+            });
+            toast.success('Great! Your post has been successfully created.');
+        },
+        onError: () => {
+            toast.error(
+                'Oops! Unable to create post at the moment. Please review your content and try again. If issues persist, reach out to our support team. Thanks for your understanding!'
+            );
+        },
+        onSettled: () => {
+            setFilesInputState([]);
+            setContentState('');
+        },
+    });
 
-    const handlePostSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handlePostSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        mutate({
+        await mutateAsync({
             authorId: user?.id!,
             content: contentState,
             images: filesInputState,
         });
-    };
-
-    const handleTextAreaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        setContentState(e.target.value);
     };
 
     const handlerRemoveMedia = (idx: number) => {
@@ -48,7 +63,7 @@ export default function FormCreatePost() {
                     <div className="flex p-4 gap-x-4 h-full">
                         <div className="w-[2.5rem]">
                             <UserAvatar
-                                src={user?.image}
+                                src={user?.avatarUrl}
                                 fallback="..."
                                 className="w-full h-full"
                             />
@@ -59,16 +74,7 @@ export default function FormCreatePost() {
                             encType="multipart/form-data"
                             onSubmit={handlePostSubmit}
                         >
-                            <textarea
-                                className="w-full bg-transparent resize-none outline-none py-2"
-                                rows={1}
-                                maxLength={280}
-                                name="content"
-                                id="content"
-                                value={contentState}
-                                onChange={handleTextAreaChange}
-                                placeholder="What's on your mind?"
-                            />
+                            <TextArea />
                             {filesURL.length > 0 ? (
                                 <FormPreviewImage
                                     previewSource={filesURL}
@@ -76,20 +82,20 @@ export default function FormCreatePost() {
                                 />
                             ) : null}
                             <div className="w-full border-t flex justify-between pt-4">
-                                <div>
-                                    <InputImage
-                                        filesInputState={filesInputState}
-                                        setFilesInputState={setFilesInputState}
-                                        filesURL={filesURL}
-                                        setFilesURL={setFilesURL}
-                                    />
-                                </div>
+                                <RiibbonMenu />
                                 <div>
                                     <Button
                                         className="font-semibold rounded-full bg-sky-500 hover:bg-sky-600 text-white"
                                         type="submit"
+                                        disabled={isPending}
                                     >
-                                        Post
+                                        {!isPending ? (
+                                            'Post'
+                                        ) : (
+                                            <span className="flex items-center">
+                                                <Loading /> Uploading...
+                                            </span>
+                                        )}
                                     </Button>
                                 </div>
                             </div>

@@ -10,13 +10,9 @@ export default function UserWizard() {
             {user ? (
                 <div className="flex justify-between items-center sm:p-4  hover hover:bg-neutral-900 rounded-full cursor-pointer">
                     <div className="flex gap-4 items-center">
-                        <UserAvatar
-                            src={user.image}
-                            name={user.name}
-                            fallback="..."
-                        />
+                        <UserAvatar src={user.avatarUrl} fallback="..." />
                         <div className="leading-tight hidden xl:block">
-                            <h1>{user.name}</h1>
+                            <h1>{user.fullName}</h1>
                             <h2 className="text-muted-foreground">
                                 @{user.username}
                             </h2>
