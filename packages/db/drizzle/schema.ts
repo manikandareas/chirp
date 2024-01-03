@@ -47,11 +47,13 @@ export const posts = pgTable("posts", {
   content: text("content").notNull(),
   authorId: uuid("author_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: "cascade" }),
 
   createdAt,
   updatedAt,
 });
+
+export type Post = typeof posts.$inferSelect;
 
 export const postsRelations = relations(posts, ({ one, many }) => ({
   author: one(users, {
@@ -63,13 +65,16 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
 
 export const images = pgTable("images", {
   id: serial("id").primaryKey(),
+  key: text("key").notNull(),
   url: text("url").notNull(),
   postId: uuid("post_id")
     .notNull()
-    .references(() => posts.id),
+    .references(() => posts.id, { onDelete: "cascade" }),
   createdAt,
   updatedAt,
 });
+
+export type PostImage = typeof images.$inferSelect;
 
 export const imagesRelations = relations(images, ({ one }) => ({
   post: one(posts, {

@@ -78,13 +78,14 @@ export class PostsController {
         } satisfies ApiResponse<typeof postData>;
     }
 
+    @UseGuards(JwtGuard)
     @Patch(':id')
     update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-        return this.postsService.update(+id, updatePostDto);
+        return this.postsService.update(id, updatePostDto);
     }
 
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.postsService.remove(+id);
+    @Delete(':key')
+    remove(@Param('key') key: string) {
+        return this.postsService.remove(key);
     }
 }

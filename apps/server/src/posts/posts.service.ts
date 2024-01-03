@@ -1,6 +1,6 @@
 import { CreatePostDto, UpdatePostDto } from '@chirp/dto';
 import { Injectable } from '@nestjs/common';
-import { desc } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { AwsService } from 'src/aws/aws.service';
 import * as schema from '@chirp/db';
 
@@ -27,27 +27,25 @@ export class PostsService {
     ) {
         const createdPost = await this.db
             .insert(schema.posts)
-            .values(createPostDto)
-            .returning();
+            .values(createPostDto);
         //* if there is an image when posting
-        let imageUploaded;
         if (images) {
             for (const image of images) {
                 const imageLocation = await this.awsService.uploadToS3(
                     image.originalname,
                     image.buffer
                 );
-                imageUploaded = await this.db
-                    .insert(schema.images)
-                    .values({
-                        url: imageLocation.Location,
-                        postId: createdPost[0].id,
-                    })
-                    .returning();
+                await this.db.insert(schema.images).values({
+                    url: imageLocation.Location,
+                    key: imageLocation.Key,
+                    postId: createdPost[0].id,
+                });
             }
         }
 
-        return { createdPost, imageUploaded: imageUploaded ?? undefined };
+        return {
+            message: 'success',
+        };
     }
 
     /**
@@ -118,11 +116,16 @@ export class PostsService {
         return postDataById;
     }
 
-    update(id: number, updatePostDto: UpdatePostDto) {
-        return `This action updates a #${id} post`;
+    async update(id: string, updatePostDto: UpdatePostDto) {
+        const updatedPost = await this.db
+            .update(schema.posts)
+            .set(updatePostDto)
+            .where(eq(schema.posts.id, id))
+            .returning();
+        return updatedPost;
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} post`;
+    async remove(key: string) {
+        return '';
     }
 }
