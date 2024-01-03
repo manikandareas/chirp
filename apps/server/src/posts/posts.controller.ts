@@ -9,11 +9,13 @@ import {
     Patch,
     Post,
     UploadedFiles,
+    UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiResponse } from 'src/typings/apiResponse';
 import { PostsService } from './posts.service';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -26,7 +28,7 @@ export class PostsController {
      * @param {Express.Multer.File} images - The images to be uploaded (optional).
      * @return {Promise<{ statusCode: number, data: any }>} - The response object containing the status code and data.
      */
-    // @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard)
     @Post()
     @UseInterceptors(FilesInterceptor('images'))
     async create(
@@ -51,11 +53,7 @@ export class PostsController {
      *
      * @return {Promise<{ statusCode: number, data: any }>} The response objects.
      */
-
-    /**
-     * Removing JWT Guard from this Routes
-     * @author Vito
-     */
+    @UseGuards(JwtGuard)
     @Get()
     async findAll() {
         const postsData = await this.postsService.findAll();
@@ -67,7 +65,7 @@ export class PostsController {
 
     @Get(':id')
     findOne(@Param('id') id: string) {
-        return this.postsService.findOne(+id);
+        return this.postsService.findOne(id);
     }
 
     @Patch(':id')
