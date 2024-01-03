@@ -1,4 +1,4 @@
-import { S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import { Injectable } from '@nestjs/common';
 import { config } from 'src/config';
@@ -43,5 +43,21 @@ export class AwsService {
         parallelUploadS3.on('httpUploadProgress', progressCallback);
 
         return parallelUploadS3.done();
+    }
+
+    async deleteFromS3(key: string) {
+        const deleteParams = {
+            Bucket: config.awsBucketName,
+            Key: key,
+        };
+
+        const deleteCommand = new DeleteObjectCommand(deleteParams);
+
+        try {
+            const response = await this.s3Client.send(deleteCommand);
+            console.log(response);
+        } catch (error) {
+            console.error(error);
+        }
     }
 }
