@@ -117,6 +117,13 @@ export class PostsService {
         return postDataById;
     }
 
+    /**
+     * Updates a post with the given ID using the provided data.
+     *
+     * @param {string} id - The ID of the post to update.
+     * @param {UpdatePostDto} updatePostDto - The data to update the post with.
+     * @return {Promise<any>} A promise that resolves to the updated post.
+     */
     async update(id: string, updatePostDto: UpdatePostDto) {
         const updatedPost = await this.db
             .update(schema.posts)
@@ -126,8 +133,14 @@ export class PostsService {
         return updatedPost;
     }
 
+    /**
+     * Removes a post with the given ID.
+     *
+     * @param {string} id - The ID of the item to be removed.
+     * @return {Promise<void>} - A promise that resolves when the item is successfully removed.
+     */
     async remove(id: string) {
-        const imageUrlToBeDeleted = await this.db.query.images.findMany({
+        const imageKeyToBeDeleted = await this.db.query.images.findMany({
             where: (image, { eq }) => eq(image.postId, id),
             columns: {
                 key: true,
@@ -135,11 +148,18 @@ export class PostsService {
         });
 
         await Promise.all([
-            this.deleteImagesFromS3(imageUrlToBeDeleted),
+            this.deleteImagesFromS3(imageKeyToBeDeleted),
             this.deletePostFromDatabase(id),
         ]);
     }
 
+    /**
+     * Deletes images from S3.
+     *
+     * @param {Array} images - An array of objects representing the images to delete.
+     *                        Each object should have a 'key' property indicating the image's key.
+     * @return {Promise<void>} - A promise that resolves when all the images are deleted from S3.
+     */
     async deleteImagesFromS3(
         images: {
             key: string;
@@ -154,6 +174,12 @@ export class PostsService {
         }
     }
 
+    /**
+     * Deletes a post from the database.
+     *
+     * @param {string} id - The ID of the post to delete.
+     * @return {Promise<void>} - A Promise that resolves when the post is successfully deleted.
+     */
     async deletePostFromDatabase(id: string) {
         await this.db.delete(schema.posts).where(eq(schema.posts.id, id));
     }

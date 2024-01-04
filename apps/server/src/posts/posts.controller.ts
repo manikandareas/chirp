@@ -23,10 +23,14 @@ export class PostsController {
 
     /**
      * Creates a new post with the given data and images.
+     * Secures this endpoint using JwtGuard for authentication.
      *
+     * @method POST
      * @param {CreatePostDto} createPostDto - The data for creating the post.
-     * @param {Express.Multer.File} images - The images to be uploaded (optional).
+     * @param {Express.Multer.File[]} images - An array of uploaded image files. (optional).
      * @return {Promise<{ statusCode: number, data: any }>} - The response object containing the status code and data.
+     * @throws {HttpException} - Throws an exception if an error occurs during the creation process.
+     * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
      */
     @UseGuards(JwtGuard)
     @Post()
@@ -50,8 +54,12 @@ export class PostsController {
 
     /**
      * Retrieves all the data.
+     * Secures this endpoint using JwtGuard for authentication.
      *
-     * @return {Promise<{ statusCode: number, data: any }>} The response object containing the status code and data.
+     * @method GET
+     * @returns {Promise<{ statusCode: number, data: any[] }>} - A response object with HTTP status code and an array of post data.
+     * @throws {HttpException} - Throws an exception if an error occurs during the retrieval process.
+     * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
      */
     @UseGuards(JwtGuard)
     @Get()
@@ -64,10 +72,12 @@ export class PostsController {
     }
 
     /**
-     * Find one by ID.
+     * Retrieves post data by its ID.
      *
-     * @param {string} id - The ID of the item to find.
-     * @return {ApiResponse<typeof postData>} - The response object containing the status code and data.
+     * @method GET
+     * @param {string} id - The ID of the post to be retrieved.
+     * @returns {Promise<{ statusCode: number, data: any }>} - A response object with HTTP status code and the post data.
+     * @throws {HttpException} - Throws an exception if an error occurs during the retrieval process.
      */
     @Get(':id')
     async findOneById(@Param('id') id: string) {
@@ -78,6 +88,17 @@ export class PostsController {
         } satisfies ApiResponse<typeof postDataById>;
     }
 
+    /**
+     * Updates a post with the given ID using the provided data.
+     * Secures this endpoint using JwtGuard for authentication.
+     *
+     * @method PATCH
+     * @param {string} id - The ID of the post to be updated.
+     * @param {UpdatePostDto} updatePostDto - A Data Transfer Object (DTO) containing the update information for the post.
+     * @returns {Promise<{ statusCode: number, data: any }>} - A response object with HTTP status code and the updated post data.
+     * @throws {HttpException} - Throws an exception if an error occurs during the update process.
+     * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
+     */
     @UseGuards(JwtGuard)
     @Patch(':id')
     async update(
@@ -91,6 +112,17 @@ export class PostsController {
         } satisfies ApiResponse<typeof updatedPost>;
     }
 
+    /**
+     * Removes a post with the given ID.
+     * Secures this endpoint using JwtGuard for authentication.
+     *
+     * @method DELETE
+     * @param {string} id - The ID of the post to be removed.
+     * @return {Promise<{statusCode: number, data: any}>} - A promise that resolves to an object containing the status code and the data of the deleted post.
+     * @throws {HttpException} - Throws an exception if an error occurs during the removal process.
+     * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
+     */
+    @UseGuards(JwtGuard)
     @Delete(':id')
     async remove(@Param('id') id: string) {
         const deletedPost = await this.postsService.remove(id);
