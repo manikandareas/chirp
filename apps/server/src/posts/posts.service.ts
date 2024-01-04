@@ -18,7 +18,6 @@ export class PostsService {
      * Creates a new post with the given data and optional images.
      *
      * @param {CreatePostDto} createPostDto - The data for creating the post.
-     * @param {any} user - The user creating the post.
      * @param {Express.Multer.File} images - Optional images to be uploaded with the post.
      * @return {Promise<{ createdPost: any, imageUploaded?: any }>} - A promise that resolves to an object containing the created post and optionally the uploaded image.
      */
@@ -118,7 +117,6 @@ export class PostsService {
             },
         });
 
-        console.log(postDataById);
         return postDataById;
     }
 
@@ -156,6 +154,8 @@ export class PostsService {
             this.deleteImagesFromS3(imageKeyToBeDeleted),
             this.deletePostFromDatabase(id),
         ]);
+
+        return { message: 'Delete Post Success!' };
     }
 
     /**
