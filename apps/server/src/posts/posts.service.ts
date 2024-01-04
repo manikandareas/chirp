@@ -18,22 +18,28 @@ export class PostsService {
      * Creates a new post with the given data and optional images.
      *
      * @param {CreatePostDto} createPostDto - The data for creating the post.
+     * @param {any} user - The user creating the post.
      * @param {Express.Multer.File} images - Optional images to be uploaded with the post.
      * @return {Promise<{ createdPost: any, imageUploaded?: any }>} - A promise that resolves to an object containing the created post and optionally the uploaded image.
      */
     async create(
         createPostDto: CreatePostDto,
+        user: any,
         images?: Array<Express.Multer.File>
     ) {
         const createdPost = await this.db
             .insert(schema.posts)
             .values(createPostDto)
             .returning();
-        //* if there is an image when posting
+        // * if there is an image when posting
         if (images) {
             for (const image of images) {
-                const imageLocation = await this.awsService.uploadToS3(
+                const uniqueKeyFileName = await this.generateUniqueKeyFile(
                     image.originalname,
+                    user.username
+                );
+                const imageLocation = await this.awsService.uploadToS3(
+                    uniqueKeyFileName,
                     image.buffer
                 );
                 await this.db.insert(schema.images).values({
@@ -43,7 +49,6 @@ export class PostsService {
                 });
             }
         }
-
         return {
             message: 'Create Post Success!',
         };
@@ -182,5 +187,17 @@ export class PostsService {
      */
     async deletePostFromDatabase(id: string) {
         await this.db.delete(schema.posts).where(eq(schema.posts.id, id));
+    }
+
+    /**
+     * Generates a unique key file name based on the provided key and username.
+     *
+     * @param {string} key - The key to be included in the unique key file.
+     * @param {string} username - The username to be included in the unique key file.
+     * @return {Promise<string>} The generated unique key file.
+     */
+    async generateUniqueKeyFile(key: string, username: string) {
+        const uniqueKey = `${username}-${Date.now()}-${key}`;
+        return uniqueKey;
     }
 }

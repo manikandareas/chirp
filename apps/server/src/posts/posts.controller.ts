@@ -8,6 +8,7 @@ import {
     ParseFilePipeBuilder,
     Patch,
     Post,
+    Request,
     UploadedFiles,
     UseGuards,
     UseInterceptors,
@@ -27,6 +28,7 @@ export class PostsController {
      *
      * @method POST
      * @param {CreatePostDto} createPostDto - The data for creating the post.
+     * @param {any} user - The user creating the post.
      * @param {Express.Multer.File[]} images - An array of uploaded image files. (optional).
      * @return {Promise<{ statusCode: number, data: any }>} - The response object containing the status code and data.
      * @throws {HttpException} - Throws an exception if an error occurs during the creation process.
@@ -43,9 +45,14 @@ export class PostsController {
                 .addMaxSizeValidator({ maxSize: 1000000 })
                 .build({ fileIsRequired: false })
         )
-        images: Array<Express.Multer.File>
+        images: Array<Express.Multer.File>,
+        @Request() req
     ) {
-        const post = await this.postsService.create(createPostDto, images);
+        const post = await this.postsService.create(
+            createPostDto,
+            req.user,
+            images
+        );
         return {
             statusCode: 201,
             data: post,
