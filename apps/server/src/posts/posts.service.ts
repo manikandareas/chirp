@@ -1,9 +1,8 @@
+import * as schema from '@chirp/db';
 import { CreatePostDto, UpdatePostDto } from '@chirp/dto';
 import { Injectable } from '@nestjs/common';
 import { desc, eq } from 'drizzle-orm';
 import { AwsService } from 'src/aws/aws.service';
-import * as schema from '@chirp/db';
-
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { DrizzleService } from 'src/drizzle/drizzle.service';
 
@@ -199,5 +198,32 @@ export class PostsService {
     async generateUniqueKeyFile(key: string, username: string) {
         const uniqueKey = `${username}-${Date.now()}-${key}`;
         return uniqueKey;
+    }
+
+    /**
+     * Check if the user is the owner of the post.
+     *
+     * @param {string} id - The ID of the post.
+     * @param {any} user - The user object.
+     * @return {Promise<boolean>} A promise that resolves to a boolean indicating if the user is the owner of the post.
+     */
+    async isOwner(id: string, user): Promise<boolean> {
+        const ownerPost = await this.db.query.posts
+            .findFirst({
+                where: (posts, { eq }) => eq(posts.id, id),
+                columns: {
+                    authorId: true,
+                },
+                with: {
+                    author: {
+                        columns: {
+                            username: true,
+                        },
+                    },
+                },
+            })
+            .then((post) => post?.author.username);
+
+        return ownerPost === user.username;
     }
 }

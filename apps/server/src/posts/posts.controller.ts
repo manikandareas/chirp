@@ -17,6 +17,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiResponse } from 'src/typings/apiResponse';
 import { PostsService } from './posts.service';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { OwnerGuard } from './guard/owner.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -98,6 +99,7 @@ export class PostsController {
     /**
      * Updates a post with the given ID using the provided data.
      * Secures this endpoint using JwtGuard for authentication.
+     * Only the owner of the post can update it.
      *
      * @method PATCH
      * @param {string} id - The ID of the post to be updated.
@@ -106,7 +108,7 @@ export class PostsController {
      * @throws {HttpException} - Throws an exception if an error occurs during the update process.
      * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
      */
-    @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard, OwnerGuard)
     @Patch(':id')
     async update(
         @Param('id') id: string,
@@ -122,6 +124,7 @@ export class PostsController {
     /**
      * Removes a post with the given ID.
      * Secures this endpoint using JwtGuard for authentication.
+     * Only the owner of the post can delete it.
      *
      * @method DELETE
      * @param {string} id - The ID of the post to be removed.
@@ -129,7 +132,7 @@ export class PostsController {
      * @throws {HttpException} - Throws an exception if an error occurs during the removal process.
      * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
      */
-    @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard, OwnerGuard)
     @Delete(':id')
     async remove(@Param('id') id: string) {
         const deletedPost = await this.postsService.remove(id);
