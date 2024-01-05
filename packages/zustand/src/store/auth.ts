@@ -1,67 +1,55 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import * as schema from "@chirp/db";
 
-type User = {
-  username: string;
-  firstName: string;
-  lastName: string;
-  name: string;
-  email: string;
-  image: string;
-};
+/*
+ * Getting library from @chirp/db pacakage
+ */
+import { InferSelectModel } from "drizzle-orm";
 
-type BackendTokens = {
+/*
+ * Getting type from @chirp/db schema
+ */
+
+export type User = Omit<InferSelectModel<typeof schema.users>, "password">;
+
+export type BackendTokens = {
   accessToken: string;
   refreshToken: string;
   expiresIn: number | null;
 };
 
-type AuthSlice = {
-  user: User;
-  backendTokens: BackendTokens;
+export type AuthSlice = {
+  user: User | null;
+  backendTokens: BackendTokens | null;
   onSignInSuccess: (
-    payload: Omit<AuthSlice, "setInitialData" | "onSignOut">
+    payload: Omit<AuthSlice, "onSignInSuccess" | "onSignOutSuccess">
   ) => void;
   onSignOutSuccess: () => void;
-};
-
-const defaultValue = {
-  user: {
-    username: "",
-    firstName: "",
-    lastName: "",
-    name: "",
-    email: "",
-    image: "",
-  },
-
-  backendTokens: {
-    accessToken: "",
-    refreshToken: "",
-    expiresIn: null,
-  },
 };
 
 export const useAuthStore = create<AuthSlice>()(
   persist(
     (set, get) => ({
-      user: defaultValue.user,
-      backendTokens: defaultValue.backendTokens,
+      user: null,
+      backendTokens: null,
 
       onSignInSuccess: ({ user, backendTokens }) =>
         set({
           user,
           backendTokens,
         }),
-      onSignOutSuccess: () =>
-        set({
-          user: defaultValue.user,
-          backendTokens: defaultValue.backendTokens,
-        }),
+      onSignOutSuccess: () => {
+        localStorage.removeItem("chirp-storage");
+        return set({
+          user: null,
+          backendTokens: null,
+        });
+      },
     }),
     {
       name: "chirp-storage",
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );

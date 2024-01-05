@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
-import * as schema from './schema';
+import * as schema from '@chirp/db';
 import { config } from 'src/config';
 
 /**

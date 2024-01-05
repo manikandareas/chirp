@@ -24,6 +24,9 @@ import { Separator } from '@/common/components/ui/separator';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import SubTitlePage from '../../components/SubTitlePage';
+import { useState } from 'react';
+import Loading from '@/common/components/ui/loading';
+import AuthPrompt from '../../components/AuthPrompt';
 
 const formSchema = z.object({
     email: z.string().email({ message: 'Invalid email address.' }),
@@ -33,6 +36,8 @@ const formSchema = z.object({
 });
 
 export default function SignInForm() {
+    const [submmittingFormIsLoading, setSubmmittingFormIsLoading] =
+        useState<boolean>(false);
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -43,31 +48,39 @@ export default function SignInForm() {
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         const promise = () =>
-            new Promise(async (resolve) => {
-                await signIn('credentials', {
-                    email: values.email,
-                    password: values.password,
-                    redirect: true,
-                    callbackUrl: '/',
-                });
-                resolve(true);
+            new Promise(async (resolve, reject) => {
+                setSubmmittingFormIsLoading(true);
+                try {
+                    const signInResponse = await signIn('credentials', {
+                        email: values.email,
+                        password: values.password,
+                        redirect: true,
+                        callbackUrl: '/',
+                    });
+                    if (signInResponse?.error) {
+                        throw new Error('Unable to sign in');
+                    }
+                    resolve(true);
+                } catch (error) {
+                    reject();
+                } finally {
+                    setSubmmittingFormIsLoading(false);
+                }
             });
 
         toast.promise(promise, {
             loading: 'Loading...',
             success: () => {
                 form.reset();
-                return `${values.email} toast has been added`;
+                return `Hey welcome back dude!`;
             },
-            error: 'Error',
+            error: () => 'Unable to sign in',
         });
-
-        console.log(values);
     }
 
     return (
         <div className="grid place-items-center">
-            <div className="space-y-8 lg:w-1/2 ">
+            <div className="space-y-8 lg:max-w-lg max-w-[90%] w-full">
                 <div className="text-center">
                     <TitlePage>
                         Welcome <span className="animate-pulse">Back</span>
@@ -79,6 +92,7 @@ export default function SignInForm() {
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="space-y-8"
+                        data-aos="fade up"
                     >
                         <FormField
                             control={form.control}
@@ -119,9 +133,20 @@ export default function SignInForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full">
-                            Sign In
-                        </Button>
+                        {submmittingFormIsLoading ? (
+                            <Button
+                                type="submit"
+                                className="text-center w-full"
+                                disabled
+                                aria-disabled
+                            >
+                                <Loading /> Loading...
+                            </Button>
+                        ) : (
+                            <Button type="submit" className="w-full">
+                                Create Account
+                            </Button>
+                        )}
                     </form>
                 </Form>
 
@@ -140,12 +165,7 @@ export default function SignInForm() {
                     </Button>
                 </div>
 
-                <div className="text-center text-sm">
-                    Don't have any account?{' '}
-                    <Link href={'/auth/signup'} className="text-blue-500">
-                        Sign Up
-                    </Link>
-                </div>
+                <AuthPrompt variant="signup" />
             </div>
         </div>
     );

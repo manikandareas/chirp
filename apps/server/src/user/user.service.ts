@@ -1,23 +1,23 @@
 import {
+    BadRequestException,
     ConflictException,
-    Inject,
     Injectable,
     NotFoundException,
-    BadRequestException,
 } from '@nestjs/common';
-import { DrizzleAsyncProvider } from 'src/drizzle/drizzle.provider';
-import { LibSQLDatabase } from 'drizzle-orm/libsql';
-import * as schema from '../drizzle/schema';
+
+import * as schema from '@chirp/db';
 import { CreateUserDto, UpdateUserDto } from '@chirp/dto';
 import { hash } from 'bcrypt';
 import { eq } from 'drizzle-orm';
+import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { DrizzleService } from 'src/drizzle/drizzle.service';
 import { combinerName, nullishObjectChecker } from 'src/lib/utils';
 
 @Injectable()
 export class UserService {
-    constructor(
-        @Inject(DrizzleAsyncProvider) private db: LibSQLDatabase<typeof schema>
-    ) {}
+    constructor(private readonly drizzle: DrizzleService) {}
+
+    private readonly db: NeonHttpDatabase<typeof schema> = this.drizzle.getDb();
     /**
      * Registers a new user.
      *
@@ -27,19 +27,19 @@ export class UserService {
     async registerUser(createUserDto: CreateUserDto) {
         const user = await this.findByEmail(createUserDto.email);
 
-        if (user) throw new ConflictException('email duplicated');
+        if (user) throw new ConflictException('email already exist');
         // Combine first and last_name for name
-        const name = combinerName(
+        const fullName = combinerName(
             user,
             createUserDto.firstName,
             createUserDto.lastName
         );
-
         const createdUsers = await this.db
             .insert(schema.users)
             .values({
                 ...createUserDto,
-                name,
+                avatarUrl: `https://ui-avatars.com/api/?name=${fullName}`,
+                fullName,
                 password: await hash(createUserDto.password, 10),
             })
             .returning();
@@ -51,12 +51,58 @@ export class UserService {
         return createdUser;
     }
 
+    /**
+     * Checks the availability of a username and/or email.
+     *
+     * @param {string} username - The username to check.
+     * @param {string} email - The email to check.
+     * @return {Object} - Returns an object with a message indicating availability.
+     */
+    async checkAvailability(username?: string, email?: string) {
+        if (username) {
+            const usernameCheck = await this.findByUsername(username);
+            if (usernameCheck)
+                throw new ConflictException('Username already exist');
+        }
+        if (email) {
+            const emailCheck = await this.findByEmail(email);
+            if (emailCheck) throw new ConflictException('Email already exist');
+        }
+        return {
+            message: 'Available',
+        };
+    }
+
+    /**
+     * Finds a user by username.
+     *
+     * @param {string} username - The username of the user to find.
+     * @return {Promise<User | null>} - A promise that resolves to the found user or null if not found.
+     */
+    async findByUsername(username: string) {
+        return await this.db.query.users.findFirst({
+            where: (user, { eq }) => eq(user.username, username),
+        });
+    }
+
+    /**
+     * Finds a user by their email.
+     *
+     * @param {string} email - The email of the user.
+     * @return {Promise<User | null>} - A promise that resolves to the user object if found, otherwise null.
+     */
     async findByEmail(email: string) {
         return await this.db.query.users.findFirst({
             where: (user, { eq }) => eq(user.email, email),
         });
     }
 
+    /**
+     * Find a user by their ID.
+     *
+     * @param {string} id - The ID of the user to find.
+     * @return {Promise<User | null>} - A promise that resolves with the found user or null if not found.
+     */
     async findById(id: string) {
         return await this.db.query.users.findFirst({
             where: (user, { eq }) => eq(user.id, id),
@@ -79,7 +125,7 @@ export class UserService {
         if (!nullishObjectChecker(updateUserDto))
             throw new BadRequestException();
         // Combine first and last_name for name
-        const name = combinerName(
+        const fullName = combinerName(
             user,
             updateUserDto.firstName,
             updateUserDto.lastName
@@ -90,7 +136,7 @@ export class UserService {
             .set({
                 ...user,
                 ...updateUserDto,
-                name: name ? name : user.name,
+                fullName: fullName ? fullName : user.fullName,
             })
             .where(eq(schema.users.id, id))
             .returning();

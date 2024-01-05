@@ -4,6 +4,7 @@
       "outDir": "dist/",
       "jsx": "preserve",
       "esModuleInterop": true,
+      "skipLibCheck": true,
       "declaration": true,
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,

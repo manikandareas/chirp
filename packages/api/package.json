@@ -5,17 +5,27 @@
   "main": "dist/src/index.js",
   "types": "src/index.ts",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc -w"
+    "build": "tsc && tsc-alias",
+    "dev": "concurrently --kill-others \"tsc -w\" \"tsc-alias -w\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@chirp/db": "workspace:*",
+    "@chirp/dto": "workspace:*",
+    "@tanstack/react-query": "^5.15.5",
+    "@tanstack/react-query-devtools": "^5.15.5",
     "axios": "^1.6.2",
-    "@chirp/dto": "workspace:*"
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/react": "18",
+    "concurrently": "^8.2.1",
+    "tsc-alias": "^1.8.8",
+    "@types/react-dom": "^18",
+    "type-fest": "^4.9.0",
     "typescript": "5.1.3"
   }
 }

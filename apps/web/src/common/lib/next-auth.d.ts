@@ -1,35 +1,28 @@
-import NextAuth from "next-auth";
+import NextAuth from 'next-auth';
+import { InferSelectModel } from '@chirp/db/drizzle-orm';
+import * as schema from '@chirp/db';
 
-declare module "next-auth" {
+declare module 'next-auth' {
     interface Session {
-        user: {
-            id: string
-            email: string
-            name: string
-        }
+        user: User;
         backendTokens: {
-            accessToken: string
-            refreshToken: string
-            expiresIn: number
-        }
-       
-    }   
+            accessToken: string;
+            refreshToken: string;
+            expiresIn: number;
+        };
+    }
 }
 
-import { JWT } from "next-auth/jwt";
+import { JWT } from 'next-auth/jwt';
+import { User } from '../typings/user';
 
-declare module "next-auth/jwt" {
+declare module 'next-auth/jwt' {
     interface JWT {
-        user: {
-            id: string
-            email: string
-            name: string
-        }
+        user: User;
         backendTokens: {
-            accessToken: string
-            refreshToken: string
-            expiresIn: number
-        }
-        
+            accessToken: string;
+            refreshToken: string;
+            expiresIn: number;
+        };
     }
 }

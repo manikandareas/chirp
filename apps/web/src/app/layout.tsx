@@ -7,6 +7,9 @@ import { fontPoppins } from '@/common/lib/fonts';
 import { Toaster } from 'sonner';
 import { AOSInit } from '@/common/components/provider/AOSInit';
 import 'aos/dist/aos.css';
+import { AuthListener } from '@/common/components/provider/AuthListener';
+import ReactQueryProvider from '@/common/components/provider/ReactQueryProvider';
+import ApiClientProvider from '@/common/components/provider/ApiClientProvider';
 
 export const metadata: Metadata = {
     title: {
@@ -22,19 +25,28 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en">
-            <body className={cn(fontPoppins.className, 'antialiased')}>
+        <html
+            lang="en"
+            className={cn(fontPoppins.className, 'antialiased')}
+            suppressHydrationWarning
+        >
+            <body>
                 <AOSInit />
                 <AuthProvider>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        <Toaster richColors />
-                        {children}
-                    </ThemeProvider>
+                    <ApiClientProvider>
+                        <ReactQueryProvider>
+                            <AuthListener />
+                            <ThemeProvider
+                                attribute="class"
+                                defaultTheme="dark"
+                                enableSystem
+                                disableTransitionOnChange
+                            >
+                                <Toaster richColors position="bottom-center" />
+                                {children}
+                            </ThemeProvider>
+                        </ReactQueryProvider>
+                    </ApiClientProvider>
                 </AuthProvider>
             </body>
         </html>
