@@ -1,9 +1,13 @@
 import {
+  IsDateString,
   IsEmail,
   IsEnum,
+  IsLowercase,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
+  MaxLength,
   MinLength,
 } from "class-validator";
 
@@ -13,6 +17,7 @@ import {
  * firstName: Validates that the first name is not empty and is a string.
  * lastName: Validates that the last name is not empty and is a string.
  * username: Validates that the username is not empty and is a string.
+ * bio: Validates that the bio is an optional string.
  * dob: Validates that the date of birth is not empty and is a string.
  * email: Validates that the email is not empty and is a valid email format.
  * password: Validates that the password is not empty, is at least 8 characters long, and does not start or end with whitespace.
@@ -31,10 +36,21 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
+  @MinLength(4)
+  @IsLowercase()
+  @Matches(/^[a-z0-9_]+$/, {
+    message:
+      "username can only contain lowercase letters, numbers, underscores, and can not contain spaces, and symbols",
+  })
   username: string;
 
+  @IsOptional()
+  @MaxLength(150)
+  bio: string;
+
   @IsNotEmpty()
-  @IsString()
+  // @IsString()
+  @IsDateString()
   dob: string;
 
   @IsNotEmpty()
