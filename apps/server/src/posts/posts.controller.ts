@@ -14,9 +14,9 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiResponse } from 'src/typings/apiResponse';
+import { ApiResponse } from '~/typings/apiResponse';
 import { PostsService } from './posts.service';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { JwtGuard } from '~/auth/guards/jwt.guard';
 import { OwnerGuard } from './guard/owner.guard';
 
 @Controller('posts')
@@ -40,20 +40,17 @@ export class PostsController {
     @UseInterceptors(FilesInterceptor('images'))
     async create(
         @Body() createPostDto: CreatePostDto,
+        @Request() req,
         @UploadedFiles(
             new ParseFilePipeBuilder()
                 .addFileTypeValidator({ fileType: /(jpg|jpeg|png)$/ })
                 .addMaxSizeValidator({ maxSize: 1000000 })
                 .build({ fileIsRequired: false })
         )
-        images: Array<Express.Multer.File>,
-        @Request() req
+        images: Array<Express.Multer.File>
     ) {
-        const post = await this.postsService.create(
-            createPostDto,
-            req.user,
-            images
-        );
+        console.log(req);
+        const post = await this.postsService.create(createPostDto, req, images);
         return {
             statusCode: 201,
             data: post,

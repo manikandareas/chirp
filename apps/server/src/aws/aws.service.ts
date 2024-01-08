@@ -1,7 +1,7 @@
 import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Upload } from '@aws-sdk/lib-storage';
 import { Injectable } from '@nestjs/common';
-import { config } from 'src/config';
+import { config } from '~/config';
 
 @Injectable()
 export class AwsService {

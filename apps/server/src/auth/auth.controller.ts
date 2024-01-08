@@ -9,8 +9,8 @@ import {
     Request,
     UseGuards,
 } from '@nestjs/common';
-import { ApiResponse } from 'src/typings/apiResponse';
-import { UserService } from 'src/user/user.service';
+import { ApiResponse } from '~/typings/apiResponse';
+import { UserService } from '~/user/user.service';
 import { AuthService } from './auth.service';
 import { RefreshJwtGuard } from './guards/refresh.guard';
 

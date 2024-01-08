@@ -10,8 +10,8 @@ import { CreateUserDto, UpdateUserDto } from '@chirp/dto';
 import { hash } from 'bcrypt';
 import { eq } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { DrizzleService } from 'src/drizzle/drizzle.service';
-import { combinerName, nullishObjectChecker } from 'src/lib/utils';
+import { DrizzleService } from '~/drizzle/drizzle.service';
+import { combinerName, nullishObjectChecker } from '~/lib/utils';
 
 @Injectable()
 export class UserService {

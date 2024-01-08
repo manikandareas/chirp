@@ -1,9 +1,9 @@
 import { LoginDto } from '@chirp/dto';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare } from 'bcrypt';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '~/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { config } from 'src/config';
+import { config } from '~/config';
 
 const EXPIRE_TIME = 1000 * 60 * 60 * 5;
 

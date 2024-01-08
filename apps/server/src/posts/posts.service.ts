@@ -1,18 +1,20 @@
 import * as schema from '@chirp/db';
 import { CreatePostDto, UpdatePostDto } from '@chirp/dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { desc, eq } from 'drizzle-orm';
-import { AwsService } from 'src/aws/aws.service';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { DrizzleService } from 'src/drizzle/drizzle.service';
+import { AwsService } from '~/aws/aws.service';
+import { DrizzleService } from '~/drizzle/drizzle.service';
 
 @Injectable()
 export class PostsService {
+    private readonly db: NeonHttpDatabase<typeof schema>;
     constructor(
         private readonly drizzle: DrizzleService,
         private readonly awsService: AwsService
-    ) {}
-    private readonly db: NeonHttpDatabase<typeof schema> = this.drizzle.getDb();
+    ) {
+        this.db = this.drizzle.getDb();
+    }
     /**
      * Creates a new post with the given data and optional images.
      *
@@ -22,9 +24,13 @@ export class PostsService {
      */
     async create(
         createPostDto: CreatePostDto,
-        user: any,
+        req: any,
         images?: Array<Express.Multer.File>
     ) {
+        console.log(req.user);
+        if (!req.user) {
+            throw new UnauthorizedException();
+        }
         const createdPost = await this.db
             .insert(schema.posts)
             .values(createPostDto)
@@ -34,7 +40,7 @@ export class PostsService {
             for (const image of images) {
                 const uniqueKeyFileName = await this.generateUniqueKeyFile(
                     image.originalname,
-                    user.username
+                    req.user.username
                 );
                 const imageLocation = await this.awsService.uploadToS3(
                     uniqueKeyFileName,
