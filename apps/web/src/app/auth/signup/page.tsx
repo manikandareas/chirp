@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
-import ChirpPoster from '../components/ChirpPoster';
+
+import AuthChirpPoster from '../components/AuthChirpPoster';
 import AuthContainer from '../components/AuthContainer';
-import FormTabs from './components/FormTabs';
+import SignUpFormTabs from './components/SignUpFormTabs';
 
 export const metadata: Metadata = {
     title: 'Sign Up',
@@ -10,8 +11,8 @@ export const metadata: Metadata = {
 export default function SignUpPage() {
     return (
         <AuthContainer>
-            <FormTabs />
-            <ChirpPoster variants="right" />
+            <SignUpFormTabs />
+            <AuthChirpPoster variants="right" />
         </AuthContainer>
     );
 }

@@ -4,18 +4,31 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/common/components/ui/dropdown-menu';
+import { useAuthStore } from '@chirp/zustand';
 import { MoreHorizontal } from 'lucide-react';
+
+import { usePost } from './context/PostProvider';
 import PostRemoveModal from './PostRemoveModal';
-export default function PostOptions({ postId }: { postId: string }) {
+
+export default function PostOptions({
+    postId,
+    authorId,
+}: {
+    postId: string;
+    authorId: string;
+}) {
+    const { user } = useAuthStore();
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
                 <MoreHorizontal />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-                <DropdownMenuItem asChild>
-                    <PostRemoveModal id={postId} />
-                </DropdownMenuItem>
+                {user?.id === authorId ? (
+                    <DropdownMenuItem asChild>
+                        <PostRemoveModal postId={postId} />
+                    </DropdownMenuItem>
+                ) : null}
             </DropdownMenuContent>
         </DropdownMenu>
     );

@@ -1,4 +1,5 @@
 import { cn } from '@/common/lib/utils';
+
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 
 type UserAvatarProps = {
@@ -9,7 +10,7 @@ type UserAvatarProps = {
 
 export default function UserAvatar(props: UserAvatarProps) {
     return (
-        <Avatar>
+        <Avatar className={cn(props.className)}>
             <AvatarImage className={cn(props.className)} src={props.src} />
             <AvatarFallback>{props.fallback ?? '...'}</AvatarFallback>
         </Avatar>

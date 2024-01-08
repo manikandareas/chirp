@@ -1,13 +1,14 @@
 'use client';
+
+import { useRouter } from 'next/navigation';
 import { Button } from '@/common/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 export default function PostDetailNavbar() {
     const router = useRouter();
     return (
-        <header className="h-[53px] border-x w-full sticky top-0 bg-background/50 backdrop-blur-sm z-50 p-4">
-            <div className="flex text-neutral-200 h-full text-base items-center space-x-2">
+        <header className="sticky top-0 z-50 h-[53px] w-full border-x bg-background/50 p-4 backdrop-blur-sm">
+            <div className="flex h-full items-center space-x-2 text-base text-neutral-200">
                 <Button
                     variant={'ghost'}
                     size={'icon'}

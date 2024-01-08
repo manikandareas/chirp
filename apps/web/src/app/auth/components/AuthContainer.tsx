@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 
 export default function AuthContainer({ children }: PropsWithChildren) {
     return (
-        <main className="w-full h-screen grid md:grid-cols-2 relative bg-neutral-200 dark:bg-gradient-to-tr dark:from-neutral-900 dark:to-neutral-950 ">
+        <main className="relative grid h-screen w-full bg-neutral-200 md:grid-cols-2 dark:bg-gradient-to-tr dark:from-neutral-900 dark:to-neutral-950 ">
             {children}
         </main>
     );

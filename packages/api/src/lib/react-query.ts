@@ -1,6 +1,6 @@
-import { UseMutationOptions, UseQueryOptions } from "@tanstack/react-query";
-import { AxiosError, AxiosInstance, AxiosPromise } from "axios";
-import { AsyncReturnType } from "type-fest";
+import { UseMutationOptions, UseQueryOptions } from '@tanstack/react-query';
+import { AxiosError, AxiosInstance, AxiosPromise } from 'axios';
+import { AsyncReturnType } from 'type-fest';
 
 // const queryConfig: DefaultOptions = {
 //   queries: {
@@ -29,25 +29,25 @@ import { AsyncReturnType } from "type-fest";
 // });
 
 export type ExtractFnReturnType<FnType extends (...args: any) => any> =
-  AsyncReturnType<FnType>;
+    AsyncReturnType<FnType>;
 
 export type QueryConfig<QueryFnType extends (...args: any) => any> = Omit<
-  UseQueryOptions<ExtractFnReturnType<QueryFnType>>,
-  "queryKey" | "queryFn"
+    UseQueryOptions<ExtractFnReturnType<QueryFnType>>,
+    'queryKey' | 'queryFn'
 >;
 
 export type MutationConfig<MutationFnType extends (...args: any) => any> =
-  UseMutationOptions<
-    ExtractFnReturnType<MutationFnType>,
-    AxiosError,
-    Parameters<MutationFnType>[0]
-  >;
+    UseMutationOptions<
+        ExtractFnReturnType<MutationFnType>,
+        AxiosError,
+        Parameters<MutationFnType>[0]
+    >;
 
 export type ApiFnOptions = {
-  axios?: AxiosInstance;
+    axios?: AxiosInstance;
 };
 
 export type ApiFn<ParamsType, ResponseType extends AxiosPromise> = (
-  params: ParamsType,
-  config: ApiFnOptions
+    params: ParamsType,
+    config: ApiFnOptions,
 ) => ResponseType;

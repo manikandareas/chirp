@@ -2,7 +2,7 @@
 const nextConfig = {
     env: {
         NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || 'NEXTAUTH_SECRET',
-        BACKEND_URL: process.env.BACKEND_URL
+        BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:8000',
     },
     transpilePackages: ['@chirp/dto', '@chirp/api'],
     reactStrictMode: true,

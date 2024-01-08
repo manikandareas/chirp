@@ -7,19 +7,21 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/common/components/ui/dialog';
+import { useRemovePostMutation } from '@chirp/api';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { Trash2 } from 'lucide-react';
-import { Button } from '../../ui/button';
-import { useRemovePostMutation } from '@chirp/api';
-import { queryClient } from '../../provider/ReactQueryProvider';
 import { toast } from 'sonner';
-import Loading from '../../ui/loading';
 
-export default function PostRemoveModal({ id }: { id: string }) {
+import { queryClient } from '../../provider/ReactQueryProvider';
+import { Button } from '../../ui/button';
+import Loading from '../../ui/loading';
+import { usePost } from './context/PostProvider';
+
+export default function PostRemoveModal({ postId }: { postId: string }) {
     const { mutateAsync, isPending } = useRemovePostMutation({
         onError: () => {
             toast.error(
-                'Oops! Something went wrong. Unable to delete the post at the moment'
+                'Oops! Something went wrong. Unable to delete the post at the moment',
             );
         },
         onSuccess: () => {
@@ -31,11 +33,11 @@ export default function PostRemoveModal({ id }: { id: string }) {
     });
 
     const handleRemovePost = async () => {
-        await mutateAsync(id);
+        await mutateAsync(postId);
     };
     return (
         <Dialog>
-            <DialogTrigger className="group/delete  gap-2 flex items-center text-sm">
+            <DialogTrigger className="group/delete  flex items-center gap-2 text-sm">
                 <Trash2
                     size={18}
                     className="group-hover/delete:text-rose-500"

@@ -1,9 +1,12 @@
 'use client';
-import Image from 'next/image';
+
 import { useState } from 'react';
+import Image from 'next/image';
 import Lightbox from 'yet-another-react-lightbox';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+
 import 'yet-another-react-lightbox/styles.css';
+
 type Props = {
     images: {
         id?: number;
@@ -37,7 +40,7 @@ export default function PostDetailImage({ images }: Props) {
                           key={img.id}
                           src={img.url}
                           alt="image"
-                          className="max-w-[35.375rem] overflow-hidden rounded-lg object-cover cursor-zoom-in"
+                          className="max-w-[35.375rem] cursor-zoom-in overflow-hidden rounded-lg object-cover"
                           quality={100}
                           width={566}
                           height={566}
@@ -54,7 +57,7 @@ export default function PostDetailImage({ images }: Props) {
                             key={img.id}
                             src={img.url}
                             alt="image"
-                            className="max-w-[calc(100%/2-4px)] rounded-lg object-cover cursor-zoom-in"
+                            className="max-w-[calc(100%/2-4px)] cursor-zoom-in rounded-lg object-cover"
                             quality={100}
                             width={283}
                             height={283}
@@ -73,7 +76,7 @@ export default function PostDetailImage({ images }: Props) {
                                       key={img.id}
                                       src={img.url}
                                       alt="image"
-                                      className="max-w-[35.375rem] rounded-lg object-cover cursor-zoom-in"
+                                      className="max-w-[35.375rem] cursor-zoom-in rounded-lg object-cover"
                                       quality={100}
                                       width={566}
                                       height={566}
@@ -90,7 +93,7 @@ export default function PostDetailImage({ images }: Props) {
                                   key={img.id}
                                   src={img.url}
                                   alt="image"
-                                  className="max-w-[calc(100%/2-4px)] rounded-lg object-cover cursor-zoom-in"
+                                  className="max-w-[calc(100%/2-4px)] cursor-zoom-in rounded-lg object-cover"
                                   quality={100}
                                   width={283}
                                   height={283}
@@ -109,7 +112,7 @@ export default function PostDetailImage({ images }: Props) {
                                       key={img.id}
                                       src={img.url}
                                       alt="image"
-                                      className="rounded-lg object-cover cursor-zoom-in"
+                                      className="cursor-zoom-in rounded-lg object-cover"
                                       quality={100}
                                       width={566}
                                       height={566}
@@ -126,7 +129,7 @@ export default function PostDetailImage({ images }: Props) {
                                   key={img.id}
                                   src={img.url}
                                   alt="image"
-                                  className="max-w-[calc(100%/3-4px)] rounded-lg object-cover cursor-zoom-in"
+                                  className="max-w-[calc(100%/3-4px)] cursor-zoom-in rounded-lg object-cover"
                                   sizes="(max-width: calc(100%/3)) 100vw, calc(100%/3)"
                                   quality={100}
                                   width={188}

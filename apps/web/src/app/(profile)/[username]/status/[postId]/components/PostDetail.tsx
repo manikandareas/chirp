@@ -1,21 +1,19 @@
 'use client';
 
-import Link from 'next/link';
+import { PostLoading, PostOptions } from '@/common/components/elements/post';
 import UserAvatar from '@/common/components/elements/UserAvatar';
-import PostOptions from '@/common/components/elements/post/PostOptions';
-import PostLoading from '@/common/components/elements/post/PostLoading';
 
-import { usePostDetail } from '../context/PostDetailProvider';
+import { usePostDetailContext } from '../context/PostDetailProvider';
 import PostDetailImage from './PostDetailImages';
 
 export default function PostDetail() {
-    const { data } = usePostDetail();
+    const { data } = usePostDetailContext();
 
     if (!data) return <PostLoading />;
     return (
         <article className="flex flex-col gap-4 border-b p-4">
             <header className="flex justify-between">
-                <div className="flex gap-2 items-center leading-4">
+                <div className="flex items-center gap-2 leading-4">
                     <UserAvatar src={data.data.author.avatarUrl} />
                     <div>
                         <h1>{data.data.author.fullName}</h1>
@@ -26,11 +24,14 @@ export default function PostDetail() {
                 </div>
 
                 <div>
-                    <PostOptions postId={data.data.id} />
+                    <PostOptions
+                        authorId={data.data.author.id}
+                        postId={data.data.id}
+                    />
                 </div>
             </header>
             <main className="space-y-2">
-                <p className="text-neutral-200 text-sm">{data.data.content}</p>
+                <p className="text-sm text-neutral-200">{data.data.content}</p>
                 {data.data.images ? (
                     <PostDetailImage images={data.data.images} />
                 ) : null}

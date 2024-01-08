@@ -1,22 +1,22 @@
-import MainNavbar from '@/app/components/MainNavbar';
-import MainSidebar from '@/app/components/MainSidebar';
-import SidebarColumn from './SidebarColumn';
+import HomeAsideNavigation from '@/app/components/HomeAsideNavigation';
+
 import PostDetailNavbar from './PostDetailNavbar';
+import PostDetailSidebarColumn from './PostDetailSidebarColumn';
 
 type PostDetailLayoutProps = {
     children: React.ReactNode;
 };
 export default function PostDetailLayout(props: PostDetailLayoutProps) {
     return (
-        <div className={'w-full sm:max-w-7xl mx-auto '}>
-            <div className="flex relative lg:gap-4">
-                <MainSidebar />
-                <div className="sm:max-w-[37.5rem] w-full relative">
+        <div className={'mx-auto w-full sm:max-w-7xl '}>
+            <div className="relative flex lg:gap-4">
+                <HomeAsideNavigation />
+                <div className="relative w-full sm:max-w-[37.5rem]">
                     <PostDetailNavbar />
                     {props.children}
                 </div>
 
-                <SidebarColumn />
+                <PostDetailSidebarColumn />
             </div>
         </div>
     );
