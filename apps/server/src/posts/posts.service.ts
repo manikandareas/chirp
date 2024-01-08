@@ -1,6 +1,10 @@
 import * as schema from '@chirp/db';
 import { CreatePostDto, UpdatePostDto } from '@chirp/dto';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { desc, eq } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { AwsService } from '~/aws/aws.service';
@@ -96,8 +100,11 @@ export class PostsService {
      *
      * @param {string} id - The ID of the post to find.
      * @return {Promise} - A promise that resolves to the post data.
+     * @throws {NotFoundException} - If the post is not found.
      */
     async findOneById(id: string) {
+        this.validateId(id);
+
         const postDataById = await this.db.query.posts.findFirst({
             where: (posts, { eq }) => eq(posts.id, id),
             columns: {
@@ -122,6 +129,9 @@ export class PostsService {
             },
         });
 
+        if (!postDataById) {
+            throw new NotFoundException('Post Not Found');
+        }
         return postDataById;
     }
 
@@ -133,6 +143,8 @@ export class PostsService {
      * @return {Promise<any>} A promise that resolves to the updated post.
      */
     async update(id: string, updatePostDto: UpdatePostDto) {
+        this.validateId(id);
+
         const updatedPost = await this.db
             .update(schema.posts)
             .set(updatePostDto)
@@ -147,7 +159,9 @@ export class PostsService {
      * @param {string} id - The ID of the item to be removed.
      * @return {Promise<void>} - A promise that resolves when the item is successfully removed.
      */
-    async remove(id: string) {
+    async delete(id: string) {
+        this.validateId(id);
+
         const imageKeyToBeDeleted = await this.db.query.images.findMany({
             where: (image, { eq }) => eq(image.postId, id),
             columns: {
@@ -161,6 +175,16 @@ export class PostsService {
         ]);
 
         return { message: 'Delete Post Success!' };
+    }
+
+    validateId(id: string) {
+        const idPattern =
+            /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+        if (!idPattern.test(id)) {
+            throw new NotFoundException('Post Not Found');
+        }
+        return true;
     }
 
     /**

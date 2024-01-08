@@ -131,8 +131,8 @@ export class PostsController {
      */
     @UseGuards(JwtGuard, OwnerGuard)
     @Delete(':id')
-    async remove(@Param('id') id: string) {
-        const deletedPost = await this.postsService.remove(id);
+    async delete(@Param('id') id: string) {
+        const deletedPost = await this.postsService.delete(id);
         return {
             statusCode: 200,
             data: deletedPost,
