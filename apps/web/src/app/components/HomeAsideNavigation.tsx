@@ -29,7 +29,7 @@ export default function HomeAsideNavigation() {
                             key={menu.label}
                             href={menu.href}
                             className={cn(
-                                'flex items-center rounded-full px-3 py-3 text-xl font-thin text-white/80 hover:bg-neutral-900 sm:w-fit sm:gap-x-4 sm:px-4',
+                                'flex items-center rounded-full px-3 py-3 text-xl font-thin text-white/80 hover:bg-primary sm:w-fit sm:gap-x-4 sm:px-4',
                                 idx === 0 && menuActiveStyle,
                             )}
                         >

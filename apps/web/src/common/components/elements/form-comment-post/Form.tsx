@@ -1,56 +1,37 @@
-'use client';
-
-import { FormEvent } from 'react';
-import { useFormPost } from './context/FormPostProvider';
-import UserAvatar from '@/common/components/elements/UserAvatar';
-import { queryClient } from '@/common/components/provider/ReactQueryProvider';
-import { Button } from '@/common/components/ui/button';
-import Loading from '@/common/components/ui/loading';
-import { useCreatePostMutation } from '@chirp/api';
 import { useAuthStore } from '@chirp/zustand';
-import { toast } from 'sonner';
+import React, { FormEvent } from 'react';
+import {
+    FormPreviewImage,
+    FormRibbonMenu,
+    FormTextArea,
+    useFormCommentPostContext,
+} from '.';
+import UserAvatar from '../UserAvatar';
+import { Button } from '../../ui/button';
+import Loading from '../../ui/loading';
 
-import FormPreviewImage from './FormPreviewImage';
-import FormRibbonMenu from './FormRibbonMenu';
-import FormTextArea from './FormTextArea';
+type FormProps = {
+    onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+    isPending: boolean;
+    type: 'comment' | 'post';
+};
 
-export default function FormCreatePost() {
+const formVariants = {
+    comment: {
+        placeholder: 'Post your reply',
+        submit: ['Reply', 'Replying...'],
+    },
+    post: {
+        placeholder: "What's on your mind?",
+        submit: ['Post', 'Posting...'],
+    },
+} as const;
+
+const Form: React.FC<FormProps> = ({ isPending, onSubmit, type }) => {
     const user = useAuthStore((state) => state.user);
 
-    const {
-        filesInputState,
-        setFilesInputState,
-        filesURL,
-        contentState,
-        setContentState,
-    } = useFormPost();
-
-    const { mutateAsync, isPending } = useCreatePostMutation({
-        onSuccess: () => {
-            queryClient.invalidateQueries({
-                queryKey: ['posts'],
-            });
-            toast.success('Great! Your post has been successfully created.');
-        },
-        onError: () => {
-            toast.error(
-                'Oops! Unable to create post at the moment. Please review your content and try again. If issues persist, reach out to our support team. Thanks for your understanding!',
-            );
-        },
-        onSettled: () => {
-            setFilesInputState([]);
-            setContentState('');
-        },
-    });
-
-    const handlePostSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        await mutateAsync({
-            authorId: user?.id!,
-            content: contentState,
-            images: filesInputState,
-        });
-    };
+    const { filesInputState, setFilesInputState, filesURL } =
+        useFormCommentPostContext();
 
     const handlerRemoveMedia = (idx: number) => {
         const updatedInputFiles = filesInputState.filter(
@@ -74,9 +55,11 @@ export default function FormCreatePost() {
                         <form
                             className="grow space-y-2"
                             encType="multipart/form-data"
-                            onSubmit={handlePostSubmit}
+                            onSubmit={onSubmit}
                         >
-                            <FormTextArea />
+                            <FormTextArea
+                                placeholder={formVariants[type].placeholder}
+                            />
                             {filesURL.length > 0 ? (
                                 <FormPreviewImage
                                     previewSource={filesURL}
@@ -92,10 +75,11 @@ export default function FormCreatePost() {
                                         disabled={isPending}
                                     >
                                         {!isPending ? (
-                                            'Post'
+                                            formVariants[type].submit[0]
                                         ) : (
                                             <span className="flex items-center">
-                                                <Loading /> Uploading...
+                                                <Loading />
+                                                {formVariants[type].submit[1]}
                                             </span>
                                         )}
                                     </Button>
@@ -107,4 +91,6 @@ export default function FormCreatePost() {
             )}
         </>
     );
-}
+};
+
+export default Form;

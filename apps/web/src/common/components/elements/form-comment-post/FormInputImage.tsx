@@ -10,17 +10,16 @@ type InputImageProps = {
     filesURL: string[];
     setFilesURL: Dispatch<SetStateAction<string[]>>;
 };
-export default function InputImage(props: InputImageProps) {
+const FormInputImage: React.FC<InputImageProps> = (props) => {
     const handleInputFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) return;
 
-        if (!props.filesInputState) {
-            const files = [e.target.files[0]];
-            props.setFilesInputState(files);
-        } else {
-            const files = [...props.filesInputState, e.target.files[0]];
-            props.setFilesInputState(files);
+        let files = [...props.filesInputState, ...e.target.files];
+
+        if (files.length > 4) {
+            files = files.slice(0, 4);
         }
+        props.setFilesInputState(files);
     };
 
     useEffect(() => {
@@ -57,10 +56,12 @@ export default function InputImage(props: InputImageProps) {
                     id="filesInput"
                     name="filesInput"
                     accept="image/*"
+                    multiple
                     className="sr-only"
                     disabled={props.filesInputState.length === 4}
                 />
             </label>
         </div>
     );
-}
+};
+export default FormInputImage;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { ElementRef, useEffect, useRef, useState } from 'react';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { Smile } from 'lucide-react';
@@ -14,15 +14,26 @@ const InputEmoji = ({ onSelect }: InputEmojiProps<string>) => {
     const [showInputEmoji, setShowInputEmoji] = useState<boolean>(false);
 
     const handelInputEmoji = (e: any) => {
-        // const sym = e.unified.split('_');
-        // const codeArray: any = [];
-        // sym.forEach((el: any) => codeArray.push('0x' + el));
-
-        // let emoji = String.fromCodePoint(...codeArray);
         onSelect(e.native);
     };
+
+    const inputEmojiRef = useRef<ElementRef<'span'>>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (
+                inputEmojiRef.current &&
+                !inputEmojiRef.current.contains(e.target as Node)
+            ) {
+                setShowInputEmoji(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () =>
+            document.removeEventListener('mousedown', handleClickOutside);
+    }, [setShowInputEmoji]);
     return (
-        <>
+        <span ref={inputEmojiRef}>
             <button
                 type="button"
                 onClick={() => setShowInputEmoji(!showInputEmoji)}
@@ -45,7 +56,7 @@ const InputEmoji = ({ onSelect }: InputEmojiProps<string>) => {
                     />
                 </div>
             ) : null}
-        </>
+        </span>
     );
 };
 

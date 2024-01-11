@@ -1,7 +1,7 @@
-import { useFormPost } from './context/FormPostProvider';
+import { useFormCommentPostContext } from './context/FormCommentPostProvider';
 import InputEmoji from '@/common/components/elements/InputEmoji';
 
-import InputImage from './InputImage';
+import FormInputImage from './FormInputImage';
 
 export default function FormRibbonMenu() {
     const {
@@ -11,14 +11,14 @@ export default function FormRibbonMenu() {
         setFilesURL,
         setContentState,
         contentState,
-    } = useFormPost();
+    } = useFormCommentPostContext();
 
     const handelInputEmoji = (e: string) => {
         setContentState(contentState + e);
     };
     return (
         <div className="relative flex items-center space-x-2">
-            <InputImage
+            <FormInputImage
                 filesInputState={filesInputState}
                 setFilesInputState={setFilesInputState}
                 filesURL={filesURL}

@@ -9,7 +9,7 @@ export default function HomeNavbar() {
             <div className="flex h-full text-base text-muted-foreground">
                 <Link
                     href={'#'}
-                    className="grid grow  place-items-center hover:bg-neutral-900"
+                    className="grid grow  place-items-center hover:bg-primary/10"
                 >
                     <nav
                         className={cn(
@@ -23,7 +23,7 @@ export default function HomeNavbar() {
                 <Link
                     href={'#'}
                     aria-disabled={true}
-                    className="grid grow  place-items-center hover:bg-neutral-900"
+                    className="grid grow  place-items-center hover:bg-primary/10"
                 >
                     <nav className="grid h-full place-items-center">
                         Following

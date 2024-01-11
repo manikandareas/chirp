@@ -1,10 +1,14 @@
 'use client';
 
 import { ChangeEvent, useEffect } from 'react';
-import { useFormPost } from './context/FormPostProvider';
+import { useFormCommentPostContext } from './context/FormCommentPostProvider';
 
-export default function TextArea() {
-    const { contentState, setContentState, textAreaRef } = useFormPost();
+type FormTextAreaProps = {
+    placeholder: string;
+};
+const FormTextArea: React.FC<FormTextAreaProps> = ({ placeholder }) => {
+    const { contentState, setContentState, textAreaRef } =
+        useFormCommentPostContext();
     const handleTextAreaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setContentState(e.target.value);
     };
@@ -28,7 +32,8 @@ export default function TextArea() {
             id="content"
             value={contentState}
             onChange={handleTextAreaChange}
-            placeholder="What's on your mind?"
+            placeholder={placeholder}
         />
     );
-}
+};
+export default FormTextArea;
