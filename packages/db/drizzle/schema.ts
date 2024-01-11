@@ -1,7 +1,9 @@
 import { relations, sql } from 'drizzle-orm';
 import {
+    bigint,
     date,
     pgTable,
+    primaryKey,
     serial,
     text,
     timestamp,
@@ -21,7 +23,6 @@ export const users = pgTable('users', {
     lastName: text('last_name').notNull(),
 
     username: text('username').unique().notNull(),
-    bio: text('bio'),
 
     dob: date('day_of_birth').notNull(),
     email: text('email').unique().notNull(),
@@ -37,10 +38,6 @@ export const users = pgTable('users', {
 
 export type User = typeof users.$inferSelect;
 
-export const usersRelations = relations(users, ({ many }) => ({
-    posts: many(posts),
-}));
-
 export const posts = pgTable('posts', {
     id: uuid('id')
         .primaryKey()
@@ -49,20 +46,13 @@ export const posts = pgTable('posts', {
     authorId: uuid('author_id')
         .notNull()
         .references(() => users.id, { onDelete: 'cascade' }),
+    totalLikes: bigint('total_likes', { mode: 'number' }).default(0),
 
     createdAt,
     updatedAt,
 });
 
 export type Post = typeof posts.$inferSelect;
-
-export const postsRelations = relations(posts, ({ one, many }) => ({
-    author: one(users, {
-        fields: [posts.authorId],
-        references: [users.id],
-    }),
-    images: many(images),
-}));
 
 export const images = pgTable('images', {
     id: serial('id').primaryKey(),
@@ -77,9 +67,68 @@ export const images = pgTable('images', {
 
 export type PostImage = typeof images.$inferSelect;
 
+export const likes = pgTable(
+    'likes',
+    {
+        postId: uuid('post_id')
+            .notNull()
+            .references(() => posts.id, { onDelete: 'cascade' }),
+        userId: uuid('user_id')
+            .notNull()
+            .references(() => users.id, { onDelete: 'cascade' }),
+        createdAt,
+    },
+    (table) => {
+        return {
+            pk: primaryKey({
+                name: 'id',
+                columns: [table.postId, table.userId],
+            }),
+        };
+        // eslint-disable-next-line prettier/prettier
+    },
+);
+
+export type Like = typeof likes.$inferSelect;
+
+// ---------------------------------------------------------------------//
+
+/*
+ * Relations section starts here
+ */
+
+// Relations for users
+export const usersRelations = relations(users, ({ many }) => ({
+    posts: many(posts),
+    likes: many(likes),
+}));
+
+// Relations for posts
+export const postsRelations = relations(posts, ({ one, many }) => ({
+    author: one(users, {
+        fields: [posts.authorId],
+        references: [users.id],
+    }),
+    images: many(images),
+    likes: many(likes),
+}));
+
+// Relations for images
 export const imagesRelations = relations(images, ({ one }) => ({
     post: one(posts, {
         fields: [images.postId],
         references: [posts.id],
+    }),
+}));
+
+// Relations for likes
+export const likesRelations = relations(likes, ({ one }) => ({
+    post: one(posts, {
+        fields: [likes.postId],
+        references: [posts.id],
+    }),
+    author: one(users, {
+        fields: [likes.userId],
+        references: [users.id],
     }),
 }));

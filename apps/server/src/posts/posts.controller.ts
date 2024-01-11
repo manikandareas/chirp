@@ -14,12 +14,12 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiResponse } from 'src/typings/apiResponse';
-import { PostsService } from './posts.service';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { JwtGuard } from '~/auth/guards/jwt.guard';
+import { ApiResponse } from '~/typings/apiResponse';
 import { OwnerGuard } from './guard/owner.guard';
+import { PostsService } from './posts.service';
 
-@Controller('posts')
+@Controller()
 export class PostsController {
     constructor(private readonly postsService: PostsService) {}
 
@@ -40,20 +40,19 @@ export class PostsController {
     @UseInterceptors(FilesInterceptor('images'))
     async create(
         @Body() createPostDto: CreatePostDto,
+        @Request() req,
         @UploadedFiles(
             new ParseFilePipeBuilder()
-                .addFileTypeValidator({ fileType: /(jpg|jpeg|png)$/ })
+                .addFileTypeValidator({
+                    fileType: /(jpg|jpeg|png|svg|tiff|webp|gif)$/,
+                })
                 .addMaxSizeValidator({ maxSize: 1000000 })
                 .build({ fileIsRequired: false })
         )
-        images: Array<Express.Multer.File>,
-        @Request() req
+        images: Array<Express.Multer.File>
     ) {
-        const post = await this.postsService.create(
-            createPostDto,
-            req.user,
-            images
-        );
+        console.log(req.user);
+        const post = await this.postsService.create(createPostDto, req, images);
         return {
             statusCode: 201,
             data: post,
@@ -133,10 +132,10 @@ export class PostsController {
      * @throws {HttpException} - Throws an exception if an error occurs during the removal process.
      * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
      */
-    @UseGuards(JwtGuard, OwnerGuard)
+    // @UseGuards(JwtGuard, OwnerGuard)
     @Delete(':id')
-    async remove(@Param('id') id: string) {
-        const deletedPost = await this.postsService.remove(id);
+    async delete(@Param('id') id: string) {
+        const deletedPost = await this.postsService.delete(id);
         return {
             statusCode: 200,
             data: deletedPost,

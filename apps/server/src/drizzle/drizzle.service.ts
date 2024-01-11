@@ -1,7 +1,7 @@
 import { drizzle, NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { neon, neonConfig } from '@neondatabase/serverless';
 import { Injectable } from '@nestjs/common';
-import { config } from 'src/config';
+import { config } from '~/config';
 import * as schema from '@chirp/db';
 
 @Injectable()

@@ -1,6 +1,6 @@
 {
-  "id": "ed1785ae-9ab2-45c0-a584-b95c6e72ce4a",
-  "prevId": "b25a412d-53cc-4629-afe5-6162e2402aec",
+  "id": "26fca79a-935c-492d-807b-ccda27f72de0",
+  "prevId": "9ad30267-457c-416e-b807-cf423cbfcecc",
   "version": "5",
   "dialect": "pg",
   "tables": {
@@ -88,13 +88,6 @@
           "primaryKey": false,
           "notNull": false,
           "default": "CURRENT_TIMESTAMP"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "CURRENT_TIMESTAMP"
         }
       },
       "indexes": {},
@@ -162,9 +155,10 @@
         },
         "total_likes": {
           "name": "total_likes",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",

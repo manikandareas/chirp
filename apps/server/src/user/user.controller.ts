@@ -10,8 +10,8 @@ import {
     HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiResponse } from 'src/typings/apiResponse';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { ApiResponse } from '~/typings/apiResponse';
+import { JwtGuard } from '~/auth/guards/jwt.guard';
 import { UpdateUserDto } from '@chirp/dto';
 
 @UseGuards(JwtGuard)

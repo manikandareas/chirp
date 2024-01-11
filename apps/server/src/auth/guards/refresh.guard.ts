@@ -6,7 +6,7 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { config } from 'src/config';
+import { config } from '~/config';
 
 @Injectable()
 export class RefreshJwtGuard implements CanActivate {
