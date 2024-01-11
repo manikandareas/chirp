@@ -208,6 +208,7 @@ describe('PostsController', () => {
             createdAt: new Date(),
             updatedAt: new Date(),
             content: 'post content',
+            totalLikes: 0,
             images: [
                 {
                     id: 1,
@@ -261,6 +262,7 @@ describe('PostsController', () => {
                 id: '1',
                 createdAt: new Date(),
                 updatedAt: new Date(),
+                totalLikes: 0,
             },
         ];
 

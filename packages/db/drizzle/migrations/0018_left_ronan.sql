@@ -1,0 +1,1 @@
+ALTER TABLE "posts" ALTER COLUMN "total_likes" SET DATA TYPE bigint;
