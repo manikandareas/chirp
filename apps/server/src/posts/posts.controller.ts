@@ -43,7 +43,9 @@ export class PostsController {
         @Request() req,
         @UploadedFiles(
             new ParseFilePipeBuilder()
-                .addFileTypeValidator({ fileType: /(jpg|jpeg|png)$/ })
+                .addFileTypeValidator({
+                    fileType: /(jpg|jpeg|png|svg|tiff|webp|gif)$/,
+                })
                 .addMaxSizeValidator({ maxSize: 1000000 })
                 .build({ fileIsRequired: false })
         )

@@ -40,7 +40,8 @@ export class PostsService {
                 );
                 const imageLocation = await this.awsService.uploadToS3(
                     uniqueKeyFileName,
-                    image.buffer
+                    image.buffer,
+                    image.mimetype
                 );
                 await this.db.insert(schema.images).values({
                     url: imageLocation.Location,
