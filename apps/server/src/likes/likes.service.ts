@@ -1,5 +1,5 @@
 import * as schema from '@chirp/db';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { DrizzleService } from '~/drizzle/drizzle.service';
@@ -23,6 +23,7 @@ export class LikesService {
      * @return {Promise<object>} An object with a message indicating whether the post was liked or unliked.
      */
     async likePost(postId: string, userId) {
+        console.log('User ID want to like the post: ', userId);
         await this.postsService.findOneById(postId);
 
         // check if user already liked this post & get total likes
