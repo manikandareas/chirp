@@ -14,12 +14,12 @@ import {
     UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiResponse } from '~/typings/apiResponse';
-import { PostsService } from './posts.service';
 import { JwtGuard } from '~/auth/guards/jwt.guard';
+import { ApiResponse } from '~/typings/apiResponse';
 import { OwnerGuard } from './guard/owner.guard';
+import { PostsService } from './posts.service';
 
-@Controller('posts')
+@Controller()
 export class PostsController {
     constructor(private readonly postsService: PostsService) {}
 
@@ -49,7 +49,7 @@ export class PostsController {
         )
         images: Array<Express.Multer.File>
     ) {
-        console.log(req);
+        console.log(req.user);
         const post = await this.postsService.create(createPostDto, req, images);
         return {
             statusCode: 201,
@@ -129,7 +129,7 @@ export class PostsController {
      * @throws {HttpException} - Throws an exception if an error occurs during the removal process.
      * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
      */
-    @UseGuards(JwtGuard, OwnerGuard)
+    // @UseGuards(JwtGuard, OwnerGuard)
     @Delete(':id')
     async delete(@Param('id') id: string) {
         const deletedPost = await this.postsService.delete(id);

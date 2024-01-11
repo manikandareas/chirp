@@ -1,12 +1,14 @@
+import { relations, sql } from "drizzle-orm";
 import {
+  bigint,
   date,
   pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import { relations, sql } from "drizzle-orm";
 
 const createdAt = timestamp("created_at").default(sql`CURRENT_TIMESTAMP`);
 const updatedAt = timestamp("updated_at").default(sql`CURRENT_TIMESTAMP`);
@@ -36,10 +38,6 @@ export const users = pgTable("users", {
 
 export type User = typeof users.$inferSelect;
 
-export const usersRelations = relations(users, ({ many }) => ({
-  posts: many(posts),
-}));
-
 export const posts = pgTable("posts", {
   id: uuid("id")
     .primaryKey()
@@ -48,20 +46,13 @@ export const posts = pgTable("posts", {
   authorId: uuid("author_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  totalLikes: bigint("total_likes", { mode: "number" }).default(0),
 
   createdAt,
   updatedAt,
 });
 
 export type Post = typeof posts.$inferSelect;
-
-export const postsRelations = relations(posts, ({ one, many }) => ({
-  author: one(users, {
-    fields: [posts.authorId],
-    references: [users.id],
-  }),
-  images: many(images),
-}));
 
 export const images = pgTable("images", {
   id: serial("id").primaryKey(),
@@ -76,9 +67,64 @@ export const images = pgTable("images", {
 
 export type PostImage = typeof images.$inferSelect;
 
+export const likes = pgTable(
+  "likes",
+  {
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    postId: uuid("post_id")
+      .notNull()
+      .references(() => posts.id, { onDelete: "cascade" }),
+    createdAt,
+  },
+  (table) => {
+    return {
+      pk: primaryKey({
+        name: "id",
+        columns: [table.userId, table.postId],
+      }),
+    };
+    // eslint-disable-next-line prettier/prettier
+  }
+);
+
+export type Like = typeof likes.$inferSelect;
+
+// ---------------------------------------------------------------------//
+
+/*
+ * Relations section starts here
+ */
+
+export const usersRelations = relations(users, ({ many }) => ({
+  posts: many(posts),
+  likes: many(likes),
+}));
+
+export const postsRelations = relations(posts, ({ one, many }) => ({
+  author: one(users, {
+    fields: [posts.authorId],
+    references: [users.id],
+  }),
+  images: many(images),
+  likes: many(likes),
+}));
+
 export const imagesRelations = relations(images, ({ one }) => ({
   post: one(posts, {
     fields: [images.postId],
     references: [posts.id],
+  }),
+}));
+
+export const likesRelations = relations(likes, ({ one }) => ({
+  post: one(posts, {
+    fields: [likes.postId],
+    references: [posts.id],
+  }),
+  author: one(users, {
+    fields: [likes.userId],
+    references: [users.id],
   }),
 }));

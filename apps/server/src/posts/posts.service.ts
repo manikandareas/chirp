@@ -31,7 +31,6 @@ export class PostsService {
         req: any,
         images?: Array<Express.Multer.File>
     ) {
-        console.log(req.user);
         if (!req.user) {
             throw new UnauthorizedException();
         }
@@ -145,12 +144,15 @@ export class PostsService {
     async update(id: string, updatePostDto: UpdatePostDto) {
         this.validateId(id);
 
-        const updatedPost = await this.db
+        await this.db
             .update(schema.posts)
             .set(updatePostDto)
             .where(eq(schema.posts.id, id))
             .returning();
-        return updatedPost;
+
+        return {
+            message: 'Update Post Success!',
+        };
     }
 
     /**
@@ -177,6 +179,12 @@ export class PostsService {
         return { message: 'Delete Post Success!' };
     }
 
+    /**
+     * Validates an ID against a specific pattern.
+     *
+     * @param {string} id - The ID to be validated.
+     * @return {boolean} Returns true if the ID is valid.
+     */
     validateId(id: string) {
         const idPattern =
             /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
