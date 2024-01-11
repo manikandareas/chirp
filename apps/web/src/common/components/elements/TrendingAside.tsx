@@ -4,7 +4,7 @@ import { MoreHorizontal } from 'lucide-react';
 
 export default function TrendingAside() {
     return (
-        <main className="h-full w-full overflow-hidden rounded-2xl bg-primary-foreground">
+        <main className="h-full w-full overflow-hidden rounded-2xl bg-secondary">
             <h1 className="p-4 text-xl font-semibold">Trends for you</h1>
 
             <div>
@@ -12,7 +12,7 @@ export default function TrendingAside() {
                     <Link
                         key={item.content}
                         href={'#'}
-                        className="flex px-4 py-2 hover:bg-neutral-800"
+                        className="flex px-4 py-2 hover:bg-primary"
                     >
                         <div className="flex-1">
                             <p className="text-sm text-muted-foreground">
@@ -34,7 +34,7 @@ export default function TrendingAside() {
                 ))}
                 <Link
                     href={'#'}
-                    className="flex p-4 text-sm text-sky-600 hover:bg-neutral-800 "
+                    className="flex p-4 text-sm text-neutral-300 hover:bg-primary "
                 >
                     Show more
                 </Link>

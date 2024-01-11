@@ -87,7 +87,7 @@ export default function FormCreatePost() {
                                 <FormRibbonMenu />
                                 <div>
                                     <Button
-                                        className="rounded-full bg-sky-500 font-semibold text-white hover:bg-sky-600"
+                                        className="rounded-full bg-primary font-semibold text-white hover:bg-primary/90"
                                         type="submit"
                                         disabled={isPending}
                                     >

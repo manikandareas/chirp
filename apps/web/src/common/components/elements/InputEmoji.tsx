@@ -26,10 +26,10 @@ const InputEmoji = ({ onSelect }: InputEmojiProps<string>) => {
             <button
                 type="button"
                 onClick={() => setShowInputEmoji(!showInputEmoji)}
-                className="rounded-full p-2 hover:bg-sky-500/10"
+                className="rounded-full p-2 hover:bg-primary/10"
                 title="Emoji"
             >
-                <Smile size={20} className="text-sky-500" />
+                <Smile size={20} className="text-primary" />
             </button>
             {showInputEmoji ? (
                 <div className="absolute left-1/2 top-full z-50">

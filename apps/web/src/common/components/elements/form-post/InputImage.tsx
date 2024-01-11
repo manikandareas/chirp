@@ -37,7 +37,7 @@ export default function InputImage(props: InputImageProps) {
                 htmlFor="filesInput"
                 title="Media"
                 className={cn(
-                    'cursor-pointer rounded-full p-2 group-hover/inputFiles:bg-sky-500/10',
+                    'cursor-pointer rounded-full p-2 group-hover/inputFiles:bg-primary/10',
                     {
                         'cursor-not-allowed group-hover/inputFiles:bg-neutral-400/10':
                             props.filesInputState.length === 4,
@@ -47,7 +47,7 @@ export default function InputImage(props: InputImageProps) {
             >
                 <ImageIcon
                     size={20}
-                    className={cn('text-sky-500', {
+                    className={cn('text-primary', {
                         'text-neutral-400': props.filesInputState.length === 4,
                     })}
                 />

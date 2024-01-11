@@ -39,10 +39,10 @@ export default function HomeAsideNavigation() {
                             </span>
                         </Link>
                     ))}
-                    <button className="hidden rounded-full bg-sky-500 p-3 text-white hover:bg-sky-400 xl:block xl:w-[90%]">
+                    <button className="hidden rounded-full bg-primary p-3 text-white hover:bg-primary/90 xl:block xl:w-[90%]">
                         Post
                     </button>
-                    <button className="w-fit rounded-full bg-sky-500 p-2 text-white hover:bg-sky-400 xl:hidden">
+                    <button className="w-fit rounded-full bg-primary p-2 text-white hover:bg-primary/90 xl:hidden">
                         <LiaFeatherSolid size={24} />
                     </button>
                 </div>

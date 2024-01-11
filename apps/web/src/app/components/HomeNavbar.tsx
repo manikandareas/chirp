@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { cn } from '@/common/lib/utils';
 
 export default function HomeNavbar() {
-    const activStyle = 'border-b-4 border-sky-500 text-white';
+    const activStyle = 'border-b-4 border-primary text-white';
 
     return (
         <header className="sticky top-0 z-50 h-[53px] w-full border bg-background/50 backdrop-blur-sm">

@@ -8,9 +8,7 @@ import {
     TabsTrigger,
 } from '@/common/components/ui/tabs';
 import { registerUser } from '@chirp/api';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
-import { useForm } from 'react-hook-form';
 import { TbMinusVertical } from 'react-icons/tb';
 import { toast } from 'sonner';
 import * as z from 'zod';

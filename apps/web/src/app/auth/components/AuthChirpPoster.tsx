@@ -49,7 +49,7 @@ export default function ChirpPoster(props: ChirpPosterProps) {
                         buttonVariants({
                             size: 'icon',
                             className:
-                                'bg-sky-400 hover:bg-sky-400/90 hover:text-white/90',
+                                'bg-primary hover:bg-primary/90 hover:text-white/90',
                         }),
                         'rounded-full ',
                     )}
