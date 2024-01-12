@@ -1,17 +1,25 @@
 import * as schema from '@chirp/db';
 import { CreatePostDto, UpdatePostDto } from '@chirp/dto';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    Inject,
+    Injectable,
+    NotFoundException,
+    forwardRef,
+} from '@nestjs/common';
 import { desc, eq } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { AwsService } from '~/aws/aws.service';
 import { DrizzleService } from '~/drizzle/drizzle.service';
+import { LikesService } from '~/likes/likes.service';
 
 @Injectable()
 export class PostsService {
     private readonly db: NeonHttpDatabase<typeof schema>;
     constructor(
         private readonly drizzle: DrizzleService,
-        private readonly awsService: AwsService
+        private readonly awsService: AwsService,
+        @Inject(forwardRef(() => LikesService))
+        private readonly likesService: LikesService
     ) {
         this.db = this.drizzle.getDb();
     }
@@ -19,6 +27,7 @@ export class PostsService {
      * Creates a new post with the given data and optional images.
      *
      * @param {CreatePostDto} createPostDto - The data for creating the post.
+     * @param {any} req - The user object from the request.
      * @param {Express.Multer.File} images - Optional images to be uploaded with the post.
      * @return {Promise<{ createdPost: any, imageUploaded?: any }>} - A promise that resolves to an object containing the created post and optionally the uploaded image.
      */
@@ -58,9 +67,10 @@ export class PostsService {
     /**
      * Retrieves all posts from the database sorted from newest by date updated.
      *
+     * @param {string} userId - The ID of the user.
      * @return {Promise<Post[]>} An array of post objects.
      */
-    async findAll() {
+    async findAll(userId: string) {
         const posts = await this.db.query.posts.findMany({
             columns: {
                 authorId: false,
@@ -81,21 +91,36 @@ export class PostsService {
                         avatarUrl: true,
                     },
                 },
+                likes: {
+                    where: (likes, { eq }) => eq(likes.userId, userId),
+                    columns: {
+                        userId: true,
+                    },
+                },
             },
             orderBy: [desc(schema.posts.updatedAt)],
         });
 
-        return posts;
+        // likes not include
+        return posts.map(({ likes, ...post }) => {
+            return {
+                ...post,
+                isUserLiked: !!likes.length,
+            };
+        });
     }
 
     /**
      * Finds a post by its ID.
+     * If the user is authenticated, it also checks if the user has liked the post.
+     * If the user is not authenticated, it does not check if the user has liked the post.
      *
      * @param {string} id - The ID of the post to find.
+     * @param {string} userId - The ID of the user (optional).
      * @return {Promise} - A promise that resolves to the post data.
      * @throws {NotFoundException} - If the post is not found.
      */
-    async findOneById(id: string) {
+    async findOneById(id: string, userId?: string) {
         this.validateId(id);
 
         const postDataById = await this.db.query.posts.findFirst({
@@ -119,13 +144,24 @@ export class PostsService {
                         avatarUrl: true,
                     },
                 },
+                likes: {
+                    where: (likes, { eq }) => eq(likes.userId, userId),
+                    columns: {
+                        userId: true,
+                    },
+                },
             },
         });
 
         if (!postDataById) {
             throw new NotFoundException('Post Not Found');
         }
-        return postDataById;
+
+        // return postDataById with isUserLiked;
+        return {
+            ...postDataById,
+            isUserLiked: !!postDataById.likes.length,
+        };
     }
 
     /**

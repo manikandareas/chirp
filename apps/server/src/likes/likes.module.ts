@@ -9,5 +9,6 @@ import { JwtModule } from '@nestjs/jwt';
     imports: [forwardRef(() => PostsModule), JwtModule],
     controllers: [LikesController],
     providers: [LikesService, DrizzleService],
+    exports: [LikesService],
 })
 export class LikesModule {}
