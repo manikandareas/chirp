@@ -8,8 +8,9 @@ import PopupInformationForUser from '../PopupInformationForUser';
 import UserAvatar from '../UserAvatar';
 import PostImage from './PostImages';
 import PostOptions from './PostOptions';
+import PostActions from './PostActions';
 
-type PostProps = {
+export type PostProps = {
     post: PostPromise['data'];
 };
 export default function Post(props: PostProps) {
@@ -55,8 +56,8 @@ export default function Post(props: PostProps) {
                     ) : null}
                 </Link>
             </main>
-            <footer>
-                <div></div>
+            <footer className="flex items-center justify-between">
+                <PostActions post={props.post} />
                 <div className="w-full text-right text-xs text-muted-foreground ">
                     <time>{relativeDate}</time>
                 </div>

@@ -8,9 +8,10 @@ import { useApiClient } from '../../providers';
 export type PostPromise = {
     data: {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         content: string;
-        createdAt: string;
-        updatedAt: string;
+        totalLikes: number;
         images: {
             id: number;
             createdAt: string;
