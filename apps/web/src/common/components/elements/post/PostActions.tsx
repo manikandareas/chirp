@@ -12,6 +12,7 @@ const ICON_SIZE = 18;
 
 const PostActions: React.FC<PostActionsProps> = (props) => {
     const { likes, onLikePress, isUserLiked } = useLikeService(props.post);
+    console.log({ isUserLiked });
     return (
         <div className="flex items-center gap-1.5">
             {/* Likes */}
@@ -22,14 +23,13 @@ const PostActions: React.FC<PostActionsProps> = (props) => {
             >
                 <i
                     className={cn(
-                        'rounded-full p-1.5 group-hover/like:bg-rose-500/20',
-                        { 'bg-rose-500/20': isUserLiked },
+                        ' rounded-full p-1.5 group-hover/like:bg-rose-500/20',
                     )}
                 >
                     <Heart
                         size={ICON_SIZE}
-                        className={cn('group-hover/like:text-rose-500', {
-                            'text-rose-500': isUserLiked,
+                        className={cn(' group-hover/like:text-rose-500', {
+                            'fill-rose-500 text-rose-500': isUserLiked,
                         })}
                     />
                 </i>

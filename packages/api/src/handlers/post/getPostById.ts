@@ -7,6 +7,7 @@ import { useApiClient } from '../../providers';
 
 export type PostPromise = {
     data: {
+        isUserLiked: boolean;
         id: string;
         createdAt: Date;
         updatedAt: Date;
