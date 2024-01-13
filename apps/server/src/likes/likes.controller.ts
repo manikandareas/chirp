@@ -20,7 +20,7 @@ export class LikesController {
     @UseGuards(JwtGuard)
     @Post(':postId')
     async likePost(@Param('postId') postId: string, @Request() req) {
-        const like = await this.likesService.likePost(postId, req.user.id);
+        const like = await this.likesService.likePost(postId, req.user);
         return {
             statusCode: 201,
             data: like,

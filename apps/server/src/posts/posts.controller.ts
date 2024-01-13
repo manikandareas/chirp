@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { JwtGuard } from '~/auth/guards/jwt.guard';
+import { OptionalJwtGuard } from '~/auth/guards/optional-jwt.guard';
 import { ApiResponse } from '~/typings/apiResponse';
 import { OwnerGuard } from './guard/owner.guard';
 import { PostsService } from './posts.service';
@@ -51,7 +52,7 @@ export class PostsController {
         )
         images: Array<Express.Multer.File>
     ) {
-        console.log(req.user);
+        console.log('User', req.user, 'want to create a new post');
         const post = await this.postsService.create(createPostDto, req, images);
         return {
             statusCode: 201,
@@ -64,15 +65,16 @@ export class PostsController {
      * Secures this endpoint using JwtGuard for authentication.
      *
      * @method GET
+     * @param {any} req - The user object from the request.
      * @returns {Promise<{ statusCode: number, data: any[] }>} - A response object with HTTP status code and an array of post data.
      * @throws {HttpException} - Throws an exception if an error occurs during the retrieval process.
      * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
      */
     @UseGuards(JwtGuard)
     @Get()
-    async findAll() {
-        const postsData = await this.postsService.findAll();
-
+    async findAll(@Request() req) {
+        console.log('User: ', req.user, 'want to get all posts');
+        const postsData = await this.postsService.findAll(req.user.id);
         return {
             statusCode: 200,
             data: postsData,
@@ -81,15 +83,26 @@ export class PostsController {
 
     /**
      * Retrieves post data by its ID.
+     * Secures this endpoint using OptionalJwtGuard for authentication.
+     * If the user is not authenticated, the isUserLiked field will be false.
+     * If the user is authenticated, the isUserLiked field will be true if the user has liked the post.
      *
      * @method GET
      * @param {string} id - The ID of the post to be retrieved.
+     * @param {any} req - The user object from the request.
      * @returns {Promise<{ statusCode: number, data: any }>} - A response object with HTTP status code and the post data.
      * @throws {HttpException} - Throws an exception if an error occurs during the retrieval process.
      */
+    @UseGuards(OptionalJwtGuard)
     @Get(':id')
-    async findOneById(@Param('id') id: string) {
-        const postDataById = await this.postsService.findOneById(id);
+    async findOneById(@Param('id') id: string, @Request() req) {
+        console.log('User:', req.user, `want to get post: ${id}`);
+        // return postDataById with isUserLiked but not likes data;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { likes, ...postDataById } = await this.postsService.findOneById(
+            id,
+            req.user?.id
+        );
         return {
             statusCode: 200,
             data: postDataById,
@@ -132,7 +145,7 @@ export class PostsController {
      * @throws {HttpException} - Throws an exception if an error occurs during the removal process.
      * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
      */
-    // @UseGuards(JwtGuard, OwnerGuard)
+    @UseGuards(JwtGuard, OwnerGuard)
     @Delete(':id')
     async delete(@Param('id') id: string) {
         const deletedPost = await this.postsService.delete(id);
