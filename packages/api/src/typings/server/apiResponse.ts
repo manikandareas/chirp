@@ -1,4 +1,4 @@
 export type ApiResponse = {
-  statusCode: number;
-  data: any;
+    statusCode: number;
+    data: any;
 };

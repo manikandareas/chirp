@@ -2,15 +2,15 @@ import { SearchIcon } from 'lucide-react';
 
 export default function SearchBar() {
     return (
-        <header className="h-[53px] w-full sticky top-0 bg-background backdrop-blur-sm grid place-items-center ">
-            <div className="relative px-4 py-3 rounded-full border grid place-items-center bg-secondary w-full">
+        <header className="sticky top-0 grid h-[53px] w-full place-items-center bg-background backdrop-blur-sm ">
+            <div className="relative grid w-full place-items-center rounded-full border bg-secondary px-4 py-3">
                 <SearchIcon
-                    className="absolute top-1/2 -translate-y-1/2 left-5 text-primary"
+                    className="absolute left-5 top-1/2 -translate-y-1/2 text-primary"
                     size={18}
                 />
                 <input
                     type="search"
-                    className="bg-transparent border-none w-[80%] text-sm outline-none px-2"
+                    className="w-[80%] border-none bg-transparent px-2 text-sm outline-none"
                 />
             </div>
         </header>

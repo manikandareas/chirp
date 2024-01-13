@@ -1,27 +1,25 @@
-import Layout from './components/Layout';
-import FormCreatePost from './components/form-post/FormCreatePost';
-import { FormPostProvider } from './context/FormPostProvider';
-import PostFeed from './components/PostFeed';
 import { Suspense } from 'react';
+import {
+    FormCreatePost,
+    FormCommentPostProvider,
+} from '@/common/components/elements/form-comment-post';
 import PostLoading from '@/common/components/elements/post/PostLoading';
+import Container from '@/common/components/ui/Container';
 
-export default function Home() {
+import HomeLayout from './components/HomeLayout';
+import HomeTimeline from './components/HomeTimeline';
+
+export default function HomePage() {
     return (
-        <Layout>
-            <main className="border-x overflow-clip">
-                <FormPostProvider>
+        <HomeLayout>
+            <Container>
+                <FormCommentPostProvider>
                     <FormCreatePost />
-                </FormPostProvider>
-                <Suspense
-                    fallback={Array(6)
-                        .fill(0)
-                        .map((_, idx) => (
-                            <PostLoading key={idx} />
-                        ))}
-                >
-                    <PostFeed />
+                </FormCommentPostProvider>
+                <Suspense fallback={<PostLoading.Many />}>
+                    <HomeTimeline />
                 </Suspense>
-            </main>
-        </Layout>
+            </Container>
+        </HomeLayout>
     );
 }

@@ -1,7 +1,7 @@
 import { drizzle } from 'drizzle-orm/libsql';
 import { createClient } from '@libsql/client';
 import * as schema from '@chirp/db';
-import { config } from 'src/config';
+import { config } from '~/config';
 
 /**
  * Provider key used for dependency injection to provide the Drizzle ORM instance asynchronously.

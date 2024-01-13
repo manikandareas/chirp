@@ -27,6 +27,12 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+ "ts-node": {
+  "compilerOptions": {
+    "module": "ES2015",
+    "moduleResolution": "Node"
+  }
+ },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "cypress"],
   "exclude": ["node_modules"]
 }

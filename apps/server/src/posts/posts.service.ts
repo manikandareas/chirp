@@ -1,28 +1,39 @@
 import * as schema from '@chirp/db';
 import { CreatePostDto, UpdatePostDto } from '@chirp/dto';
-import { Injectable } from '@nestjs/common';
+import {
+    Inject,
+    Injectable,
+    NotFoundException,
+    forwardRef,
+} from '@nestjs/common';
 import { desc, eq } from 'drizzle-orm';
-import { AwsService } from 'src/aws/aws.service';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { DrizzleService } from 'src/drizzle/drizzle.service';
+import { AwsService } from '~/aws/aws.service';
+import { DrizzleService } from '~/drizzle/drizzle.service';
+import { LikesService } from '~/likes/likes.service';
 
 @Injectable()
 export class PostsService {
+    private readonly db: NeonHttpDatabase<typeof schema>;
     constructor(
         private readonly drizzle: DrizzleService,
-        private readonly awsService: AwsService
-    ) {}
-    private readonly db: NeonHttpDatabase<typeof schema> = this.drizzle.getDb();
+        private readonly awsService: AwsService,
+        @Inject(forwardRef(() => LikesService))
+        private readonly likesService: LikesService
+    ) {
+        this.db = this.drizzle.getDb();
+    }
     /**
      * Creates a new post with the given data and optional images.
      *
      * @param {CreatePostDto} createPostDto - The data for creating the post.
+     * @param {any} req - The user object from the request.
      * @param {Express.Multer.File} images - Optional images to be uploaded with the post.
      * @return {Promise<{ createdPost: any, imageUploaded?: any }>} - A promise that resolves to an object containing the created post and optionally the uploaded image.
      */
     async create(
         createPostDto: CreatePostDto,
-        user: any,
+        req: any,
         images?: Array<Express.Multer.File>
     ) {
         const createdPost = await this.db
@@ -34,11 +45,12 @@ export class PostsService {
             for (const image of images) {
                 const uniqueKeyFileName = await this.generateUniqueKeyFile(
                     image.originalname,
-                    user.username
+                    req.user.username
                 );
                 const imageLocation = await this.awsService.uploadToS3(
                     uniqueKeyFileName,
-                    image.buffer
+                    image.buffer,
+                    image.mimetype
                 );
                 await this.db.insert(schema.images).values({
                     url: imageLocation.Location,
@@ -55,9 +67,10 @@ export class PostsService {
     /**
      * Retrieves all posts from the database sorted from newest by date updated.
      *
+     * @param {string} userId - The ID of the user.
      * @return {Promise<Post[]>} An array of post objects.
      */
-    async findAll() {
+    async findAll(userId: string) {
         const posts = await this.db.query.posts.findMany({
             columns: {
                 authorId: false,
@@ -78,20 +91,38 @@ export class PostsService {
                         avatarUrl: true,
                     },
                 },
+                likes: {
+                    where: (likes, { eq }) => eq(likes.userId, userId),
+                    columns: {
+                        userId: true,
+                    },
+                },
             },
             orderBy: [desc(schema.posts.updatedAt)],
         });
 
-        return posts;
+        // likes not include
+        return posts.map(({ likes, ...post }) => {
+            return {
+                ...post,
+                isUserLiked: !!likes.length,
+            };
+        });
     }
 
     /**
      * Finds a post by its ID.
+     * If the user is authenticated, it also checks if the user has liked the post.
+     * If the user is not authenticated, it does not check if the user has liked the post.
      *
      * @param {string} id - The ID of the post to find.
+     * @param {string} userId - The ID of the user (optional).
      * @return {Promise} - A promise that resolves to the post data.
+     * @throws {NotFoundException} - If the post is not found.
      */
-    async findOneById(id: string) {
+    async findOneById(id: string, userId?: string) {
+        this.validateId(id);
+
         const postDataById = await this.db.query.posts.findFirst({
             where: (posts, { eq }) => eq(posts.id, id),
             columns: {
@@ -113,10 +144,24 @@ export class PostsService {
                         avatarUrl: true,
                     },
                 },
+                likes: {
+                    where: (likes, { eq }) => eq(likes.userId, userId),
+                    columns: {
+                        userId: true,
+                    },
+                },
             },
         });
 
-        return postDataById;
+        if (!postDataById) {
+            throw new NotFoundException('Post Not Found');
+        }
+
+        // return postDataById with isUserLiked;
+        return {
+            ...postDataById,
+            isUserLiked: !!postDataById.likes.length,
+        };
     }
 
     /**
@@ -127,12 +172,17 @@ export class PostsService {
      * @return {Promise<any>} A promise that resolves to the updated post.
      */
     async update(id: string, updatePostDto: UpdatePostDto) {
-        const updatedPost = await this.db
+        this.validateId(id);
+
+        await this.db
             .update(schema.posts)
             .set(updatePostDto)
             .where(eq(schema.posts.id, id))
             .returning();
-        return updatedPost;
+
+        return {
+            message: 'Update Post Success!',
+        };
     }
 
     /**
@@ -141,7 +191,9 @@ export class PostsService {
      * @param {string} id - The ID of the item to be removed.
      * @return {Promise<void>} - A promise that resolves when the item is successfully removed.
      */
-    async remove(id: string) {
+    async delete(id: string) {
+        this.validateId(id);
+
         const imageKeyToBeDeleted = await this.db.query.images.findMany({
             where: (image, { eq }) => eq(image.postId, id),
             columns: {
@@ -155,6 +207,22 @@ export class PostsService {
         ]);
 
         return { message: 'Delete Post Success!' };
+    }
+
+    /**
+     * Validates an ID against a specific pattern.
+     *
+     * @param {string} id - The ID to be validated.
+     * @return {boolean} Returns true if the ID is valid.
+     */
+    validateId(id: string) {
+        const idPattern =
+            /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+        if (!idPattern.test(id)) {
+            throw new NotFoundException('Post Not Found');
+        }
+        return true;
     }
 
     /**

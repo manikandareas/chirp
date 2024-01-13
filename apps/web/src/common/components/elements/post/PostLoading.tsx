@@ -33,3 +33,17 @@ export default function PostLoading() {
         </article>
     );
 }
+
+const PostsLoading: React.FC<{ length?: number }> = ({ length = 6 }) => {
+    return (
+        <>
+            {Array(length)
+                .fill(0)
+                .map((_, idx) => (
+                    <PostLoading key={idx} />
+                ))}
+        </>
+    );
+};
+
+PostLoading.Many = PostsLoading;

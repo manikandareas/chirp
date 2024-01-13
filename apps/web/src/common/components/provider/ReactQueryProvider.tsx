@@ -6,7 +6,13 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 type ReactQueryProviderProps = {
     children: React.ReactNode;
 };
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 5000,
+        },
+    },
+});
 
 const ReactQueryProvider: React.FC<ReactQueryProviderProps> = ({
     children,

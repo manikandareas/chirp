@@ -1,15 +1,19 @@
 import type { Metadata } from 'next';
+
 import './globals.css';
+
+import { AOSInit } from '@/common/components/provider/AOSInit';
 import AuthProvider from '@/common/components/provider/AuthProvider';
 import { ThemeProvider } from '@/common/components/provider/ThemeProvider';
-import { cn } from '@/common/lib/utils';
 import { fontPoppins } from '@/common/lib/fonts';
+import { cn } from '@/common/lib/utils';
 import { Toaster } from 'sonner';
-import { AOSInit } from '@/common/components/provider/AOSInit';
+
 import 'aos/dist/aos.css';
+
+import ApiClientProvider from '@/common/components/provider/ApiClientProvider';
 import { AuthListener } from '@/common/components/provider/AuthListener';
 import ReactQueryProvider from '@/common/components/provider/ReactQueryProvider';
-import ApiClientProvider from '@/common/components/provider/ApiClientProvider';
 
 export const metadata: Metadata = {
     title: {

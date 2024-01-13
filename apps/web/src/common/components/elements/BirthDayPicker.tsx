@@ -1,6 +1,14 @@
 'use client';
 
 import React from 'react';
+import { Button } from '@/common/components/ui/button';
+import { CustomCalendar } from '@/common/components/ui/custom-calendar';
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/common/components/ui/popover';
+import { cn } from '@/common/lib/utils';
 import { createCalendar, getLocalTimeZone } from '@internationalized/date';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
@@ -19,16 +27,6 @@ import {
     type DatePickerStateOptions,
     type DateSegment,
 } from 'react-stately';
-
-import { cn } from '@/common/lib/utils';
-
-import { Button } from '@/common/components/ui/button';
-import { CustomCalendar } from '@/common/components/ui/custom-calendar';
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from '@/common/components/ui/popover';
 
 /* -------------------------------------------------------------------------------------------------
  * DatePicker
@@ -58,7 +56,7 @@ export function CustomDatePicker({
     const { groupProps, fieldProps, calendarProps } = useDatePicker(
         props,
         state,
-        ref
+        ref,
     );
 
     // Don't focus DateField on click
@@ -77,7 +75,7 @@ export function CustomDatePicker({
                             variant="outline"
                             className={cn(
                                 'w-[280px] justify-start text-left font-normal',
-                                !date && 'text-muted-foreground'
+                                !date && 'text-muted-foreground',
                             )}
                         >
                             <CalendarIcon className="mr-2 h-4 w-4" />

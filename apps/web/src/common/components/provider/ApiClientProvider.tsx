@@ -1,7 +1,9 @@
 'use client';
+
+import React from 'react';
 import { AxiosManager } from '@/common/lib/axios';
 import { ApiClientProvider as ApiClientProviderDefault } from '@chirp/api';
-import React from 'react';
+
 export default function ApiClientProvider({
     children,
 }: {

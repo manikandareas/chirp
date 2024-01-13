@@ -1,3 +1,11 @@
+import Container from '@/common/components/ui/Container';
+
+import ProfileLayout from './components/ProfileLayout';
+
 export default function ProfilePage() {
-    return <h1>Profile Page</h1>;
+    return (
+        <ProfileLayout>
+            <Container>Profile Page</Container>
+        </ProfileLayout>
+    );
 }
