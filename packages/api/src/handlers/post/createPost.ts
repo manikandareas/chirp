@@ -1,39 +1,44 @@
-import { useMutation } from "@tanstack/react-query";
-import { ApiFn, MutationConfig } from "../../lib";
-import { CreatePostDto } from "@chirp/dto";
-import defaultAxios, { AxiosPromise } from "axios";
-import type { InferSelectModel } from "@chirp/db/drizzle-orm";
-import { users } from "@chirp/db";
-import { useApiClient } from "../../providers/ApiClientProvider";
+import { CreatePostDto } from '@chirp/dto';
+import { useMutation } from '@tanstack/react-query';
+import defaultAxios, { AxiosPromise } from 'axios';
 
-export type Post = Omit<InferSelectModel<typeof users>, "password">;
+import { ApiFn, MutationConfig } from '../../lib';
+import { useApiClient } from '../../providers/ApiClientProvider';
 
-type CreatePostDtoWithImage = CreatePostDto & {
-  images: (File | Blob | MediaSource)[];
+export type PostResponse = {
+    statusCode: number;
 };
 
-export const createPost: ApiFn<CreatePostDtoWithImage, AxiosPromise<Post>> = (
-  createPostDTO,
-  { axios = defaultAxios }
-) => {
-  const formData = new FormData();
+type CreatePostDtoWithImage = CreatePostDto & {
+    images: (File | Blob | MediaSource)[];
+};
 
-  formData.append("authorId", createPostDTO.authorId);
-  formData.append("content", createPostDTO.content);
-  formData.append("images", createPostDTO.images[0] as File);
+export const createPost: ApiFn<
+    CreatePostDtoWithImage,
+    AxiosPromise<PostResponse>
+> = (createPostDTO, { axios = defaultAxios }) => {
+    const formData = new FormData();
 
-  return axios.post("/posts", formData);
+    formData.append('authorId', createPostDTO.authorId);
+    formData.append('content', createPostDTO.content);
+
+    createPostDTO.images.forEach((image) => {
+        formData.append('images', image as File);
+    });
+
+    return axios.post('/posts', formData);
 };
 
 type MutationFnType = typeof createPost;
 
 export const useCreatePostMutation = (
-  config: MutationConfig<MutationFnType> = {}
+    config: MutationConfig<MutationFnType> = {},
 ) => {
-  const { axios } = useApiClient();
+    const { axios } = useApiClient();
 
-  return useMutation({
-    mutationFn: (body: CreatePostDtoWithImage) => createPost(body, { axios }),
-    ...config,
-  });
+    return useMutation({
+        mutationFn: (body: CreatePostDtoWithImage) =>
+            createPost(body, { axios }),
+        ...config,
+    });
 };

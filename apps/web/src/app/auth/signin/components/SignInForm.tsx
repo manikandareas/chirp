@@ -1,11 +1,7 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
-import { FcGoogle } from 'react-icons/fc';
-import { SiGithub } from 'react-icons/si';
-
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/common/components/ui/button';
 import {
     Form,
@@ -17,23 +13,20 @@ import {
     FormMessage,
 } from '@/common/components/ui/form';
 import { Input } from '@/common/components/ui/input';
-
-import TitlePage from '../../components/TitlePage';
-import { toast } from 'sonner';
-import { Separator } from '@/common/components/ui/separator';
-import { signIn } from 'next-auth/react';
-import Link from 'next/link';
-import SubTitlePage from '../../components/SubTitlePage';
-import { useState } from 'react';
 import Loading from '@/common/components/ui/loading';
-import AuthPrompt from '../../components/AuthPrompt';
+import { Separator } from '@/common/components/ui/separator';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
+import { useForm } from 'react-hook-form';
+import { FcGoogle } from 'react-icons/fc';
+import { SiGithub } from 'react-icons/si';
+import { toast } from 'sonner';
+import * as z from 'zod';
 
-const formSchema = z.object({
-    email: z.string().email({ message: 'Invalid email address.' }),
-    password: z
-        .string()
-        .min(8, { message: 'Password must be at least 8 characters.' }),
-});
+import AuthPrompt from '../../components/AuthPrompt';
+import AuthSubTitlePage from '../../components/AuthSubTitlePage';
+import AuthTitlePage from '../../components/AuthTitlePage';
+import { formSchema } from '../form/signin';
 
 export default function SignInForm() {
     const [submmittingFormIsLoading, setSubmmittingFormIsLoading] =
@@ -46,21 +39,23 @@ export default function SignInForm() {
         },
     });
 
+    const router = useRouter();
+
     function onSubmit(values: z.infer<typeof formSchema>) {
         const promise = () =>
             new Promise(async (resolve, reject) => {
                 setSubmmittingFormIsLoading(true);
                 try {
-                    const signInResponse = await signIn('credentials', {
+                    const signInRes = await signIn('credentials', {
                         email: values.email,
                         password: values.password,
-                        redirect: true,
-                        callbackUrl: '/',
+                        redirect: false,
                     });
-                    if (signInResponse?.error) {
+                    if (!signInRes?.ok) {
                         throw new Error('Unable to sign in');
                     }
                     resolve(true);
+                    router.replace('/');
                 } catch (error) {
                     reject();
                 } finally {
@@ -80,12 +75,14 @@ export default function SignInForm() {
 
     return (
         <div className="grid place-items-center">
-            <div className="space-y-8 lg:max-w-lg max-w-[90%] w-full">
+            <div className="w-full max-w-[90%] space-y-8 lg:max-w-lg">
                 <div className="text-center">
-                    <TitlePage>
+                    <AuthTitlePage>
                         Welcome <span className="animate-pulse">Back</span>
-                    </TitlePage>
-                    <SubTitlePage>Please enter your details.</SubTitlePage>
+                    </AuthTitlePage>
+                    <AuthSubTitlePage>
+                        Please enter your details.
+                    </AuthSubTitlePage>
                 </div>
 
                 <Form {...form}>
@@ -103,6 +100,7 @@ export default function SignInForm() {
                                     <FormControl>
                                         <Input
                                             placeholder="johnDoe@mail.com"
+                                            data-testid="input-email"
                                             {...field}
                                         />
                                     </FormControl>
@@ -123,6 +121,7 @@ export default function SignInForm() {
                                         <Input
                                             placeholder="********"
                                             type="password"
+                                            data-testid="input-password"
                                             {...field}
                                         />
                                     </FormControl>
@@ -136,27 +135,31 @@ export default function SignInForm() {
                         {submmittingFormIsLoading ? (
                             <Button
                                 type="submit"
-                                className="text-center w-full"
+                                className="w-full text-center"
                                 disabled
                                 aria-disabled
                             >
                                 <Loading /> Loading...
                             </Button>
                         ) : (
-                            <Button type="submit" className="w-full">
-                                Create Account
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                data-testid="button-signin"
+                            >
+                                Sign In
                             </Button>
                         )}
                     </form>
                 </Form>
 
-                <div className="flex items-center mx-auto">
+                <div className="mx-auto flex items-center">
                     <Separator className="flex-1" />
                     <span>or</span>
                     <Separator className="flex-1" />
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-2 justify-around">
+                <div className="flex flex-col justify-around gap-2 md:flex-row">
                     <Button className="space-x-2" variant={'secondary'}>
                         <FcGoogle size={20} /> <span>Continue with Google</span>
                     </Button>

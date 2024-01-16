@@ -1,8 +1,8 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useAuthStore } from '@chirp/zustand';
 import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
 
 export const AuthListener = () => {
     const { onSignInSuccess, onSignOutSuccess } = useAuthStore((state) => ({

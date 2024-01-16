@@ -17,7 +17,7 @@ export class AxiosManager {
     }
 
     private async authRequestInterceptor(
-        axiosConfig: InternalAxiosRequestConfig
+        axiosConfig: InternalAxiosRequestConfig,
     ) {
         const token = useAuthStore.getState().backendTokens?.accessToken;
 

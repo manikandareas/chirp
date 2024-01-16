@@ -34,7 +34,6 @@ export class UsersService {
             createUserDto.firstName,
             createUserDto.lastName
         );
-        console.log({ createUserDto });
         const createdUsers = await this.db
             .insert(schema.users)
             .values({

@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '@/common/lib/utils';
 import {
     createCalendar,
     getLocalTimeZone,
@@ -21,8 +22,6 @@ import {
     type CalendarState,
     type CalendarStateOptions,
 } from 'react-stately';
-
-import { cn } from '@/common/lib/utils';
 
 import { Button } from './button';
 
@@ -109,7 +108,7 @@ function CalendarGrid({ state, ...props }: CalendarGridProps) {
                                     />
                                 ) : (
                                     <td key={i} />
-                                )
+                                ),
                             )}
                     </tr>
                 ))}
@@ -155,9 +154,9 @@ function CalendarCell({ state, date }: CalendarCellProps) {
                             isSelected,
                         'bg-accent text-accent-foreground': isToday(
                             date,
-                            getLocalTimeZone()
+                            getLocalTimeZone(),
                         ),
-                    }
+                    },
                 )}
             >
                 {formattedDate}
