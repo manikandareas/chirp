@@ -1,5 +1,5 @@
 import { PostsService } from '../posts.service';
-import { OwnerGuard } from '../guard/owner.guard';
+import { OwnerGuard } from '../../auth/guards/owner.guard';
 
 describe('OwnerGuard', () => {
     let postsService: PostsService;

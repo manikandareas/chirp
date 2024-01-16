@@ -8,13 +8,13 @@ import {
 import * as schema from '@chirp/db';
 import { CreateUserDto, UpdateUserDto } from '@chirp/dto';
 import { hash } from 'bcrypt';
-import { eq } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { DrizzleService } from '~/drizzle/drizzle.service';
 import { combinerName, nullishObjectChecker } from '~/lib/utils';
 
 @Injectable()
-export class UserService {
+export class UsersService {
     constructor(private readonly drizzle: DrizzleService) {}
 
     private readonly db: NeonHttpDatabase<typeof schema> = this.drizzle.getDb();
@@ -82,7 +82,49 @@ export class UserService {
     async findByUsername(username: string) {
         return await this.db.query.users.findFirst({
             where: (user, { eq }) => eq(user.username, username),
+            columns: {
+                password: false,
+            },
         });
+    }
+
+    async findByUsernameWithPosts(username: string, userId: string) {
+        const userWithPosts = await this.db.query.users.findFirst({
+            where: (user, { eq }) => eq(user.username, username),
+            columns: {
+                password: false,
+            },
+            with: {
+                posts: {
+                    columns: {
+                        authorId: false,
+                    },
+                    with: {
+                        images: true,
+                        likes: {
+                            where: (likes, { eq }) => eq(likes.userId, userId),
+                            columns: {
+                                userId: true,
+                            },
+                        },
+                    },
+                    orderBy: [desc(schema.posts.updatedAt)],
+                },
+            },
+        });
+
+        // add isUserLiked field
+        userWithPosts.posts = userWithPosts.posts.map((post) => {
+            const isUserLiked = post.likes.length > 0;
+            // delete likes field
+            delete post.likes;
+            return {
+                ...post,
+                isUserLiked,
+            };
+        });
+
+        return userWithPosts;
     }
 
     /**
@@ -106,6 +148,9 @@ export class UserService {
     async findById(id: string) {
         return await this.db.query.users.findFirst({
             where: (user, { eq }) => eq(user.id, id),
+            columns: {
+                password: false,
+            },
         });
     }
 
@@ -136,6 +181,7 @@ export class UserService {
             .set({
                 ...user,
                 ...updateUserDto,
+                updatedAt: new Date(),
                 fullName: fullName ? fullName : user.fullName,
             })
             .where(eq(schema.users.id, id))
@@ -165,5 +211,26 @@ export class UserService {
 
         await this.db.delete(schema.users).where(eq(schema.users.id, user.id));
         return;
+    }
+
+    /**
+     * Check if the requested user is a valid requesting user.
+     *
+     * @param {string} requestedProfileId - The ID of the user requested.
+     * @param {any} requestingUserid - The user id of the requesting user.
+     * @return {Promise<boolean>} A promise that resolves to a boolean indicating if the user is the owner of the post.
+     */
+    async isUserOwner(
+        requestedProfileId: string,
+        requestingUserid
+    ): Promise<boolean> {
+        const requestedId = await this.db.query.users.findFirst({
+            where: (users, { eq }) => eq(users.id, requestedProfileId),
+            columns: {
+                id: true,
+            },
+        });
+
+        return requestedId.id === requestingUserid.id;
     }
 }
