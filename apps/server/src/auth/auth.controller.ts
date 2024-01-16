@@ -10,7 +10,7 @@ import {
     UseGuards,
 } from '@nestjs/common';
 import { ApiResponse } from '~/typings/apiResponse';
-import { UserService } from '~/user/user.service';
+import { UsersService } from '~/users/users.service';
 import { AuthService } from './auth.service';
 import { RefreshJwtGuard } from './guards/refresh.guard';
 
@@ -18,7 +18,7 @@ import { RefreshJwtGuard } from './guards/refresh.guard';
 export class AuthController {
     constructor(
         private readonly authService: AuthService,
-        private readonly userService: UserService
+        private readonly usersService: UsersService
     ) {}
 
     @Post('register')
@@ -29,7 +29,7 @@ export class AuthController {
 +     * @return {Promise<ApiResponse<typeof user>>} The response object containing the status code and data of the created user.
 +     */
     async registerUser(@Body() createUserDto: CreateUserDto) {
-        const user = await this.userService.registerUser(createUserDto);
+        const user = await this.usersService.registerUser(createUserDto);
         return {
             statusCode: HttpStatus.CREATED,
             data: user,
@@ -48,7 +48,7 @@ export class AuthController {
         @Query('username') username: string,
         @Query('email') email: string
     ) {
-        const user = await this.userService.checkAvailability(username, email);
+        const user = await this.usersService.checkAvailability(username, email);
         return {
             statusCode: HttpStatus.OK,
             data: user,

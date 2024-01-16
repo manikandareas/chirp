@@ -1,7 +1,7 @@
 import { LoginDto } from '@chirp/dto';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { compare } from 'bcrypt';
-import { UserService } from '~/user/user.service';
+import { UsersService } from '~/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { config } from '~/config';
 
@@ -12,11 +12,11 @@ export class AuthService {
     /**
      * Constructor for the class.
      *
-     * @param {UserService} userService - The user service.
+     * @param {UsersService} usersService - The user service.
      * @param {JwtService} jwtService - The JWT service.
      */
     constructor(
-        private readonly userService: UserService,
+        private readonly usersService: UsersService,
         private readonly jwtService: JwtService
     ) {}
 
@@ -63,7 +63,7 @@ export class AuthService {
      * @throws {UnauthorizedException} - Throws an UnauthorizedException if the credentials are invalid.
      */
     async validateUser(loginDto: LoginDto) {
-        const user = await this.userService.findByEmail(loginDto.email);
+        const user = await this.usersService.findByEmail(loginDto.email);
         if (user && (await compare(loginDto.password, user.password))) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { password: _, ...result } = user;

@@ -176,7 +176,7 @@ export class PostsService {
 
         await this.db
             .update(schema.posts)
-            .set(updatePostDto)
+            .set({ updatedAt: new Date(), content: updatePostDto.content })
             .where(eq(schema.posts.id, id))
             .returning();
 
@@ -275,8 +275,8 @@ export class PostsService {
      * @param {any} user - The user object.
      * @return {Promise<boolean>} A promise that resolves to a boolean indicating if the user is the owner of the post.
      */
-    async isOwner(id: string, user): Promise<boolean> {
-        const ownerPost = await this.db.query.posts
+    async isOwnerPost(id: string, user): Promise<boolean> {
+        const requestedPostId = await this.db.query.posts
             .findFirst({
                 where: (posts, { eq }) => eq(posts.id, id),
                 columns: {
@@ -285,13 +285,13 @@ export class PostsService {
                 with: {
                     author: {
                         columns: {
-                            username: true,
+                            id: true,
                         },
                     },
                 },
             })
-            .then((post) => post?.author.username);
+            .then((post) => post?.author.id);
 
-        return ownerPost === user.username;
+        return requestedPostId === user.id;
     }
 }
