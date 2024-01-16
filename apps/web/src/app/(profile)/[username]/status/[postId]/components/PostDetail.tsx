@@ -1,12 +1,12 @@
 'use client';
 
 import { PostLoading, PostOptions } from '@/common/components/elements/post';
+import PostActions from '@/common/components/elements/post/PostActions';
 import UserAvatar from '@/common/components/elements/UserAvatar';
+import { intlFormatDistance } from 'date-fns';
 
 import { usePostDetailContext } from '../context/PostDetailProvider';
 import PostDetailImage from './PostDetailImages';
-import PostActions from '@/common/components/elements/post/PostActions';
-import { intlFormatDistance } from 'date-fns';
 
 export default function PostDetail() {
     const { data } = usePostDetailContext();

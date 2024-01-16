@@ -16,10 +16,10 @@ import * as z from 'zod';
 import AuthPrompt from '../../components/AuthPrompt';
 import AuthSubTitlePage from '../../components/AuthSubTitlePage';
 import AuthTitlePage from '../../components/AuthTitlePage';
+import { useSignUpFormContext } from '../context/SignUpFormProvider';
 import { profileSchema } from '../form/profile';
 import SignUpFormAccount from './SignUpFormAccount';
 import SignUpFormProfile from './SignUpFormProfile';
-import { useSignUpFormContext } from '../context/SignUpFormProvider';
 
 export type TTabsValue = 'account' | 'profile';
 

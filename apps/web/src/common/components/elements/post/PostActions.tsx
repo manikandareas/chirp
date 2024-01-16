@@ -1,8 +1,9 @@
-import { Heart, MessageCircle } from 'lucide-react';
 import React from 'react';
+import { cn } from '@/common/lib/utils';
+import { Heart, MessageCircle } from 'lucide-react';
+
 import { PostProps } from './Post';
 import { useLikeService } from './services/likeService';
-import { cn } from '@/common/lib/utils';
 
 type PostActionsProps = {
     post: PostProps['post'];

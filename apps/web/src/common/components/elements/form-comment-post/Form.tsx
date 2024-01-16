@@ -1,14 +1,15 @@
-import { useAuthStore } from '@chirp/zustand';
 import React, { FormEvent } from 'react';
+import { useAuthStore } from '@chirp/zustand';
+
 import {
     FormPreviewImage,
     FormRibbonMenu,
     FormTextArea,
     useFormCommentPostContext,
 } from '.';
-import UserAvatar from '../UserAvatar';
 import { Button } from '../../ui/button';
 import Loading from '../../ui/loading';
+import UserAvatar from '../UserAvatar';
 
 type FormProps = {
     onSubmit: (e: FormEvent<HTMLFormElement>) => void;
@@ -35,7 +36,7 @@ const Form: React.FC<FormProps> = ({ isPending, onSubmit, type }) => {
 
     const handlerRemoveMedia = (idx: number) => {
         const updatedInputFiles = filesInputState.filter(
-            (_, id, __) => id !== idx,
+            (_, id) => id !== idx,
         );
         setFilesInputState(updatedInputFiles);
     };

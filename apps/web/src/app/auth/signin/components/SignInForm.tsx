@@ -6,7 +6,6 @@ import { Button } from '@/common/components/ui/button';
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -43,19 +42,20 @@ export default function SignInForm() {
 
     function onSubmit(values: z.infer<typeof formSchema>) {
         const promise = () =>
-            new Promise(async (resolve, reject) => {
+            new Promise((resolve, reject) => {
                 setSubmmittingFormIsLoading(true);
                 try {
-                    const signInRes = await signIn('credentials', {
+                    signIn('credentials', {
                         email: values.email,
                         password: values.password,
                         redirect: false,
+                    }).then((res) => {
+                        if (!res?.ok) {
+                            throw new Error('Unable to sign in');
+                        }
+                        resolve(true);
+                        router.replace('/');
                     });
-                    if (!signInRes?.ok) {
-                        throw new Error('Unable to sign in');
-                    }
-                    resolve(true);
-                    router.replace('/');
                 } catch (error) {
                     reject();
                 } finally {
