@@ -1,8 +1,10 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { PostProps } from '../Post';
-import { useLikePostMutation } from '@chirp/api';
+
+import { useEffect, useState } from 'react';
 import { queryClient } from '@/common/components/provider/ReactQueryProvider';
+import { useLikePostMutation } from '@chirp/api';
+
+import { PostProps } from '../Post';
 
 export const useLikeService = (post: PostProps['post']) => {
     const [likes, setLikes] = useState<number>(post.totalLikes);

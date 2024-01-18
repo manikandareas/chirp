@@ -6,7 +6,7 @@ import {
     NotFoundException,
     forwardRef,
 } from '@nestjs/common';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, and, isNull } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { AwsService } from '~/aws/aws.service';
 import { DrizzleService } from '~/drizzle/drizzle.service';
@@ -97,6 +97,42 @@ export class PostsService {
                         userId: true,
                     },
                 },
+                comments: {
+                    orderBy: [desc(schema.comments.createdAt)],
+                    columns: {
+                        id: true,
+                        message: true,
+                        parentId: true,
+                        createdAt: true,
+                        updatedAt: true,
+                    },
+                    with: {
+                        author: {
+                            columns: {
+                                id: true,
+                                username: true,
+                                avatarUrl: true,
+                            },
+                        },
+                        replies: {
+                            columns: {
+                                id: true,
+                                message: true,
+                                parentId: true,
+                                createdAt: true,
+                                updatedAt: true,
+                                author: {
+                                    columns: {
+                                        id: true,
+                                        username: true,
+                                        avatarUrl: true,
+                                    },
+                                },
+                            },
+                            orderBy: [desc(schema.comments.createdAt)],
+                        },
+                    },
+                },
             },
             orderBy: [desc(schema.posts.updatedAt)],
         });
@@ -148,6 +184,25 @@ export class PostsService {
                     where: (likes, { eq }) => eq(likes.userId, userId),
                     columns: {
                         userId: true,
+                    },
+                },
+                comments: {
+                    orderBy: [desc(schema.comments.createdAt)],
+                    columns: {
+                        id: true,
+                        message: true,
+                        parentId: true,
+                        createdAt: true,
+                        updatedAt: true,
+                    },
+                    with: {
+                        author: {
+                            columns: {
+                                id: true,
+                                username: true,
+                                avatarUrl: true,
+                            },
+                        },
                     },
                 },
             },
@@ -290,8 +345,7 @@ export class PostsService {
                     },
                 },
             })
-            .then((post) => post?.author.id);
-
+            .then((post) => post?.authorId);
         return requestedPostId === user.id;
     }
 }

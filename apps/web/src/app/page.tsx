@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import {
-    FormCreatePost,
     FormCommentPostProvider,
+    FormCreatePost,
 } from '@/common/components/elements/form-comment-post';
 import PostLoading from '@/common/components/elements/post/PostLoading';
 import Container from '@/common/components/ui/Container';

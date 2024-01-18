@@ -6,9 +6,9 @@ import { intlFormatDistance } from 'date-fns';
 
 import PopupInformationForUser from '../PopupInformationForUser';
 import UserAvatar from '../UserAvatar';
+import PostActions from './PostActions';
 import PostImage from './PostImages';
 import PostOptions from './PostOptions';
-import PostActions from './PostActions';
 
 export type PostProps = {
     post: PostPromise['data'];
