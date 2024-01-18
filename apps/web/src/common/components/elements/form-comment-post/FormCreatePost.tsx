@@ -40,7 +40,7 @@ export default function FormCreatePost() {
     const handlePostSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         await mutateAsync({
-            authorId: user?.id!,
+            authorId: user?.id as unknown as string,
             content: contentState,
             images: filesInputState,
         });

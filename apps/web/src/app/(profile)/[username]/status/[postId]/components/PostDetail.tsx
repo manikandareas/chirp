@@ -30,10 +30,7 @@ export default function PostDetail() {
                     </div>
 
                     <div>
-                        <PostOptions
-                            authorId={data.data.author.id}
-                            postId={data.data.id}
-                        />
+                        <PostOptions post={data.data} />
                     </div>
                 </header>
                 <main className="space-y-2">

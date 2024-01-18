@@ -7,29 +7,33 @@ import {
 import { useAuthStore } from '@chirp/zustand';
 import { MoreHorizontal } from 'lucide-react';
 
-import { usePost } from './context/PostProvider';
 import PostRemoveModal from './PostRemoveModal';
+import PostUpdateModal from './PostUpdateModal';
+import { PostProps } from './Post';
 
-export default function PostOptions({
-    postId,
-    authorId,
-}: {
-    postId: string;
-    authorId: string;
-}) {
+type PostOptionsProps = PostProps;
+
+const PostOptions: React.FC<PostOptionsProps> = ({ post }) => {
     const { user } = useAuthStore();
     return (
         <DropdownMenu>
             <DropdownMenuTrigger>
                 <MoreHorizontal />
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-                {user?.id === authorId ? (
-                    <DropdownMenuItem asChild>
-                        <PostRemoveModal postId={postId} />
-                    </DropdownMenuItem>
+            <DropdownMenuContent className="space-y-2 p-2 font-light">
+                {user?.id === post?.author.id ? (
+                    <>
+                        <DropdownMenuItem asChild>
+                            <PostRemoveModal postId={post.id} />
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                            <PostUpdateModal post={post} />
+                        </DropdownMenuItem>
+                    </>
                 ) : null}
             </DropdownMenuContent>
         </DropdownMenu>
     );
-}
+};
+
+export default PostOptions;

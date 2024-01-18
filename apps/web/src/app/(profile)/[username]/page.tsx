@@ -1,19 +1,38 @@
 import Container from '@/common/components/ui/Container';
 
 import ProfileLayout from './components/ProfileLayout';
+import { ProfileUserProvider } from './context/ProfileProvider';
+import Profile from './components/Profile';
+import ProfileNavigationTimelines from './components/ProfileNavigationTimelines';
+import ProfileTimeline from './components/ProfileTimeline';
+import { Metadata } from 'next';
 
-export default async function ProfilePage({
-    params,
-}: {
+type ProfilePageProps = {
     params: { username: string };
-}) {
-    const user = await fetch(
-        `http://localhost:8000/api/users/${params.username}?posts=true`,
-    ).then((res) => res.json());
-    console.log({ posts: user?.data.posts });
-    return (
-        <ProfileLayout>
-            <Container>Profile Page</Container>
-        </ProfileLayout>
-    );
+};
+
+export async function generateMetadata({
+    params,
+}: ProfilePageProps): Promise<Metadata> {
+    const username = params.username;
+
+    return {
+        title: username,
+    };
 }
+
+const ProfilePage: React.FC<ProfilePageProps> = (props) => {
+    return (
+        <ProfileUserProvider username={props.params.username}>
+            <ProfileLayout>
+                <Container>
+                    <Profile />
+                    <ProfileNavigationTimelines />
+                    <ProfileTimeline />
+                </Container>
+            </ProfileLayout>
+        </ProfileUserProvider>
+    );
+};
+
+export default ProfilePage;

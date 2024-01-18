@@ -35,7 +35,7 @@ export const mainSidebarMenus = [
         icon: Bookmark,
     },
     {
-        href: '/profile',
+        href: '/',
         label: 'Profile',
         icon: User,
     },

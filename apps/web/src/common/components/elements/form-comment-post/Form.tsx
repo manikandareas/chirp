@@ -31,13 +31,11 @@ const formVariants = {
 const Form: React.FC<FormProps> = ({ isPending, onSubmit, type }) => {
     const user = useAuthStore((state) => state.user);
 
-    const { filesInputState, setFilesInputState, filesURL } =
+    const { filesInputState, setFilesInputState, filesURL, contentState } =
         useFormCommentPostContext();
 
     const handlerRemoveMedia = (idx: number) => {
-        const updatedInputFiles = filesInputState.filter(
-            (_, id) => id !== idx,
-        );
+        const updatedInputFiles = filesInputState.filter((_, id) => id !== idx);
         setFilesInputState(updatedInputFiles);
     };
     return (
@@ -73,7 +71,10 @@ const Form: React.FC<FormProps> = ({ isPending, onSubmit, type }) => {
                                     <Button
                                         className="rounded-full bg-primary font-semibold text-white hover:bg-primary/90"
                                         type="submit"
-                                        disabled={isPending}
+                                        disabled={
+                                            isPending ||
+                                            contentState.length <= 3
+                                        }
                                     >
                                         {!isPending ? (
                                             formVariants[type].submit[0]

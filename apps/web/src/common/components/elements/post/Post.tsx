@@ -40,10 +40,7 @@ export default function Post(props: PostProps) {
                 </Link>
 
                 <div>
-                    <PostOptions
-                        authorId={props.post.author.id}
-                        postId={props.post.id}
-                    />
+                    <PostOptions post={props.post} />
                 </div>
             </header>
             <main>

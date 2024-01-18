@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 import UserWizard from '@/common/components/elements/UserWizard';
 import { buttonVariants } from '@/common/components/ui/button';
@@ -5,9 +6,11 @@ import { mainSidebarMenus } from '@/common/constant/mainSidebar';
 import { cn } from '@/common/lib/utils';
 import { FaXTwitter } from 'react-icons/fa6';
 import { LiaFeatherSolid } from 'react-icons/lia';
+import { useAuthStore } from '@chirp/zustand';
 
 export default function HomeAsideNavigation() {
     const menuActiveStyle = 'text-white';
+    const { user } = useAuthStore();
     return (
         <aside className="sticky top-0 z-50 h-screen max-h-screen w-20 overflow-hidden py-1 xl:w-[17.188rem]">
             <div className="space-y-1.5">
@@ -27,7 +30,11 @@ export default function HomeAsideNavigation() {
                     {mainSidebarMenus.map((menu, idx) => (
                         <Link
                             key={menu.label}
-                            href={menu.href}
+                            href={
+                                menu.label === 'Profile'
+                                    ? menu.href + user?.username
+                                    : menu.href
+                            }
                             className={cn(
                                 'flex items-center rounded-full px-3 py-3 text-xl font-thin text-white/80 hover:bg-primary sm:w-fit sm:gap-x-4 sm:px-4',
                                 idx === 0 && menuActiveStyle,
