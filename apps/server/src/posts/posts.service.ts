@@ -6,7 +6,7 @@ import {
     NotFoundException,
     forwardRef,
 } from '@nestjs/common';
-import { desc, eq, and, isNull } from 'drizzle-orm';
+import { and, desc, eq, isNotNull } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { AwsService } from '~/aws/aws.service';
 import { DrizzleService } from '~/drizzle/drizzle.service';
@@ -98,39 +98,8 @@ export class PostsService {
                     },
                 },
                 comments: {
-                    orderBy: [desc(schema.comments.createdAt)],
                     columns: {
                         id: true,
-                        message: true,
-                        parentId: true,
-                        createdAt: true,
-                        updatedAt: true,
-                    },
-                    with: {
-                        author: {
-                            columns: {
-                                id: true,
-                                username: true,
-                                avatarUrl: true,
-                            },
-                        },
-                        replies: {
-                            columns: {
-                                id: true,
-                                message: true,
-                                parentId: true,
-                                createdAt: true,
-                                updatedAt: true,
-                                author: {
-                                    columns: {
-                                        id: true,
-                                        username: true,
-                                        avatarUrl: true,
-                                    },
-                                },
-                            },
-                            orderBy: [desc(schema.comments.createdAt)],
-                        },
                     },
                 },
             },
@@ -138,9 +107,11 @@ export class PostsService {
         });
 
         // likes not include
-        return posts.map(({ likes, ...post }) => {
+        return posts.map(({ likes, comments, ...post }) => {
             return {
                 ...post,
+                commentsNumber: comments.length,
+
                 isUserLiked: !!likes.length,
             };
         });
@@ -187,10 +158,12 @@ export class PostsService {
                     },
                 },
                 comments: {
+                    where: (comments, { isNull }) => isNull(comments.parentId),
                     orderBy: [desc(schema.comments.createdAt)],
                     columns: {
                         id: true,
                         message: true,
+                        postId: true,
                         parentId: true,
                         createdAt: true,
                         updatedAt: true,
@@ -200,13 +173,52 @@ export class PostsService {
                             columns: {
                                 id: true,
                                 username: true,
+                                fullName: true,
                                 avatarUrl: true,
+                            },
+                        },
+                        // get number of replies
+                        replies: {
+                            with: {
+                                replies: {
+                                    with: {
+                                        replies: true,
+                                    },
+                                },
                             },
                         },
                     },
                 },
             },
         });
+
+        function addRepliesCount(comment) {
+            if (!comment.replies || comment.replies.length === 0) {
+                comment.repliesNumber = 0;
+            } else {
+                comment.repliesNumber = comment.replies.length;
+                for (const reply of comment.replies) {
+                    addRepliesCount(reply);
+                }
+            }
+        }
+
+        for (const comment of postDataById.comments) {
+            addRepliesCount(comment);
+        }
+
+        // const repliesCount = postDataById.comments.map((com) => {
+        //     if (com['replies']) {
+        //         const repliesLength = com['replies'].length;
+
+        //         if (repliesLength > 0) {
+        //         }
+        //         return {
+        //             ...com,
+        //             repliesNumber: repliesLength,
+        //         };
+        //     }
+        // });
 
         if (!postDataById) {
             throw new NotFoundException('Post Not Found');
@@ -215,6 +227,7 @@ export class PostsService {
         // return postDataById with isUserLiked;
         return {
             ...postDataById,
+
             isUserLiked: !!postDataById.likes.length,
         };
     }

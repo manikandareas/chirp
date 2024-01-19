@@ -12,6 +12,8 @@
     "module": "esnext",
     "baseUrl": ".",
     "experimentalDecorators": true,
+    "declaration": false,
+    "declarationMap": false,
     "strictPropertyInitialization": false,
     "moduleResolution": "bundler",
     "resolveJsonModule": true,

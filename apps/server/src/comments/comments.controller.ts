@@ -3,6 +3,7 @@ import {
     Body,
     Controller,
     Delete,
+    Get,
     Param,
     Post,
     Put,
@@ -51,4 +52,17 @@ export class CommentsController {
     async remove(@Param('id') id: string) {
         return this.commentsService.remove(+id);
     }
+
+    @Get()
+    async getComments(@Param('postId') postId: string) {
+        console.log(postId);
+        return await this.commentsService.getCommentsByPostIdWhereParentComment(
+            postId
+        );
+    }
+
+    // @Get()
+    // async getRepliesComments(, @Param('commentId') commentId: string) {
+
+    // }
 }

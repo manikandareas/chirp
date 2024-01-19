@@ -1,8 +1,8 @@
+import * as schema from '@chirp/db';
 import { CreateCommentDto, UpdateCommentDto } from '@chirp/dto';
 import { Injectable } from '@nestjs/common';
+import { and, desc, eq, isNull } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { desc, eq, and, isNull } from 'drizzle-orm';
-import * as schema from '@chirp/db';
 import { DrizzleService } from '~/drizzle/drizzle.service';
 
 @Injectable()
@@ -33,6 +33,30 @@ export class CommentsService {
         commentId
     ) {
         return 'bro';
+    }
+
+    async getCommentsByPostIdWhereParentComment(postId: string) {
+        const comments = await this.db.query.comments.findMany({
+            where: and(
+                eq(schema.comments.postId, postId),
+                isNull(schema.comments.parentId)
+            ),
+        });
+
+        const withReplies = comments.map(async (com) => {
+            const replies = await this.getReplies(com.parentId);
+            return {
+                ...com,
+                replies,
+            };
+        });
+        return withReplies;
+    }
+
+    async getReplies(commentId: string) {
+        return await this.db.query.comments.findMany({
+            where: and(eq(schema.comments.parentId, commentId)),
+        });
     }
 
     remove(id: number) {
