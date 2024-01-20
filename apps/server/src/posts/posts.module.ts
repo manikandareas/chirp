@@ -6,9 +6,16 @@ import { DrizzleService } from '~/drizzle/drizzle.service';
 import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
 import { LikesModule } from '../likes/likes.module';
+import { CommentsModule } from '~/comments/comments.module';
 
 @Module({
-    imports: [forwardRef(() => LikesModule), AuthModule, AwsModule, JwtModule],
+    imports: [
+        forwardRef(() => LikesModule),
+        AuthModule,
+        AwsModule,
+        JwtModule,
+        CommentsModule,
+    ],
     controllers: [PostsController],
     providers: [PostsService, DrizzleService],
     exports: [PostsService],

@@ -56,13 +56,8 @@ export class CommentsController {
     @Get()
     async getComments(@Param('postId') postId: string) {
         console.log(postId);
-        return await this.commentsService.getCommentsByPostIdWhereParentComment(
+        return await this.commentsService.getCommentsByPostIdWithReplies(
             postId
         );
     }
-
-    // @Get()
-    // async getRepliesComments(, @Param('commentId') commentId: string) {
-
-    // }
 }

@@ -8,5 +8,6 @@ import { JwtModule } from '@nestjs/jwt';
     imports: [JwtModule],
     controllers: [CommentsController],
     providers: [CommentsService, DrizzleService],
+    exports: [CommentsService],
 })
 export class CommentsModule {}
