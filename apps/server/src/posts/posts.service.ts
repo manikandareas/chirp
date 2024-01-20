@@ -6,7 +6,7 @@ import {
     NotFoundException,
     forwardRef,
 } from '@nestjs/common';
-import { and, desc, eq, isNotNull } from 'drizzle-orm';
+import { and, desc, eq, isNotNull, sql } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { AwsService } from '~/aws/aws.service';
 import { DrizzleService } from '~/drizzle/drizzle.service';
@@ -118,6 +118,8 @@ export class PostsService {
     }
 
     /**
+     * ! TODO: FIX THIS SHIT CODE
+     *
      * Finds a post by its ID.
      * If the user is authenticated, it also checks if the user has liked the post.
      * If the user is not authenticated, it does not check if the user has liked the post.
@@ -179,10 +181,45 @@ export class PostsService {
                         },
                         // get number of replies
                         replies: {
+                            columns: {
+                                id: true,
+                                message: true,
+                                postId: true,
+                                parentId: true,
+                                createdAt: true,
+                                updatedAt: true,
+                            },
                             with: {
+                                author: {
+                                    columns: {
+                                        id: true,
+                                        username: true,
+                                        fullName: true,
+                                        avatarUrl: true,
+                                    },
+                                },
                                 replies: {
                                     with: {
-                                        replies: true,
+                                        author: {
+                                            columns: {
+                                                id: true,
+                                                username: true,
+                                                fullName: true,
+                                                avatarUrl: true,
+                                            },
+                                        },
+                                        replies: {
+                                            with: {
+                                                author: {
+                                                    columns: {
+                                                        id: true,
+                                                        username: true,
+                                                        fullName: true,
+                                                        avatarUrl: true,
+                                                    },
+                                                },
+                                            },
+                                        },
                                     },
                                 },
                             },

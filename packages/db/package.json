@@ -16,11 +16,11 @@
   "dependencies": {
     "@chirp/dto": "workspace:*",
     "@paralleldrive/cuid2": "^2.2.2",
-    "drizzle-orm": "^0.29.1",
+    "drizzle-orm": "^0.29.3",
     "pg": "^8.11.3"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.20.7",
+    "drizzle-kit": "^0.20.13",
     "typescript": "5.1.3"
   }
 }
