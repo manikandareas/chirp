@@ -1,0 +1,563 @@
+[33mcommit 0d3b5ecd667377e27eeeadb54fa93269c512d4f1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mcomments-service[m[33m, [m[1;31morigin/comments-service[m[33m)[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Sat Jan 20 15:43:20 2024 +0000
+
+    feat(comments): adding author and parent author for each omments replies
+
+[33mcommit fdd09005ec8868a99e1393c238bd53b8966a44c8[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Sat Jan 20 15:43:20 2024 +0000
+
+    feat(server/comments): adding author for each comments replies
+
+[33mcommit a04a23e3d2f62ce76b9641dcd4005577bc6797c0[m
+Author: Manik <vitoandareas15@gmail.com>
+Date:   Fri Jan 19 18:36:14 2024 +0800
+
+    feat(comments): unfixed comment feature
+
+[33mcommit fdabaa35252560b9ec0cec4a32466c2f4588bd8d[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Thu Jan 18 15:44:14 2024 +0800
+
+    feat(comments): adding comments features (not fixed)
+
+[33mcommit 06245103100761515c56c3f8da47824226cab778[m
+Merge: 3a3c5d3 3a62e1f
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Tue Jan 16 13:52:43 2024 +0800
+
+    Merge branch 'master' of github.com:manikandareas/chirp into comments-service
+
+[33mcommit 3a3c5d32af036c297e28675b1e3dfeba396afa97[m[33m ([m[1;31morigin/profiles-service[m[33m)[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Tue Jan 16 12:38:19 2024 +0800
+
+    fix(users): fixing users profiles bugs
+
+[33mcommit 3a62e1fbec1f842b4698c892f0adf888bf9db258[m[33m ([m[1;31morigin/master[m[33m)[m
+Merge: 6761dc9 101f67e
+Author: Vito Andareas Manik <vitoandareas15@gmail.com>
+Date:   Sat Jan 13 13:54:07 2024 +0800
+
+    Merge pull request #18 from manikandareas/web-posts-dev
+    
+    merge: merging web-posts-dev to master
+
+[33mcommit 101f67e8d14f2616c9a952c5d40a9d9add2d926c[m[33m ([m[1;31morigin/web-posts-dev[m[33m)[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Sat Jan 13 13:38:36 2024 +0800
+
+    feat(posts): adding like service
+
+[33mcommit 83767ecebc3ceca3c584adb8330231f99d018bac[m
+Merge: 1fbd178 86b7193
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Sat Jan 13 11:27:58 2024 +0800
+
+    Merge remote-tracking branch 'origin/posts-server-dev' into web-posts-dev
+
+[33mcommit 86b719338eb902279cdd9de65137e1ef9b520481[m[33m ([m[1;31morigin/posts-server-dev[m[33m)[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Fri Jan 12 23:57:23 2024 +0800
+
+    fix(posts): fixing likes response
+
+[33mcommit 1fbd1780ba6e72a045d6c789763101192969b0d3[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Fri Jan 12 17:08:04 2024 +0800
+
+    ui(posts): adding ui like for post
+
+[33mcommit 6e8184037509408d8875c5ac78cb770997792e31[m
+Merge: a92109d 3c6c6f8
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Fri Jan 12 00:02:35 2024 +0800
+
+    merge(posts): merging posts-server-dev
+
+[33mcommit a92109dbd563a9c3ab52e12a236c90f0535fa059[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Thu Jan 11 22:53:58 2024 +0800
+
+    refactor&feat(form): refactoring form-post & adding FormComment
+
+[33mcommit 694f865b74b72dcb34464cadd322d5339d6989c8[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Thu Jan 11 21:27:42 2024 +0800
+
+    ui: changing primary colors
+
+[33mcommit ba0af9ec16d92a807e3ba9209086d843bc05633e[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Thu Jan 11 20:49:17 2024 +0800
+
+    refactor&feat(auth): refactoring signup form & adding e2e test Register, Signin
+
+[33mcommit 3c6c6f89292c98645e9e49062c2dd21b9a9f924a[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Thu Jan 11 14:35:02 2024 +0800
+
+    fix(posts&aws): fixing content type of object in aws service, and adding content type for images
+
+[33mcommit d38bc3f051abb9ef251ace6b10bcfd3e4c2314bd[m[33m ([m[1;31morigin/likes-service[m[33m)[m
+Merge: 1ada5d4 84f07a1
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Thu Jan 11 13:37:18 2024 +0800
+
+    feat(likes): adding likes service
+
+[33mcommit 1ada5d4819bae37488bd9cfe023c29b39fab4c95[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Thu Jan 11 12:37:06 2024 +0800
+
+    feat(likes): adding likes service
+
+[33mcommit 84f07a12ba49afc4292613252303d346f3dfe591[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Thu Jan 11 12:37:06 2024 +0800
+
+    feat(likes): adding likes service
+
+[33mcommit 1800d7e63944343e0015fe5392b9452e27e1cb96[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Tue Jan 9 03:04:46 2024 +0800
+
+    test(posts): adding testing for posts controller
+
+[33mcommit c733e84e06001eebd72f028418469530a91f98ce[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Tue Jan 9 03:04:46 2024 +0800
+
+    test(posts): adding testing of  posts controller for create
+
+[33mcommit 340b5965de6826f93749a078ded279a856e5b217[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Mon Jan 8 15:36:02 2024 +0800
+
+    refactor&feat(web): cleaning code & setup e2e testing
+
+[33mcommit 6761dc95a69bc8cb2b799687b2de7264a341caa8[m
+Merge: d0e1a57 8b1efb9
+Author: Vito Andareas Manik <vitoandareas15@gmail.com>
+Date:   Fri Jan 5 17:42:09 2024 +0800
+
+    Merge pull request #13 from manikandareas/web-home-page
+    
+    merge: merging Web home page to master
+
+[33mcommit 8b1efb99d63252ec627ddc8e8d216562845799b8[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Wed Jan 3 21:52:15 2024 +0800
+
+    merge(posts&users): merging posts and users feature to web-home-page
+
+[33mcommit 34f94b61931608e3e26379c73d1d6466b4575554[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Fri Jan 5 15:37:11 2024 +0800
+
+    fix(users): fixing convention naming username of users
+
+[33mcommit c4217db4d0e2bbd8f1e6dc2524783cfb37345db8[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Fri Jan 5 01:18:10 2024 +0800
+
+    fix(posts): fixing update and delete can only be done by the author
+
+[33mcommit 6f6f9bce84a6d4211967adc508438512e9814386[m
+Merge: 7436b58 6786741
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Thu Jan 4 15:25:16 2024 +0800
+
+    fix(posts): fixing key name images of posts
+
+[33mcommit 7436b589d307060663c6aa8c52f037f4286e3589[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Thu Jan 4 15:05:02 2024 +0800
+
+    fix(posts): fixing key name images of posts
+
+[33mcommit a6d903deddf9d94094de419c65d88bdb7e8aa6e4[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Thu Jan 4 11:24:17 2024 +0800
+
+    docs(posts): adding documentations for posts service dan controller
+
+[33mcommit 9bd8e912ba443a5fa19d051e02bd018de23c1117[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Wed Jan 3 17:02:38 2024 +0800
+
+    refactor(posts): refactoring delete post by id for posts service
+
+[33mcommit 11913de7e5a47ffe2f871a57ff691919a073ff37[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Jan 3 15:46:43 2024 +0800
+
+    feat(posts): adding delete by id for posts service
+
+[33mcommit 5e3de0766dcb873e3416adb57b45489d4f2cf92e[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Jan 3 15:26:20 2024 +0800
+
+    feat(posts): adding update by id for posts service
+
+[33mcommit 1330c09230721cae7b2ebb402f07f5edef977796[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Jan 3 13:18:40 2024 +0800
+
+    feat(posts): adding find one by id for posts service
+
+[33mcommit 0d30eaacdb2523ff223934c3a22a2df6a26135be[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Jan 3 12:34:49 2024 +0800
+
+    fix(posts): fixing response json for find all posts
+
+[33mcommit 7e03710db8f2bf278cc683aff741ccc39f715dbf[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Jan 3 12:33:28 2024 +0800
+
+    fix(dto): fixing address field to mandatory
+
+[33mcommit 476dfc8af096cd1aa9368d0cf8e1179037fded29[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Jan 2 19:30:52 2024 +0800
+
+    refactor(db): migrate from sqlite to postgresql
+
+[33mcommit d82809cfa84ceb8e6d52f70b0f8290d6cd697da6[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Tue Jan 2 14:54:43 2024 +0800
+
+    feat(posts): adding multiple pages upload
+
+[33mcommit 07452fb021bd6adf4628ef9c764d0b435d9e7bd2[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Jan 2 12:16:09 2024 +0800
+
+    ui: adding form create post
+
+[33mcommit 0fd1bcab9ba7b7c0e87cf206a80693c6ac7712db[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Jan 2 12:12:38 2024 +0800
+
+    ui: adding form create post
+
+[33mcommit 09dbc66bea5c109d4da0b3d70bae440bb5293ccb[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Jan 2 12:02:02 2024 +0800
+
+    ui: adding form create post
+
+[33mcommit f395fe09f0ff404e50fd84d4237c3216aec3ae25[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Jan 2 11:55:58 2024 +0800
+
+    ui: adding form create post
+
+[33mcommit 4b50191a7575582e2ef87f24ab5ed5fd1a022d63[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Sat Dec 30 12:08:34 2023 +0800
+
+    ui: adding layout
+
+[33mcommit e0bf6619ea1ba4d6c380c499789486cd08908eed[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Sat Dec 30 17:00:51 2023 +0800
+
+    feat: adding email&username checker
+
+[33mcommit cad2f7360af4a4c716a74a3d188f0e78749caccf[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Thu Jan 4 12:16:59 2024 +0800
+
+    Rename .prettierignore  to .prettierignore
+    
+    remove space at the end of the file name
+
+[33mcommit 21af88f8b67b3e7327307971fcae9bc49c924b70[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Thu Jan 4 12:16:17 2024 +0800
+
+    Rename .prettierignore  to .prettierignore
+    
+    remove space at the end of the file
+
+[33mcommit 678674189062fb5e1a63bc353d64a9261c73ea2e[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Wed Jan 3 17:02:38 2024 +0800
+
+    refactor(posts): refactoring delete post by id for posts service
+
+[33mcommit f01520b1e73cef1300d8a125db5db8aaac6d93f8[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Jan 3 15:46:43 2024 +0800
+
+    feat(posts): adding delete by id for posts service
+
+[33mcommit 91d70e15784f2b000fcaf4781ee45970d2cbbe33[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Jan 3 15:26:20 2024 +0800
+
+    feat(posts): adding update by id for posts service
+
+[33mcommit 653feae13beb16480a592990e44f98ae988236d2[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Jan 3 13:18:40 2024 +0800
+
+    feat(posts): adding find one by id for posts service
+
+[33mcommit bda815f0ee966580c99ffe607c16eea7aec44433[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Jan 3 12:34:49 2024 +0800
+
+    fix(posts): fixing response json for find all posts
+
+[33mcommit 2ba05d477d944d1748f52d2f0704c57952911e7e[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Jan 3 12:33:28 2024 +0800
+
+    fix(dto): fixing address field to mandatory
+
+[33mcommit 618cdbb288aa2eb9bd46ceffae0387a221a6a1b9[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Jan 2 19:30:52 2024 +0800
+
+    refactor(db): migrate from sqlite to postgresql
+
+[33mcommit 442dc2d753651c04da73186f74d4c41cb03e07eb[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Tue Jan 2 14:54:43 2024 +0800
+
+    feat(posts): adding multiple pages upload
+
+[33mcommit 768d7a1dce184fdd88ef5bd04e2b85dc5d723315[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Jan 2 12:16:09 2024 +0800
+
+    ui: adding form create post
+
+[33mcommit 3fc7d0b8a28262c7eb63789b47880b427beab93d[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Jan 2 12:12:38 2024 +0800
+
+    ui: adding form create post
+
+[33mcommit 10f506d64efd0a30211662e1fea3863e1af48ff0[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Jan 2 12:02:02 2024 +0800
+
+    ui: adding form create post
+
+[33mcommit 815627b738045090aec84100e35332b6578ab5a1[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Jan 2 11:55:58 2024 +0800
+
+    ui: adding form create post
+
+[33mcommit 08d4745eead0f58fb625684b85aa02db84b7aed6[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Sat Dec 30 12:08:34 2023 +0800
+
+    ui: adding layout
+
+[33mcommit 38d8612e2f4d8adc1ca89e64a9ccc4acfca5a51b[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Sat Dec 30 17:00:51 2023 +0800
+
+    feat: adding email&username checker
+
+[33mcommit 21229da7c135bd7e6177051576bc0793c793cfe8[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Fri Dec 29 15:14:31 2023 +0800
+
+    feat(auth): adding check availibility for username & email of users
+
+[33mcommit 97eb57595cf05fb69ccb75a55937e749c60c555c[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Fri Dec 29 13:53:42 2023 +0800
+
+    fix(dto): fixing the user password must be at least 8 characters long and must not start and end with a space
+
+[33mcommit 245f7eb0ce716817c5b561475cca5e6ff50a27b4[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Fri Dec 29 00:33:16 2023 +0800
+
+    fix(db): make address field of users into optional
+
+[33mcommit 497ee9af85bac5a0967eec58462e9d5c79717c8d[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Thu Dec 28 19:55:30 2023 +0800
+
+    refactor: moving drizzle to separate package
+
+[33mcommit acefac5d9ed2b8eecb1864a9937c5021037ec5f2[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Wed Dec 27 14:55:22 2023 +0800
+
+    feat(web-auth): adding zustand and persist auth data
+
+[33mcommit 0b5b1bfd233e0e7cdcad0fd453998fcbfecea2e2[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Wed Dec 27 00:27:28 2023 +0800
+
+    feat(posts): adding get all posts service
+
+[33mcommit f87307c4adb573e98e04f7a4e0b6986337ac0ca7[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Tue Dec 26 23:49:10 2023 +0800
+
+    fix(aws): Change the way URL images are viewed
+
+[33mcommit c294d83b1dc8bcd224d538cf8bfdfe37e2aaec28[m
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Tue Dec 26 20:58:18 2023 +0800
+
+    refactor(posts): separate aws services
+
+[33mcommit d0e1a5733ba0c7dcba5fa959d2296a616987013a[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Dec 26 16:58:29 2023 +0800
+
+    feat(web-auth): adding zustand and persist auth data
+
+[33mcommit 6ee5f6c8cfbc911180f3ce19a065b49c18e673ff[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Mon Dec 25 23:25:38 2023 +0800
+
+    feat(web-auth): adding register service
+
+[33mcommit 2a8537b6a4229cb5664aec92f8ee55956854ad6a[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Mon Dec 25 23:00:25 2023 +0800
+
+    docs: adding docs for optional env loader
+
+[33mcommit ae3ce8185f343179b9fe3ca65b7dd7cc61050514[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Mon Dec 25 21:04:47 2023 +0800
+
+    feat(server-config): adding optional loader for env
+
+[33mcommit 7a7230670a36ee60636aa37d9f82d474a95b1830[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Mon Dec 25 18:40:27 2023 +0800
+
+    feat(web-auth): adding register service
+
+[33mcommit feac8b0d1ba66c7ab778cb38f31a82d42b4f05a2[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Mon Dec 25 16:01:39 2023 +0800
+
+    feat: adding cors
+
+[33mcommit dc5bde3a058a6fb9dd07d8bbf01bffe1a749c44c[m
+Merge: 0f386f1 a705d69
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Sun Dec 24 19:30:49 2023 +0800
+
+    Merge branch 'post-service'
+    merge server with web
+
+[33mcommit 0f386f1a1cb345b5c2b4c51e3b2905e1ed7d2469[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Sun Dec 24 19:29:31 2023 +0800
+
+    feat(web-auth): adding signup page
+
+[33mcommit a705d697ddb42f0a3c28d024f4ff15d2b1e689ce[m
+Author: FarhanDH <farhandwihartanto@gmail.com>
+Date:   Sun Dec 24 17:02:38 2023 +0800
+
+    feat(posts): adding post service
+
+[33mcommit 29c2d7d0c4bd555867f4194c6bd967b9acd61906[m
+Merge: df6a3e4 1508ab0
+Author: Farhan Dwi Hartanto <farhandwihartanto@gmail.com>
+Date:   Sun Dec 24 15:32:25 2023 +0800
+
+    Merge branch 'master' into post-service
+
+[33mcommit df6a3e4f3be3476c05e6c94b3f274266faa0b11f[m
+Author: FarhanDH <farhandwihartanto@gmail.com>
+Date:   Sun Dec 24 15:24:09 2023 +0800
+
+    fix(schema post): rename column status to content
+
+[33mcommit 1508ab046b1401a216dda2d6d6804c0bc4085f39[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Fri Dec 22 23:15:13 2023 +0800
+
+    feat(web-auth): adding signin page
+
+[33mcommit c547c53abcb7b966795fa32943addced747b6ae1[m
+Author: FarhanDH <farhandwihartanto@gmail.com>
+Date:   Fri Dec 22 18:28:40 2023 +0800
+
+    refactor: adding documentations
+
+[33mcommit 7dc85074fdc53941563064dac11c65668967d0db[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Fri Dec 22 15:54:04 2023 +0800
+
+    refactor&feat: refactoring with prettier & adding shadcn
+
+[33mcommit 1c7c22cef3d5df211379983161e6da82ba271924[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Fri Dec 22 14:39:04 2023 +0800
+
+    refactor(web): refactoring nextjs app
+
+[33mcommit a2e74754e930e2ebfe971e36a851f3f5a75ff8d5[m
+Author: FarhanDH <farhandwihartanto@gmail.com>
+Date:   Fri Dec 22 01:11:52 2023 +0800
+
+    feat(user): delete user service & controller
+
+[33mcommit 64267eb3b80fa1f8bd0e1eb11a4fb211e459d1cb[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Thu Dec 21 23:32:06 2023 +0800
+
+    docs: adding docs for entire features
+
+[33mcommit 6f6dd0b901b233fb4f820fddcc655e7748d237a0[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Thu Dec 21 22:11:55 2023 +0800
+
+    feat(user): update user service
+
+[33mcommit a7af26930115ea9a82a715aa64f1ad494d87f26a[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Thu Dec 21 12:56:15 2023 +0800
+
+    feat: adding auth
+
+[33mcommit b1335fa64468b008b705252e494a11e92efaf62a[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Wed Dec 20 14:24:52 2023 +0800
+
+    feat: adding dto package
+
+[33mcommit 466c6a4deab80ada5252d0e7de959d51109f85ce[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Wed Dec 20 01:42:01 2023 +0800
+
+    feat: adding logger
+
+[33mcommit 7a6e8b1a3ac2bf85d94e346820817e8c95952a16[m
+Author: Vito Andareas Manik <vitoandareas15@gmail.com>
+Date:   Tue Dec 19 23:19:28 2023 +0800
+
+    Delete .vscode directory
+
+[33mcommit f372d2a252bcc10f9b4a448939ee47ee620ba6e6[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Dec 19 23:17:38 2023 +0800
+
+    feat: adding turso db with drizzle orm
+
+[33mcommit 485c053db155d7f455c6a3a4c4e37e5acb0c4f1c[m
+Author: manikandareas <vitoandareas15@gmail.com>
+Date:   Tue Dec 19 02:52:51 2023 +0800
+
+    feat: adding nest js
