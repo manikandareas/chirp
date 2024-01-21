@@ -6,7 +6,7 @@ import {
     NotFoundException,
     forwardRef,
 } from '@nestjs/common';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, isNull } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { AwsService } from '~/aws/aws.service';
 import { CommentsService } from '~/comments/comments.service';
@@ -100,32 +100,56 @@ export class PostsService {
                     },
                 },
                 comments: {
-                    columns: {
-                        id: true,
+                    where: isNull(schema.comments.parentId),
+                    with: {
+                        replies: {
+                            columns: {
+                                id: true,
+                            },
+                            with: {
+                                replies: {
+                                    columns: {
+                                        id: true,
+                                    },
+                                    with: {
+                                        replies: {
+                                            columns: {
+                                                id: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
             },
             orderBy: [desc(schema.posts.updatedAt)],
         });
 
-        // likes not include
-        return posts.map(({ likes, comments, ...post }) => {
+        let commentsNumber = 0;
+
+        posts.map((post) => {
+            for (const comment of post.comments) {
+                commentsNumber += this.addRepliesCount(comment);
+                this.addRepliesCount(comment);
+            }
+        });
+
+        // adds number of comments to each post, is user liked the post and ignore comments and likes fields
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        return posts.map(({ likes, comments, ...post }, i) => {
             return {
                 ...post,
-                commentsNumber: comments.length,
-
+                commentsNumber:
+                    posts[i].comments.length > 0
+                        ? commentsNumber + posts[i].comments.length
+                        : 0,
                 isUserLiked: !!likes.length,
             };
         });
     }
 
-    /**
-     * Retrieves a single post by its ID with comments, likes, and replies.
-     *
-     * @param {string} id - the ID of the record to be found
-     * @param {string} userId - the ID of the user
-     * @return {Promise<any>} the found record with additional user like information
-     */
     async findOneById(id: string, userId?: string) {
         this.validateId(id);
 
@@ -159,36 +183,46 @@ export class PostsService {
             },
         });
 
-        const comments =
-            await this.commentsService.getCommentsByPostIdWithReplies(id);
-
-        postDataById['comments'] = comments;
-
-        function addRepliesCount(comment) {
-            if (!comment.replies || comment.replies.length === 0) {
-                comment.repliesNumber = 0;
-            } else {
-                comment.repliesNumber = comment.replies.length;
-                for (const reply of comment.replies) {
-                    addRepliesCount(reply);
-                }
-            }
-        }
-
-        for (const comment of postDataById['comments']) {
-            addRepliesCount(comment);
-        }
-
         if (!postDataById) {
             throw new NotFoundException('Post Not Found');
         }
 
-        // return postDataById with isUserLiked;
+        postDataById['comments'] =
+            await this.commentsService.getByPostIdWithReplies(id);
+
+        let commentsNumber = postDataById['comments'].length;
+
+        for (const comment of postDataById['comments']) {
+            commentsNumber += this.addRepliesCount(comment);
+            this.addRepliesCount(comment);
+        }
+
+        // return postDataById with commentsNumber and isUserLiked;
         return {
             ...postDataById,
-
+            commentsNumber,
             isUserLiked: !!postDataById.likes.length,
         };
+    }
+
+    /**
+     * Calculates the total number of replies for a given comment, including
+     * nested replies within the comment's replies.
+     *
+     * @param {object} comment - The comment object to calculate replies for.
+     * @return {number} The total number of replies for the given comment.
+     */
+    addRepliesCount(comment) {
+        let repliesNumber = 0;
+        if (!comment.replies || comment.replies.length === 0) {
+            comment.repliesNumber = 0;
+        } else {
+            comment.repliesNumber = comment.replies.length;
+            for (const reply of comment.replies) {
+                this.addRepliesCount(reply);
+            }
+        }
+        return (repliesNumber += comment.repliesNumber);
     }
 
     /**
