@@ -75,7 +75,7 @@ export class CommentsService {
             orderBy: desc(schema.comments.createdAt),
             where: and(
                 eq(schema.comments.postId, postId),
-                isNull(schema.comments.parentId``)
+                isNull(schema.comments.parentId)
             ),
             with: {
                 replies: {
