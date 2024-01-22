@@ -9,6 +9,7 @@ import {
 import { desc, eq } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { AwsService } from '~/aws/aws.service';
+import { CommentsService } from '~/comments/comments.service';
 import { DrizzleService } from '~/drizzle/drizzle.service';
 import { LikesService } from '~/likes/likes.service';
 
@@ -19,7 +20,8 @@ export class PostsService {
         private readonly drizzle: DrizzleService,
         private readonly awsService: AwsService,
         @Inject(forwardRef(() => LikesService))
-        private readonly likesService: LikesService
+        private readonly likesService: LikesService,
+        private readonly commentsService: CommentsService
     ) {
         this.db = this.drizzle.getDb();
     }
@@ -97,28 +99,32 @@ export class PostsService {
                         userId: true,
                     },
                 },
+                comments: {
+                    columns: {
+                        id: true,
+                    },
+                },
             },
             orderBy: [desc(schema.posts.updatedAt)],
         });
 
         // likes not include
-        return posts.map(({ likes, ...post }) => {
+        return posts.map(({ likes, comments, ...post }) => {
             return {
                 ...post,
+                commentsNumber: comments.length,
+
                 isUserLiked: !!likes.length,
             };
         });
     }
 
     /**
-     * Finds a post by its ID.
-     * If the user is authenticated, it also checks if the user has liked the post.
-     * If the user is not authenticated, it does not check if the user has liked the post.
+     * Retrieves a single post by its ID with comments, likes, and replies.
      *
-     * @param {string} id - The ID of the post to find.
-     * @param {string} userId - The ID of the user (optional).
-     * @return {Promise} - A promise that resolves to the post data.
-     * @throws {NotFoundException} - If the post is not found.
+     * @param {string} id - the ID of the record to be found
+     * @param {string} userId - the ID of the user
+     * @return {Promise<any>} the found record with additional user like information
      */
     async findOneById(id: string, userId?: string) {
         this.validateId(id);
@@ -153,6 +159,26 @@ export class PostsService {
             },
         });
 
+        const comments =
+            await this.commentsService.getCommentsByPostIdWithReplies(id);
+
+        postDataById['comments'] = comments;
+
+        function addRepliesCount(comment) {
+            if (!comment.replies || comment.replies.length === 0) {
+                comment.repliesNumber = 0;
+            } else {
+                comment.repliesNumber = comment.replies.length;
+                for (const reply of comment.replies) {
+                    addRepliesCount(reply);
+                }
+            }
+        }
+
+        for (const comment of postDataById['comments']) {
+            addRepliesCount(comment);
+        }
+
         if (!postDataById) {
             throw new NotFoundException('Post Not Found');
         }
@@ -160,6 +186,7 @@ export class PostsService {
         // return postDataById with isUserLiked;
         return {
             ...postDataById,
+
             isUserLiked: !!postDataById.likes.length,
         };
     }
@@ -290,8 +317,7 @@ export class PostsService {
                     },
                 },
             })
-            .then((post) => post?.author.id);
-
+            .then((post) => post?.authorId);
         return requestedPostId === user.id;
     }
 }

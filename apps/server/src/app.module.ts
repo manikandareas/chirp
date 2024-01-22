@@ -10,16 +10,20 @@ import { UsersModule } from './users/users.module';
 import { LikesModule } from './likes/likes.module';
 import { RouterModule } from '@nestjs/core';
 import { postsAndLikesRoutes } from './routes/posts-likes.routes';
+import { CommentsModule } from './comments/comments.module';
+import { postsAndCommentsRoutes } from './routes/posts-comments.route';
 
 @Module({
     imports: [
         RouterModule.register(postsAndLikesRoutes),
+        RouterModule.register(postsAndCommentsRoutes),
         UsersModule,
         DrizzleModule,
         AuthModule,
         PostsModule,
         AwsModule,
         LikesModule,
+        CommentsModule,
     ],
     controllers: [AppController],
 })

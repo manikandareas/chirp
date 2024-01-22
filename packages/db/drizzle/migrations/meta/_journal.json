@@ -141,6 +141,20 @@
       "when": 1704950034113,
       "tag": "0019_burly_maggott",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1705546872304,
+      "tag": "0020_sparkling_sister_grimm",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1705549260825,
+      "tag": "0021_huge_sunfire",
+      "breakpoints": true
     }
   ]
 }

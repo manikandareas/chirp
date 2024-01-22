@@ -14,6 +14,8 @@
     "declaration": false,
     "declarationMap": false,
     "experimentalDecorators": true,
+    "declaration": false,
+    "declarationMap": false,
     "strictPropertyInitialization": false,
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
