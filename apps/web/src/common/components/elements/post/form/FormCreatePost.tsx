@@ -6,7 +6,7 @@ import { useCreatePostMutation } from '@chirp/api';
 import { useAuthStore } from '@chirp/zustand';
 import { toast } from 'sonner';
 
-import { useFormCommentPostContext } from './context/FormCommentPostProvider';
+import { useFormPostContext } from './context/FormPostProvider';
 import Form from './Form';
 
 export default function FormCreatePost() {
@@ -17,7 +17,7 @@ export default function FormCreatePost() {
         setFilesInputState,
         contentState,
         setContentState,
-    } = useFormCommentPostContext();
+    } = useFormPostContext();
 
     const { mutateAsync, isPending } = useCreatePostMutation({
         onSuccess: () => {

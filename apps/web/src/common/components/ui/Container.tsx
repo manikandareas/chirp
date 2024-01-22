@@ -1,8 +1,6 @@
 import { cn } from '@/common/lib/utils';
 
-type ContainerProps = React.PropsWithChildren<
-    React.HTMLAttributes<HTMLElement>
->;
+type ContainerProps = React.PropsWithChildren<React.ComponentProps<'main'>>;
 export default function Container(props: ContainerProps) {
     return (
         <main

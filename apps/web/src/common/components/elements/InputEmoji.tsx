@@ -8,34 +8,36 @@ import { useTheme } from 'next-themes';
 
 type InputEmojiProps<T> = {
     onSelect: (props: T) => void;
+    disabled?: boolean;
 };
-const InputEmoji = ({ onSelect }: InputEmojiProps<string>) => {
+const InputEmoji = ({ onSelect, disabled }: InputEmojiProps<string>) => {
     const { theme } = useTheme();
     const [showInputEmoji, setShowInputEmoji] = useState<boolean>(false);
 
-    const handelInputEmoji = (e: any) => {
+    const handelInputEmoji = (e: { native: string }) => {
+        console.log(e);
         onSelect(e.native);
     };
 
     const inputEmojiRef = useRef<ElementRef<'span'>>(null);
 
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (
-                inputEmojiRef.current &&
-                !inputEmojiRef.current.contains(e.target as Node)
-            ) {
-                setShowInputEmoji(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () =>
-            document.removeEventListener('mousedown', handleClickOutside);
-    }, [setShowInputEmoji]);
+    // useEffect(() => {
+    //     const handleClickOutside = (e: MouseEvent) => {
+    //         if (
+    //             inputEmojiRef.current &&
+    //             !inputEmojiRef.current.contains(e.target as Node)
+    //         ) {
+    //             setShowInputEmoji(false);
+    //         }
+    //     };
+    //     document.addEventListener('click', handleClickOutside);
+    //     return () => document.removeEventListener('click', handleClickOutside);
+    // }, [setShowInputEmoji]);
     return (
         <span ref={inputEmojiRef}>
             <button
                 type="button"
+                disabled={disabled}
                 onClick={() => setShowInputEmoji(!showInputEmoji)}
                 className="rounded-full p-2 hover:bg-primary/10"
                 title="Emoji"

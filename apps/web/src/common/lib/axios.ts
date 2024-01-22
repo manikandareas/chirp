@@ -1,7 +1,10 @@
 import { useAuthStore } from '@chirp/zustand';
 // import axios, { AxiosInstance, AxiosPromise } from "axios";
 
-import Axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import Axios, {
+    type AxiosInstance,
+    type InternalAxiosRequestConfig,
+} from 'axios';
 
 const BASE_URL = 'http://localhost:8000/api';
 

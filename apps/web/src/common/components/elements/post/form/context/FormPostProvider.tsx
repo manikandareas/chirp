@@ -8,7 +8,7 @@ import React, {
     type ElementRef,
 } from 'react';
 
-export type TFormCommentPostContext = {
+export type TFormPostContext = {
     filesInputState: (File | Blob | MediaSource)[];
     setFilesInputState: Dispatch<SetStateAction<(File | Blob | MediaSource)[]>>;
     filesURL: string[];
@@ -18,12 +18,9 @@ export type TFormCommentPostContext = {
     textAreaRef: React.RefObject<HTMLTextAreaElement>;
 };
 
-const FormCommentPostContext =
-    React.createContext<TFormCommentPostContext | null>(null);
+const FormPostContext = React.createContext<TFormPostContext | null>(null);
 
-export const FormCommentPostProvider: FC<PropsWithChildren<{}>> = ({
-    children,
-}) => {
+export const FormPostProvider: FC<PropsWithChildren> = ({ children }) => {
     const [filesInputState, setFilesInputState] = React.useState<
         (File | Blob | MediaSource)[]
     >([]);
@@ -35,7 +32,7 @@ export const FormCommentPostProvider: FC<PropsWithChildren<{}>> = ({
     const textAreaRef = React.useRef<ElementRef<'textarea'>>(null);
 
     return (
-        <FormCommentPostContext.Provider
+        <FormPostContext.Provider
             value={{
                 filesInputState,
                 setFilesInputState,
@@ -47,16 +44,16 @@ export const FormCommentPostProvider: FC<PropsWithChildren<{}>> = ({
             }}
         >
             {children}
-        </FormCommentPostContext.Provider>
+        </FormPostContext.Provider>
     );
 };
 
-export const useFormCommentPostContext = () => {
-    const context = React.useContext(FormCommentPostContext);
+export const useFormPostContext = () => {
+    const context = React.useContext(FormPostContext);
 
     if (!context)
         throw new Error(
-            'useFormCommentPostContext must be used within FormCommentPostProvider',
+            'useFormPostContext must be used within FormPostProvider',
         );
     return context;
 };

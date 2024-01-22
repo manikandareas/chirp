@@ -1,15 +1,11 @@
 import React, { FormEvent } from 'react';
 import { useAuthStore } from '@chirp/zustand';
 
-import {
-    FormPreviewImage,
-    FormRibbonMenu,
-    FormTextArea,
-    useFormCommentPostContext,
-} from '.';
-import { Button } from '../../ui/button';
-import Loading from '../../ui/loading';
-import UserAvatar from '../UserAvatar';
+import { FormPreviewImage, FormRibbonMenu, useFormPostContext } from '.';
+import { Button } from '@/common/components/ui/button';
+import Loading from '@/common/components/ui/loading';
+import UserAvatar from '@/common/components/elements/UserAvatar';
+import GrowingTextArea from '@/common/components/ui/GrowingTextArea';
 
 type FormProps = {
     onSubmit: (e: FormEvent<HTMLFormElement>) => void;
@@ -31,8 +27,14 @@ const formVariants = {
 const Form: React.FC<FormProps> = ({ isPending, onSubmit, type }) => {
     const user = useAuthStore((state) => state.user);
 
-    const { filesInputState, setFilesInputState, filesURL, contentState } =
-        useFormCommentPostContext();
+    const {
+        filesInputState,
+        setFilesInputState,
+        filesURL,
+        contentState,
+        textAreaRef,
+        setContentState,
+    } = useFormPostContext();
 
     const handlerRemoveMedia = (idx: number) => {
         const updatedInputFiles = filesInputState.filter((_, id) => id !== idx);
@@ -56,7 +58,10 @@ const Form: React.FC<FormProps> = ({ isPending, onSubmit, type }) => {
                             encType="multipart/form-data"
                             onSubmit={onSubmit}
                         >
-                            <FormTextArea
+                            <GrowingTextArea
+                                setState={setContentState}
+                                state={contentState}
+                                textAreaRef={textAreaRef}
                                 placeholder={formVariants[type].placeholder}
                             />
                             {filesURL.length > 0 ? (

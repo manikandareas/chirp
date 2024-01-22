@@ -8,6 +8,10 @@ import { intlFormatDistance } from 'date-fns';
 import { usePostDetailContext } from '../context/PostDetailProvider';
 import PostDetailImage from './PostDetailImages';
 
+import CommentList from '@/common/components/elements/comment/CommentList';
+import { comments } from '@/common/constant/comments';
+import CommentForm from '@/common/components/elements/comment/Form/CommentForm';
+
 export default function PostDetail() {
     const { data } = usePostDetailContext();
 
@@ -34,9 +38,7 @@ export default function PostDetail() {
                     </div>
                 </header>
                 <main className="space-y-2">
-                    <p className="text-sm text-neutral-200">
-                        {data.data.content}
-                    </p>
+                    <p className="text-sm">{data.data.content}</p>
                     {data.data.images ? (
                         <PostDetailImage images={data.data.images} />
                     ) : null}
@@ -48,6 +50,10 @@ export default function PostDetail() {
                     </div>
                 </footer>
             </article>
+            <CommentForm />
+            <CommentList comments={comments} />
+
+            <div className="h-16" />
         </>
     );
 }

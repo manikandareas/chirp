@@ -1,6 +1,6 @@
 import InputEmoji from '@/common/components/elements/InputEmoji';
 
-import { useFormCommentPostContext } from './context/FormCommentPostProvider';
+import { useFormPostContext } from './context/FormPostProvider';
 import FormInputImage from './FormInputImage';
 
 export default function FormRibbonMenu() {
@@ -11,7 +11,7 @@ export default function FormRibbonMenu() {
         setFilesURL,
         setContentState,
         contentState,
-    } = useFormCommentPostContext();
+    } = useFormPostContext();
 
     const handelInputEmoji = (e: string) => {
         setContentState(contentState + e);

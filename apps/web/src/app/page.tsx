@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import {
-    FormCommentPostProvider,
+    FormPostProvider,
     FormCreatePost,
-} from '@/common/components/elements/form-comment-post';
+} from '@/common/components/elements/post/form';
 import PostLoading from '@/common/components/elements/post/PostLoading';
 import Container from '@/common/components/ui/Container';
 
@@ -13,9 +13,9 @@ export default function HomePage() {
     return (
         <HomeLayout>
             <Container>
-                <FormCommentPostProvider>
+                <FormPostProvider>
                     <FormCreatePost />
-                </FormCommentPostProvider>
+                </FormPostProvider>
                 <Suspense fallback={<PostLoading.Many />}>
                     <HomeTimeline />
                 </Suspense>
