@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@/common/components/ui/button';
 import {
     Dialog,
@@ -9,35 +10,85 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/common/components/ui/dialog';
-import { Reply } from 'lucide-react';
-import { Textarea } from '../../../ui/textarea';
-import { TComments } from '@/common/constant/comments';
+import { MessageCircle } from 'lucide-react';
+import { Post } from '@chirp/api';
+import GrowingTextArea from '@/common/components/ui/GrowingTextArea';
+import { ElementRef, useRef, useState } from 'react';
+import { useCreateComment } from '../services/commentService';
+import Loading from '@/common/components/ui/loading';
 
 type CommentFormModalProps = {
-    comment: TComments[number];
+    comment: Post['data']['comments'][number];
+    setIsShowChildren: (param: boolean) => void;
 };
 
-const CommentFormModal: React.FC<CommentFormModalProps> = () => {
+const CommentFormModal: React.FC<CommentFormModalProps> = (props) => {
+    const [content, setContent] = useState<string>('');
+    const textAreaRef = useRef<ElementRef<'textarea'>>(null);
+
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+    const { onCommentPress, isPending } = useCreateComment(
+        {
+            message: content,
+            parentId: props.comment.id,
+            postId: props.comment.postId,
+        },
+        () => {
+            props.setIsShowChildren(true);
+            setIsModalOpen(false);
+            setContent('');
+        },
+    );
     return (
-        <Dialog>
+        <Dialog open={isModalOpen} onOpenChange={(e) => setIsModalOpen(e)}>
             <DialogTrigger>
-                <Reply size={18} />
+                <button className="group/like flex items-center text-neutral-300">
+                    <i className="rounded-full p-1.5 group-hover/like:bg-sky-500/20">
+                        <MessageCircle
+                            size={18}
+                            className="group-hover/like:text-sky-500"
+                        />
+                    </i>
+                    <span className="text-xs group-hover/like:text-sky-500">
+                        {props.comment?.repliesNumber}
+                    </span>
+                </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle>Comment</DialogTitle>
                     <DialogDescription>
-                        Replying for @manikxixi
+                        Replying for @{props.comment.parent?.author.username}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                    <Textarea />
+                    <GrowingTextArea
+                        setState={setContent}
+                        state={content}
+                        textAreaRef={textAreaRef}
+                    />
                 </div>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button variant={'secondary'}>Cancel</Button>
+                        <Button variant={'secondary'} disabled={isPending}>
+                            Cancel
+                        </Button>
                     </DialogClose>
-                    <Button type="submit">Comment</Button>
+                    <Button
+                        type="button"
+                        onClick={onCommentPress}
+                        disabled={isPending}
+                    >
+                        {!isPending ? (
+                            'Reply'
+                        ) : (
+                            <span className="flex items-center">
+                                <Loading />
+                                Replying...
+                            </span>
+                        )}
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

@@ -1,8 +1,8 @@
-import { TComments } from '@/common/constant/comments';
 import Comment from './Comment';
+import { Post } from '@chirp/api';
 
 type CommentListProps = {
-    comments: TComments;
+    comments: Post['data']['comments'];
 };
 
 const CommentList: React.FC<CommentListProps> = (props) => {

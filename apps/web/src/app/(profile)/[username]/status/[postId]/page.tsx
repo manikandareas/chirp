@@ -31,7 +31,7 @@ export default function PostDetailPage({
     return (
         <PostDetailProvider postId={params.postId}>
             <PostDetailLayout>
-                <Container>
+                <Container className="overflow-visible">
                     <PostDetail />
                 </Container>
             </PostDetailLayout>

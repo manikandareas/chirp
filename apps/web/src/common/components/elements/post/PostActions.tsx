@@ -2,18 +2,18 @@ import React from 'react';
 import { cn } from '@/common/lib/utils';
 import { Heart, MessageCircle } from 'lucide-react';
 
-import { PostProps } from './Post';
-import { useLikeService } from './services/likeService';
+import { UseUserLikeService, useLikeService } from './services/likeService';
 
-type PostActionsProps = {
-    post: PostProps['post'];
+export type PostActionsProps = {
+    post: UseUserLikeService & {
+        commentsNumber: number;
+    };
 };
 
 const ICON_SIZE = 18;
 
 const PostActions: React.FC<PostActionsProps> = (props) => {
     const { likes, onLikePress, isUserLiked } = useLikeService(props.post);
-    console.log({ isUserLiked });
     return (
         <div className="flex items-center gap-1.5">
             {/* Likes */}
@@ -51,7 +51,7 @@ const PostActions: React.FC<PostActionsProps> = (props) => {
                     />
                 </i>
                 <span className="text-xs group-hover/like:text-sky-500">
-                    512
+                    {props.post.commentsNumber}
                 </span>
             </button>
         </div>

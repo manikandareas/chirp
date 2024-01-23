@@ -1,17 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { PostPromise } from '@chirp/api';
+import { Posts } from '@chirp/api';
 import { intlFormatDistance } from 'date-fns';
 
 import PopupInformationForUser from '../PopupInformationForUser';
-import UserAvatar from '../UserAvatar';
 import PostActions from './PostActions';
 import PostImage from './PostImages';
 import PostOptions from './PostOptions';
 
 export type PostProps = {
-    post: PostPromise['data'];
+    post: Posts['data'][number];
 };
 export default function Post(props: PostProps) {
     const DETAIL_POST_URL = `/${props.post.author.username}/status/${props.post.id}`;
@@ -25,9 +24,9 @@ export default function Post(props: PostProps) {
             <header className="flex justify-between">
                 <Link href={PROFILE_URL}>
                     <div className="flex items-center gap-2 leading-4">
-                        <PopupInformationForUser {...props.post.author}>
-                            <UserAvatar src={props.post.author.avatarUrl} />
-                        </PopupInformationForUser>
+                        <PopupInformationForUser.WithAvatar
+                            {...props.post.author}
+                        />
                         <div>
                             <h1 className="decoration-2 hover:underline">
                                 {props.post.author.fullName}

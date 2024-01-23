@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { PostPromise, useGetPostByIdQuery } from '@chirp/api';
+import { Post, useGetPostByIdQuery } from '@chirp/api';
 import { UseQueryResult } from '@tanstack/react-query';
 
-export type PostDetailContextOptions = UseQueryResult<PostPromise, unknown>;
+export type PostDetailContextOptions = UseQueryResult<Post, unknown>;
 
 const PostDetailContext = React.createContext<PostDetailContextOptions | null>(
     null,

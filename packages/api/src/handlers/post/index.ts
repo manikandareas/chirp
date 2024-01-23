@@ -4,3 +4,4 @@ export * from './removePost';
 export * from './getPostById';
 export * from './likePost';
 export * from './updatePost';
+export * from './createComment';

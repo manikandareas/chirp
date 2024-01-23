@@ -5,33 +5,72 @@ import { SetOptional } from 'type-fest';
 import { ApiFn } from '../../lib';
 import { useApiClient } from '../../providers';
 
-export type PostPromise = {
-    data: {
-        isUserLiked: boolean;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        content: string;
-        totalLikes: number;
-        images: {
-            id: number;
-            createdAt: string;
-            updatedAt: string;
-            key: string;
-            url: string;
-        }[];
-        author: {
-            id: string;
-            fullName: string;
-            firstName: string;
-            lastName: string;
-            username: string;
-            avatarUrl: string;
-        };
-    };
+export type Post = {
+    statusCode: number;
+    data: Data;
 };
 
-export const getPostById: ApiFn<string, AxiosPromise<PostPromise>> = (
+export type Data = {
+    id: string;
+    content: string;
+    totalLikes: number;
+    createdAt: string;
+    updatedAt: string;
+    images: any[];
+    author: Author;
+    comments: Comment[];
+    isUserLiked: boolean;
+};
+
+type Author = {
+    id: string;
+    fullName: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    avatarUrl: string;
+};
+
+export type Comment = {
+    id: string;
+    message: string;
+    authorId: string;
+    postId: string;
+    createdAt: string;
+    updatedAt: string;
+    repliesNumber: number;
+    parentId: string;
+    author: AuthorComment;
+    parent?: ParentAuthor;
+    replies?: Comment[];
+};
+
+export type ParentAuthor = {
+    author: {
+        username: string;
+    };
+};
+export type AuthorComment = {
+    id: string;
+    username: string;
+    fullName: string;
+    avatarUrl: string;
+};
+//   export type Reply = {
+//     id: string
+//     message: string
+//     authorId: string
+//     postId: string
+//     createdAt: string
+//     updatedAt: string
+//     parentId: string
+//     author: Author2
+//     parent: Parent
+//     replies: Reply2[]
+//     repliesNumber: number
+//   }
+
+export const getPostById: ApiFn<string, AxiosPromise<Post>> = (
     postId: string,
     { axios = defaultAxios },
 ) => {
@@ -41,7 +80,7 @@ export const getPostById: ApiFn<string, AxiosPromise<PostPromise>> = (
 export const useGetPostByIdQuery = (
     postId: string,
     options?: SetOptional<
-        UseQueryOptions<unknown, unknown, PostPromise, any[]>,
+        UseQueryOptions<unknown, unknown, Post, any[]>,
         'queryKey'
     >,
 ) => {

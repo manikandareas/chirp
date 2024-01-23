@@ -9,7 +9,6 @@ import { usePostDetailContext } from '../context/PostDetailProvider';
 import PostDetailImage from './PostDetailImages';
 
 import CommentList from '@/common/components/elements/comment/CommentList';
-import { comments } from '@/common/constant/comments';
 import CommentForm from '@/common/components/elements/comment/Form/CommentForm';
 
 export default function PostDetail() {
@@ -44,14 +43,14 @@ export default function PostDetail() {
                     ) : null}
                 </main>
                 <footer className="flex items-center justify-between">
-                    <PostActions post={data.data} />
+                    {/* <PostActions post={data.data} /> */}
                     <div className="w-full text-right text-xs text-muted-foreground ">
                         <time>{relativeDate}</time>
                     </div>
                 </footer>
             </article>
             <CommentForm />
-            <CommentList comments={comments} />
+            <CommentList comments={data.data.comments} />
 
             <div className="h-16" />
         </>

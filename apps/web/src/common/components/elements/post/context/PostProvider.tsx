@@ -1,21 +1,55 @@
-'use client';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import defaultAxios, { AxiosPromise } from 'axios';
+import { SetOptional } from 'type-fest';
 
-import React from 'react';
-import { PostPromise } from '@chirp/api';
+import { ApiFn } from '../../lib';
+import { useApiClient } from '../../providers';
 
-type PostContextOptions = PostPromise['data'];
-
-const PostContext = React.createContext<PostContextOptions | null>(null);
-
-export const PostProvider: React.FC<
-    React.PropsWithChildren<PostContextOptions>
-> = ({ children, ...post }) => {
-    return <PostContext.Provider value={post}>{children}</PostContext.Provider>;
+export type Posts = {
+    data: {
+        isUserLiked: boolean;
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        content: string;
+        totalLikes: number;
+        images: {
+            id: number;
+            createdAt: string;
+            updatedAt: string;
+            key: string;
+            url: string;
+        }[];
+        author: {
+            id: string;
+            fullName: string;
+            firstName: string;
+            lastName: string;
+            username: string;
+            avatarUrl: string;
+        };
+    };
 };
 
-export const usePost = () => {
-    const context = React.useContext(PostContext);
+export const getPostById: ApiFn<string, AxiosPromise<Posts>> = (
+    postId: string,
+    { axios = defaultAxios },
+) => {
+    return axios.get(`/posts/${postId}`);
+};
 
-    if (!context) throw new Error('usePost must be used within PostProvider');
-    return context;
+export const useGetPostByIdQuery = (
+    postId: string,
+    options?: SetOptional<
+        UseQueryOptions<unknown, unknown, Posts, any[]>,
+        'queryKey'
+    >,
+) => {
+    const { axios, api } = useApiClient();
+
+    return useQuery({
+        queryKey: ['posts', postId],
+        queryFn: async () => await api(getPostById(postId, { axios })),
+        ...options,
+    });
 };
