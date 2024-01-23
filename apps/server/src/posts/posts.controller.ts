@@ -61,7 +61,7 @@ export class PostsController {
     }
 
     /**
-     * Retrieves all the data.
+     * Retrieves all the posts data.
      * Secures this endpoint using JwtGuard for authentication.
      *
      * @method GET
@@ -72,7 +72,7 @@ export class PostsController {
      */
     @UseGuards(JwtGuard)
     @Get()
-    async findAll(@Request() req) {
+    async getAll(@Request() req) {
         console.log('User: ', req.user, 'want to get all posts');
         const postsData = await this.postsService.findAll(req.user.id);
         return {
@@ -95,7 +95,7 @@ export class PostsController {
      */
     @UseGuards(OptionalJwtGuard)
     @Get(':id')
-    async findOneById(@Param('id') id: string, @Request() req) {
+    async getOneById(@Param('id') id: string, @Request() req) {
         console.log('User:', req.user, `want to get post: ${id}`);
         // return postDataById with isUserLiked but not likes data;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

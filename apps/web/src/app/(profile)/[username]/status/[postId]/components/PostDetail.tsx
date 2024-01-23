@@ -43,7 +43,7 @@ export default function PostDetail() {
                     ) : null}
                 </main>
                 <footer className="flex items-center justify-between">
-                    {/* <PostActions post={data.data} /> */}
+                    <PostActions post={data.data} />
                     <div className="w-full text-right text-xs text-muted-foreground ">
                         <time>{relativeDate}</time>
                     </div>

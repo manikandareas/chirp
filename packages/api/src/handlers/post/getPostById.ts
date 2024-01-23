@@ -19,6 +19,7 @@ export type Data = {
     images: any[];
     author: Author;
     comments: Comment[];
+    commentsNumber: number;
     isUserLiked: boolean;
 };
 

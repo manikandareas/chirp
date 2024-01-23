@@ -11,17 +11,16 @@ export class OwnerCommentGuard implements CanActivate {
     constructor(private readonly commentsService: CommentsService) {}
 
     /**
-     * Check if the user is the owner of the post.
+     * Check if the user is the owner of the comment.
      *
-     * @return {Promise<boolean>} A promise that resolves to a boolean indicating if the user is the owner of the post.
+     * @return {Promise<boolean>} A promise that resolves to a boolean indicating if the user is the owner of the comment.
      */
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
         const requestingUserid = request.user;
-        // const requestedPostId = request.params.postId;
         const requestedCommentId = request.params.commentId;
 
-        // console.log(requestedPostId, requestedCommentId);
+        console.log(requestedCommentId, requestingUserid);
         const isOwnerComment = await this.commentsService.isOwnerComment(
             requestedCommentId,
             requestingUserid
