@@ -3,13 +3,13 @@ import { useAuthStore } from '@chirp/zustand';
 import PopupInformationForUser from '../../PopupInformationForUser';
 import UserAvatar from '../../UserAvatar';
 import GrowingTextArea from '@/common/components/ui/GrowingTextArea';
-import { ElementRef, useRef, useState } from 'react';
 import { Separator } from '@/common/components/ui/separator';
 import { Button } from '@/common/components/ui/button';
 import InputEmoji from '../../InputEmoji';
-import { useCreateComment } from '../services/commentService';
+import { useCreateComment } from '../hooks/useCreateComment';
 import { useParams } from 'next/navigation';
 import Loading from '@/common/components/ui/loading';
+import { useCommentService } from '../hooks/useCommentServices';
 
 type CommentFormProps = {};
 
@@ -18,8 +18,8 @@ type Params = {
 };
 const CommentForm: React.FC<CommentFormProps> = () => {
     const user = useAuthStore((state) => state.user);
-    const textAreaRef = useRef<ElementRef<'textarea'>>(null);
-    const [content, setContent] = useState<string>('');
+
+    const { content, setContent, textAreaRef } = useCommentService();
 
     const params: Params = useParams();
 

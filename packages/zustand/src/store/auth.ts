@@ -2,7 +2,6 @@ import * as schema from '@chirp/db';
 /*
  * Getting library from @chirp/db pacakage
  */
-import { InferSelectModel } from 'drizzle-orm';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
@@ -10,7 +9,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
  * Getting type from @chirp/db schema
  */
 
-export type User = Omit<InferSelectModel<typeof schema.users>, 'password'>;
+export type User = Omit<schema.User, 'password'>;
 
 export type BackendTokens = {
     accessToken: string;

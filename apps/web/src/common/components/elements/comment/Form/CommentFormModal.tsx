@@ -11,22 +11,29 @@ import {
     DialogTrigger,
 } from '@/common/components/ui/dialog';
 import { MessageCircle } from 'lucide-react';
-import { Post } from '@chirp/api';
 import GrowingTextArea from '@/common/components/ui/GrowingTextArea';
-import { ElementRef, useRef, useState } from 'react';
-import { useCreateComment } from '../services/commentService';
+import { useCreateComment } from '../hooks/useCreateComment';
 import Loading from '@/common/components/ui/loading';
+import { useCommentService } from '../hooks/useCommentServices';
 
 type CommentFormModalProps = {
-    comment: Post['data']['comments'][number];
-    setIsShowChildren: (param: boolean) => void;
+    comment: {
+        id?: string;
+        postId: string;
+        parent?: {
+            author: {
+                username: string;
+            };
+        };
+        repliesNumber: number;
+    };
+    setIsShowChildren?: (param: boolean) => void;
+    
 };
 
 const CommentFormModal: React.FC<CommentFormModalProps> = (props) => {
-    const [content, setContent] = useState<string>('');
-    const textAreaRef = useRef<ElementRef<'textarea'>>(null);
-
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const { content, setContent, isModalOpen, setIsModalOpen, textAreaRef } =
+        useCommentService();
 
     const { onCommentPress, isPending } = useCreateComment(
         {
@@ -35,7 +42,7 @@ const CommentFormModal: React.FC<CommentFormModalProps> = (props) => {
             postId: props.comment.postId,
         },
         () => {
-            props.setIsShowChildren(true);
+            props.setIsShowChildren ? props.setIsShowChildren(true) : null;
             setIsModalOpen(false);
             setContent('');
         },
@@ -59,7 +66,9 @@ const CommentFormModal: React.FC<CommentFormModalProps> = (props) => {
                 <DialogHeader>
                     <DialogTitle>Comment</DialogTitle>
                     <DialogDescription>
-                        Replying for @{props.comment.parent?.author.username}
+                        {props.comment.parent?.author.username
+                            ? `Replying for @${props.comment.parent?.author.username}`
+                            : null}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -96,3 +105,6 @@ const CommentFormModal: React.FC<CommentFormModalProps> = (props) => {
 };
 
 export default CommentFormModal;
+
+CommentFormModal.displayName = 'Comment';
+// const CommentFormModal

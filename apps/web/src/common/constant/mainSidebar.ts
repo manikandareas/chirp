@@ -40,7 +40,7 @@ export const mainSidebarMenus = [
         icon: User,
     },
     {
-        href: '/settings',
+        href: '/settings/profile',
         label: 'Settings',
         icon: Settings,
     },

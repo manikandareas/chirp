@@ -67,7 +67,7 @@ export class PostsService {
     }
 
     /**
-     * Retrieves all posts from the database sorted from newest by date updated.
+     * Retrieves all posts with number of comments of each posts and is user liked for each posts from the database sorted from newest by date updated.
      *
      * @param {string} userId - The ID of the user.
      * @return {Promise<Post[]>} An array of post objects.
@@ -127,25 +127,33 @@ export class PostsService {
             orderBy: [desc(schema.posts.updatedAt)],
         });
 
-        let commentsNumber = 0;
-
-        posts.map((post) => {
-            for (const comment of post.comments) {
-                commentsNumber += this.addRepliesCount(comment);
-                this.addRepliesCount(comment);
-            }
-        });
-
-        // adds number of comments to each post, is user liked the post and ignore comments and likes fields
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        return posts.map(({ likes, comments, ...post }, i) => {
+        // get post data with number of comments for each post and isUserLiked for each post
+        const postsData = posts.map(({ likes, ...post }, i) => {
             return {
                 ...post,
                 commentsNumber:
                     posts[i].comments.length > 0
-                        ? commentsNumber + posts[i].comments.length
+                        ? post.comments
+                              .map((comment) => {
+                                  if (comment.replies) {
+                                      return this.addRepliesCount(comment);
+                                  }
+                              })
+                              .reduce(
+                                  (accumulator, currentValue) =>
+                                      accumulator + currentValue,
+                                  0
+                              ) + posts[i].comments.length
                         : 0,
                 isUserLiked: !!likes.length,
+            };
+        });
+
+        // delete comments field
+        return postsData.map((post) => {
+            delete post.comments;
+            return {
+                ...post,
             };
         });
     }
