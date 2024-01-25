@@ -136,7 +136,9 @@ export class PostsService {
                         ? post.comments
                               .map((comment) => {
                                   if (comment.replies) {
-                                      return this.addRepliesCount(comment);
+                                      return this.commentsService.addRepliesCount(
+                                          comment
+                                      );
                                   }
                               })
                               .reduce(
@@ -201,8 +203,8 @@ export class PostsService {
         let commentsNumber = postDataById['comments'].length;
 
         for (const comment of postDataById['comments']) {
-            commentsNumber += this.addRepliesCount(comment);
-            this.addRepliesCount(comment);
+            commentsNumber += this.commentsService.addRepliesCount(comment);
+            this.commentsService.addRepliesCount(comment);
         }
 
         // return postDataById with commentsNumber and isUserLiked;
@@ -211,26 +213,6 @@ export class PostsService {
             commentsNumber,
             isUserLiked: !!postDataById.likes.length,
         };
-    }
-
-    /**
-     * Calculates the total number of replies for a given comment, including
-     * nested replies within the comment's replies.
-     *
-     * @param {object} comment - The comment object to calculate replies for.
-     * @return {number} The total number of replies for the given comment.
-     */
-    addRepliesCount(comment) {
-        let repliesNumber = 0;
-        if (!comment.replies || comment.replies.length === 0) {
-            comment.repliesNumber = 0;
-        } else {
-            comment.repliesNumber = comment.replies.length;
-            for (const reply of comment.replies) {
-                this.addRepliesCount(reply);
-            }
-        }
-        return (repliesNumber += comment.repliesNumber);
     }
 
     /**
