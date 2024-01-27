@@ -2,11 +2,11 @@ import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from '~/auth/auth.module';
 import { AwsModule } from '~/aws/aws.module';
-import { DrizzleService } from '~/drizzle/drizzle.service';
+import { CommentsModule } from '~/comments/comments.module';
+import { DrizzleModule } from '~/drizzle/drizzle.module';
+import { LikesModule } from '../likes/likes.module';
 import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
-import { LikesModule } from '../likes/likes.module';
-import { CommentsModule } from '~/comments/comments.module';
 
 @Module({
     imports: [
@@ -15,9 +15,10 @@ import { CommentsModule } from '~/comments/comments.module';
         AwsModule,
         JwtModule,
         CommentsModule,
+        DrizzleModule,
     ],
     controllers: [PostsController],
-    providers: [PostsService, DrizzleService],
+    providers: [PostsService],
     exports: [PostsService],
 })
 export class PostsModule {}

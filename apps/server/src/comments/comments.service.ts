@@ -169,4 +169,24 @@ export class CommentsService {
         console.log(requestedPostId);
         return requestedPostId.authorId === user.id;
     }
+
+    /**
+     * Calculates the total number of replies for a given comment, including
+     * nested replies within the comment's replies.
+     *
+     * @param {object} comment - The comment object to calculate replies for.
+     * @return {number} The total number of replies for the given comment.
+     */
+    addRepliesCount(comment) {
+        let repliesNumber = 0;
+        if (!comment.replies || comment.replies.length === 0) {
+            comment.repliesNumber = 0;
+        } else {
+            comment.repliesNumber = comment.replies.length;
+            for (const reply of comment.replies) {
+                this.addRepliesCount(reply);
+            }
+        }
+        return (repliesNumber += comment.repliesNumber);
+    }
 }

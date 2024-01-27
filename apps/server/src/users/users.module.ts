@@ -1,11 +1,14 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { JwtModule } from '@nestjs/jwt';
+import { CommentsModule } from '~/comments/comments.module';
+import { DrizzleModule } from '~/drizzle/drizzle.module';
 import { UsersController } from './users.controller';
-import { JwtService } from '@nestjs/jwt';
-import { DrizzleService } from '~/drizzle/drizzle.service';
+import { UsersService } from './users.service';
 
 @Module({
+    imports: [CommentsModule, DrizzleModule, JwtModule],
     controllers: [UsersController],
-    providers: [UsersService, DrizzleService, JwtService],
+    providers: [UsersService],
+    exports: [UsersService],
 })
 export class UsersModule {}
