@@ -21,8 +21,8 @@ type Data = {
     avatarUrl: string;
     gender: 'male' | 'female';
     address: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     posts: Post[];
 };
 
@@ -30,9 +30,10 @@ type Post = {
     id: string;
     content: string;
     totalLikes: number;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     images: Image[];
+    commentsNumber: number;
     isUserLiked: boolean;
 };
 
