@@ -180,7 +180,7 @@ This is your public display name.
                 <FormField
                     control={profileForm.control}
                     name="dob"
-                    render={({ field }) => (
+                    render={() => (
                         <FormItem>
                             <FormLabel>Date of Birth</FormLabel>
                             <FormControl>

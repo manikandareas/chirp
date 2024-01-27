@@ -6,9 +6,10 @@ import {
     NotFoundException,
     forwardRef,
 } from '@nestjs/common';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, isNull } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { AwsService } from '~/aws/aws.service';
+import { CommentsService } from '~/comments/comments.service';
 import { DrizzleService } from '~/drizzle/drizzle.service';
 import { LikesService } from '~/likes/likes.service';
 
@@ -19,7 +20,8 @@ export class PostsService {
         private readonly drizzle: DrizzleService,
         private readonly awsService: AwsService,
         @Inject(forwardRef(() => LikesService))
-        private readonly likesService: LikesService
+        private readonly likesService: LikesService,
+        private readonly commentsService: CommentsService
     ) {
         this.db = this.drizzle.getDb();
     }
@@ -65,7 +67,7 @@ export class PostsService {
     }
 
     /**
-     * Retrieves all posts from the database sorted from newest by date updated.
+     * Retrieves all posts with number of comments of each posts and is user liked for each posts from the database sorted from newest by date updated.
      *
      * @param {string} userId - The ID of the user.
      * @return {Promise<Post[]>} An array of post objects.
@@ -97,29 +99,67 @@ export class PostsService {
                         userId: true,
                     },
                 },
+                comments: {
+                    where: isNull(schema.comments.parentId),
+                    with: {
+                        replies: {
+                            columns: {
+                                id: true,
+                            },
+                            with: {
+                                replies: {
+                                    columns: {
+                                        id: true,
+                                    },
+                                    with: {
+                                        replies: {
+                                            columns: {
+                                                id: true,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
             },
             orderBy: [desc(schema.posts.updatedAt)],
         });
 
-        // likes not include
-        return posts.map(({ likes, ...post }) => {
+        // get post data with number of comments for each post and isUserLiked for each post
+        const postsData = posts.map(({ likes, ...post }, i) => {
             return {
                 ...post,
+                commentsNumber:
+                    posts[i].comments.length > 0
+                        ? post.comments
+                              .map((comment) => {
+                                  if (comment.replies) {
+                                      return this.commentsService.addRepliesCount(
+                                          comment
+                                      );
+                                  }
+                              })
+                              .reduce(
+                                  (accumulator, currentValue) =>
+                                      accumulator + currentValue,
+                                  0
+                              ) + posts[i].comments.length
+                        : 0,
                 isUserLiked: !!likes.length,
+            };
+        });
+
+        // delete comments field
+        return postsData.map((post) => {
+            delete post.comments;
+            return {
+                ...post,
             };
         });
     }
 
-    /**
-     * Finds a post by its ID.
-     * If the user is authenticated, it also checks if the user has liked the post.
-     * If the user is not authenticated, it does not check if the user has liked the post.
-     *
-     * @param {string} id - The ID of the post to find.
-     * @param {string} userId - The ID of the user (optional).
-     * @return {Promise} - A promise that resolves to the post data.
-     * @throws {NotFoundException} - If the post is not found.
-     */
     async findOneById(id: string, userId?: string) {
         this.validateId(id);
 
@@ -157,9 +197,20 @@ export class PostsService {
             throw new NotFoundException('Post Not Found');
         }
 
-        // return postDataById with isUserLiked;
+        postDataById['comments'] =
+            await this.commentsService.getByPostIdWithReplies(id);
+
+        let commentsNumber = postDataById['comments'].length;
+
+        for (const comment of postDataById['comments']) {
+            commentsNumber += this.commentsService.addRepliesCount(comment);
+            this.commentsService.addRepliesCount(comment);
+        }
+
+        // return postDataById with commentsNumber and isUserLiked;
         return {
             ...postDataById,
+            commentsNumber,
             isUserLiked: !!postDataById.likes.length,
         };
     }
@@ -176,7 +227,7 @@ export class PostsService {
 
         await this.db
             .update(schema.posts)
-            .set(updatePostDto)
+            .set({ updatedAt: new Date(), content: updatePostDto.content })
             .where(eq(schema.posts.id, id))
             .returning();
 
@@ -275,8 +326,8 @@ export class PostsService {
      * @param {any} user - The user object.
      * @return {Promise<boolean>} A promise that resolves to a boolean indicating if the user is the owner of the post.
      */
-    async isOwner(id: string, user): Promise<boolean> {
-        const ownerPost = await this.db.query.posts
+    async isOwnerPost(id: string, user): Promise<boolean> {
+        const requestedPostId = await this.db.query.posts
             .findFirst({
                 where: (posts, { eq }) => eq(posts.id, id),
                 columns: {
@@ -285,13 +336,12 @@ export class PostsService {
                 with: {
                     author: {
                         columns: {
-                            username: true,
+                            id: true,
                         },
                     },
                 },
             })
-            .then((post) => post?.author.username);
-
-        return ownerPost === user.username;
+            .then((post) => post?.authorId);
+        return requestedPostId === user.id;
     }
 }

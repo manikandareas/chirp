@@ -11,11 +11,16 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
     "eslint": "^8.56.0",
+    "eslint-config-next": "14.0.4",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "eslint-config-custom": "*",
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "turbo": "latest"
+    "turbo": "latest",
+    "@typescript-eslint/parser": "^6.0.0"
   },
   "packageManager": "pnpm@8.9.0",
   "engines": {

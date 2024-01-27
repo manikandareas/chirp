@@ -10,10 +10,7 @@ import {
 import UserAvatar from './UserAvatar';
 
 type AuthorType = {
-    id: string;
     fullName: string;
-    firstName: string;
-    lastName: string;
     username: string;
     avatarUrl: string;
 };
@@ -27,7 +24,7 @@ export default function PopupInformationForUser(
                 <TooltipTrigger>{props.children}</TooltipTrigger>
                 <TooltipContent
                     side="bottom"
-                    className="rounded-2xl shadow-white/20"
+                    className="z-[9999] rounded-2xl shadow-white/20"
                 >
                     <div className="w-[18.75rem] space-y-2 p-2">
                         <div className="flex justify-between">
@@ -62,3 +59,13 @@ export default function PopupInformationForUser(
         </TooltipProvider>
     );
 }
+
+const PopupInformationForUserWithAvatar = (props: AuthorType) => {
+    return (
+        <PopupInformationForUser {...props}>
+            <UserAvatar src={props.avatarUrl} />
+        </PopupInformationForUser>
+    );
+};
+
+PopupInformationForUser.WithAvatar = PopupInformationForUserWithAvatar;

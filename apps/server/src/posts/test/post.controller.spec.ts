@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Readable } from 'stream';
 import { JwtGuard } from '~/auth/guards/jwt.guard';
-import { OwnerGuard } from '../guard/owner.guard';
+import { OwnerGuard } from '../../auth/guards/owner.guard';
 import { PostsController } from '../posts.controller';
 import { PostsService } from '../posts.service';
 import {

@@ -17,7 +17,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { JwtGuard } from '~/auth/guards/jwt.guard';
 import { OptionalJwtGuard } from '~/auth/guards/optional-jwt.guard';
 import { ApiResponse } from '~/typings/apiResponse';
-import { OwnerGuard } from './guard/owner.guard';
+import { OwnerPostGuard } from './guard/post-owner.guard';
 import { PostsService } from './posts.service';
 
 @Controller()
@@ -61,7 +61,7 @@ export class PostsController {
     }
 
     /**
-     * Retrieves all the data.
+     * Retrieves all the posts data.
      * Secures this endpoint using JwtGuard for authentication.
      *
      * @method GET
@@ -72,7 +72,7 @@ export class PostsController {
      */
     @UseGuards(JwtGuard)
     @Get()
-    async findAll(@Request() req) {
+    async getAll(@Request() req) {
         console.log('User: ', req.user, 'want to get all posts');
         const postsData = await this.postsService.findAll(req.user.id);
         return {
@@ -95,7 +95,7 @@ export class PostsController {
      */
     @UseGuards(OptionalJwtGuard)
     @Get(':id')
-    async findOneById(@Param('id') id: string, @Request() req) {
+    async getOneById(@Param('id') id: string, @Request() req) {
         console.log('User:', req.user, `want to get post: ${id}`);
         // return postDataById with isUserLiked but not likes data;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -117,16 +117,19 @@ export class PostsController {
      * @method PATCH
      * @param {string} id - The ID of the post to be updated.
      * @param {UpdatePostDto} updatePostDto - A Data Transfer Object (DTO) containing the update information for the post.
+     * @param {any} req - The user object from the request.
      * @returns {Promise<{ statusCode: number, data: any }>} - A response object with HTTP status code and the updated post data.
      * @throws {HttpException} - Throws an exception if an error occurs during the update process.
      * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
      */
-    @UseGuards(JwtGuard, OwnerGuard)
+    @UseGuards(JwtGuard, OwnerPostGuard)
     @Patch(':id')
     async update(
         @Param('id') id: string,
-        @Body() updatePostDto: UpdatePostDto
+        @Body() updatePostDto: UpdatePostDto,
+        @Request() req
     ) {
+        console.log('User:', req.user, `want to update post: ${id}`);
         const updatedPost = await this.postsService.update(id, updatePostDto);
         return {
             statusCode: 200,
@@ -145,9 +148,10 @@ export class PostsController {
      * @throws {HttpException} - Throws an exception if an error occurs during the removal process.
      * @throws {UnauthorizedException} - Throws an exception if the user is not authenticated.
      */
-    @UseGuards(JwtGuard, OwnerGuard)
+    @UseGuards(JwtGuard, OwnerPostGuard)
     @Delete(':id')
-    async delete(@Param('id') id: string) {
+    async delete(@Param('id') id: string, @Request() req) {
+        console.log('User:', req.user, `want to delete post: ${id}`);
         const deletedPost = await this.postsService.delete(id);
         return {
             statusCode: 200,

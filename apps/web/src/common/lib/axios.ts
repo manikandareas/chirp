@@ -1,9 +1,12 @@
 import { useAuthStore } from '@chirp/zustand';
 // import axios, { AxiosInstance, AxiosPromise } from "axios";
 
-import Axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
+import Axios, {
+    type AxiosInstance,
+    type InternalAxiosRequestConfig,
+} from 'axios';
 
-const BASE_URL = 'http://localhost:8000/api';
+const BASE_URL = `${process.env.BACKEND_URL}/api`;
 
 export class AxiosManager {
     public readonly axios: AxiosInstance;
@@ -12,7 +15,7 @@ export class AxiosManager {
         this.axios = Axios.create({
             baseURL: BASE_URL,
         });
-
+        console.log(BASE_URL);
         this.axios.interceptors.request.use(this.authRequestInterceptor);
     }
 

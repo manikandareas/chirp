@@ -15,7 +15,6 @@ import { toast } from 'sonner';
 import { queryClient } from '../../provider/ReactQueryProvider';
 import { Button } from '../../ui/button';
 import Loading from '../../ui/loading';
-import { usePost } from './context/PostProvider';
 
 export default function PostRemoveModal({ postId }: { postId: string }) {
     const { mutateAsync, isPending } = useRemovePostMutation({

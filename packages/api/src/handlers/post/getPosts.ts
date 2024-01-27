@@ -4,33 +4,67 @@ import defaultAxios, { AxiosPromise } from 'axios';
 import { ApiFn, ExtractFnReturnType, QueryConfig } from '../../lib';
 import { useApiClient } from '../../providers';
 
-export type PostsPromise = {
-    data: {
-        isUserLiked: boolean;
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        content: string;
-        totalLikes: number;
-        images: {
-            id: number;
-            createdAt: string;
-            updatedAt: string;
-            key: string;
-            url: string;
-        }[];
-        author: {
-            id: string;
-            fullName: string;
-            firstName: string;
-            lastName: string;
-            username: string;
-            avatarUrl: string;
-        };
-    }[];
+// export type PostsPromise = {
+//     data: {
+//         isUserLiked: boolean;
+//         id: string;
+//         createdAt: Date;
+//         updatedAt: Date;
+//         content: string;
+//         totalLikes: number;
+//         images: {
+//             id: number;
+//             createdAt: string;
+//             updatedAt: string;
+//             key: string;
+//             url: string;
+//         }[];
+//         author: {
+//             id: string;
+//             fullName: string;
+//             firstName: string;
+//             lastName: string;
+//             username: string;
+//             avatarUrl: string;
+//         };
+//     }[];
+// };
+
+export type Posts = {
+    statusCode: number;
+    data: Post[];
 };
 
-export const getPosts: ApiFn<object, AxiosPromise<PostsPromise>> = (
+type Post = {
+    id: string;
+    content: string;
+    totalLikes: number;
+    createdAt: string;
+    updatedAt: string;
+    images: Image[];
+    author: Author;
+    commentsNumber: number;
+    isUserLiked: boolean;
+};
+
+export type Image = {
+    id: number;
+    key: string;
+    url: string;
+    createdAt: string;
+    updatedAt: string;
+};
+
+export type Author = {
+    id: string;
+    fullName: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    avatarUrl: string;
+};
+
+export const getPosts: ApiFn<object, AxiosPromise<Posts>> = (
     {},
     { axios = defaultAxios },
 ) => {

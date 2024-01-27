@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { JwtModule } from '@nestjs/jwt';
+import { DrizzleModule } from '~/drizzle/drizzle.module';
+import { UsersModule } from '~/users/users.module';
 import { AuthController } from './auth.controller';
-import { UserService } from '~/user/user.service';
-import { JwtService } from '@nestjs/jwt';
-import { DrizzleService } from '~/drizzle/drizzle.service';
+import { AuthService } from './auth.service';
 
 @Module({
-    providers: [AuthService, DrizzleService, UserService, JwtService],
+    imports: [DrizzleModule, JwtModule, UsersModule],
+    providers: [AuthService],
     controllers: [AuthController],
     exports: [AuthService],
 })

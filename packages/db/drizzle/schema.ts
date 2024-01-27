@@ -35,7 +35,6 @@ export const users = pgTable('users', {
     createdAt,
     updatedAt,
 });
-
 export type User = typeof users.$inferSelect;
 
 export const posts = pgTable('posts', {
@@ -51,7 +50,6 @@ export const posts = pgTable('posts', {
     createdAt,
     updatedAt,
 });
-
 export type Post = typeof posts.$inferSelect;
 
 export const images = pgTable('images', {
@@ -64,7 +62,6 @@ export const images = pgTable('images', {
     createdAt,
     updatedAt,
 });
-
 export type PostImage = typeof images.$inferSelect;
 
 export const likes = pgTable(
@@ -88,8 +85,26 @@ export const likes = pgTable(
         // eslint-disable-next-line prettier/prettier
     },
 );
-
 export type Like = typeof likes.$inferSelect;
+
+export const comments: any = pgTable('comments', {
+    id: uuid('id')
+        .primaryKey()
+        .default(sql`gen_random_uuid()`),
+    message: text('message').notNull(),
+    authorId: uuid('author_id')
+        .notNull()
+        .references(() => users.id, { onDelete: 'cascade' }),
+    postId: uuid('post_id')
+        .notNull()
+        .references(() => posts.id, { onDelete: 'cascade' }),
+    createdAt,
+    updatedAt,
+    parentId: uuid('parent_id').references(() => comments.id, {
+        onDelete: 'cascade',
+    }),
+});
+export type Comment = typeof comments.$inferSelect;
 
 // ---------------------------------------------------------------------//
 
@@ -101,6 +116,7 @@ export type Like = typeof likes.$inferSelect;
 export const usersRelations = relations(users, ({ many }) => ({
     posts: many(posts),
     likes: many(likes),
+    comments: many(comments),
 }));
 
 // Relations for posts
@@ -111,6 +127,7 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
     }),
     images: many(images),
     likes: many(likes),
+    comments: many(comments),
 }));
 
 // Relations for images
@@ -130,5 +147,25 @@ export const likesRelations = relations(likes, ({ one }) => ({
     author: one(users, {
         fields: [likes.userId],
         references: [users.id],
+    }),
+}));
+
+// Relations for comments
+export const commentsRelations = relations(comments, ({ one, many }) => ({
+    post: one(posts, {
+        fields: [comments.postId],
+        references: [posts.id],
+    }),
+    author: one(users, {
+        fields: [comments.authorId],
+        references: [users.id],
+    }),
+    parent: one(comments, {
+        relationName: 'ParentChild',
+        fields: [comments.parentId],
+        references: [comments.id],
+    }),
+    replies: many(comments, {
+        relationName: 'ParentChild',
     }),
 }));

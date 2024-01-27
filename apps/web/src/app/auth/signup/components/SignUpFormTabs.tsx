@@ -7,7 +7,7 @@ import {
     TabsList,
     TabsTrigger,
 } from '@/common/components/ui/tabs';
-import { registerUser } from '@chirp/api';
+import { useRegisterUserMutation } from '@chirp/api';
 import { signIn } from 'next-auth/react';
 import { TbMinusVertical } from 'react-icons/tb';
 import { toast } from 'sonner';
@@ -16,18 +16,15 @@ import * as z from 'zod';
 import AuthPrompt from '../../components/AuthPrompt';
 import AuthSubTitlePage from '../../components/AuthSubTitlePage';
 import AuthTitlePage from '../../components/AuthTitlePage';
+import { useSignUpFormContext } from '../context/SignUpFormProvider';
 import { profileSchema } from '../form/profile';
 import SignUpFormAccount from './SignUpFormAccount';
 import SignUpFormProfile from './SignUpFormProfile';
-import { useSignUpFormContext } from '../context/SignUpFormProvider';
 
 export type TTabsValue = 'account' | 'profile';
 
 export default function SignUpFormTabs() {
     const [tabValue, setTabValue] = useState<TTabsValue>('account');
-
-    const [submmittingFormIsLoading, setSubmmittingFormIsLoading] =
-        useState<boolean>(false);
 
     const [dateOfBirth, setDateOfBirth] = useState({
         day: 0,
@@ -36,6 +33,8 @@ export default function SignUpFormTabs() {
     });
 
     const { accountForm, profileForm } = useSignUpFormContext();
+    const { mutateAsync, isPending: submmittingFormIsLoading } =
+        useRegisterUserMutation();
 
     const onTabsChange = (value: string) => {
         setTabValue(value as TTabsValue);
@@ -54,10 +53,8 @@ export default function SignUpFormTabs() {
         ).toISOString();
         const promise = () =>
             new Promise(async (resolve, reject) => {
-                setSubmmittingFormIsLoading(true);
-
                 try {
-                    const user = await registerUser({
+                    const user = await mutateAsync({
                         ...values,
                         dob: FORMATTED_DOB,
                         email: accountForm.getValues('email'),
@@ -74,8 +71,6 @@ export default function SignUpFormTabs() {
                     resolve(true);
                 } catch (error) {
                     reject();
-                } finally {
-                    setSubmmittingFormIsLoading(false);
                 }
             });
 
@@ -98,7 +93,7 @@ export default function SignUpFormTabs() {
                         <span className="animate-pulse">!</span>
                     </AuthTitlePage>
                     <AuthSubTitlePage>
-                        Let's jump to chirp worlds!
+                        Let&apos;s jump to chirp worlds!
                     </AuthSubTitlePage>
                 </div>
 
