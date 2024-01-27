@@ -8,14 +8,18 @@ import {
 import * as schema from '@chirp/db';
 import { CreateUserDto, UpdateUserDto } from '@chirp/dto';
 import { hash } from 'bcrypt';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, isNull } from 'drizzle-orm';
 import { NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { DrizzleService } from '~/drizzle/drizzle.service';
 import { combinerName, nullishObjectChecker } from '~/lib/utils';
+import { CommentsService } from '~/comments/comments.service';
 
 @Injectable()
 export class UsersService {
-    constructor(private readonly drizzle: DrizzleService) {}
+    constructor(
+        private readonly drizzle: DrizzleService,
+        private readonly commentsService: CommentsService
+    ) {}
 
     private readonly db: NeonHttpDatabase<typeof schema> = this.drizzle.getDb();
     /**
@@ -80,12 +84,15 @@ export class UsersService {
      * @return {Promise<User | null>} - A promise that resolves to the found user or null if not found.
      */
     async findByUsername(username: string) {
-        return await this.db.query.users.findFirst({
+        const user = await this.db.query.users.findFirst({
             where: (user, { eq }) => eq(user.username, username),
             columns: {
                 password: false,
             },
         });
+
+        if (!user) throw new NotFoundException('User Profile Not Found');
+        return user;
     }
 
     async findByUsernameWithPosts(username: string, userId: string) {
@@ -100,11 +107,45 @@ export class UsersService {
                         authorId: false,
                     },
                     with: {
+                        author: {
+                            columns: {
+                                id: true,
+                                fullName: true,
+                                firstName: true,
+                                lastName: true,
+                                username: true,
+                                avatarUrl: true,
+                            },
+                        },
                         images: true,
                         likes: {
                             where: (likes, { eq }) => eq(likes.userId, userId),
                             columns: {
                                 userId: true,
+                            },
+                        },
+                        comments: {
+                            where: isNull(schema.comments.parentId),
+                            with: {
+                                replies: {
+                                    columns: {
+                                        id: true,
+                                    },
+                                    with: {
+                                        replies: {
+                                            columns: {
+                                                id: true,
+                                            },
+                                            with: {
+                                                replies: {
+                                                    columns: {
+                                                        id: true,
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
                             },
                         },
                     },
@@ -113,14 +154,40 @@ export class UsersService {
             },
         });
 
-        // add isUserLiked field
-        userWithPosts.posts = userWithPosts.posts.map((post) => {
-            const isUserLiked = post.likes.length > 0;
-            // delete likes field
-            delete post.likes;
+        if (!userWithPosts)
+            throw new NotFoundException('User Profile Not Found');
+
+        // get post data with number of comments for each post and isUserLiked for each post
+        userWithPosts.posts = userWithPosts.posts.map(
+            ({ likes, ...post }, i) => {
+                return {
+                    ...post,
+                    commentsNumber:
+                        userWithPosts.posts[i].comments.length > 0
+                            ? post.comments
+                                  .map((comment) => {
+                                      if (comment.replies) {
+                                          return this.commentsService.addRepliesCount(
+                                              comment
+                                          );
+                                      }
+                                  })
+                                  .reduce(
+                                      (accumulator, currentValue) =>
+                                          accumulator + currentValue,
+                                      0
+                                  ) + userWithPosts.posts[i].comments.length
+                            : 0,
+                    isUserLiked: !!likes.length,
+                };
+            }
+        );
+
+        // remove comments from posts
+        userWithPosts.posts.map((post) => {
+            delete post.comments;
             return {
                 ...post,
-                isUserLiked,
             };
         });
 

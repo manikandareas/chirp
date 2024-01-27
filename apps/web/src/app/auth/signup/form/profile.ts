@@ -1,5 +1,6 @@
 import { checkAvailabilityUsername } from '@chirp/api';
 import { z } from 'zod';
+import { axios } from '@/common/lib/axios';
 
 export const profileSchema = z
     .object({
@@ -10,7 +11,11 @@ export const profileSchema = z
         gender: z.enum(['male', 'female']),
         address: z.string().min(3),
     })
-    .refine(async (data) => await checkAvailabilityUsername(data.username), {
-        message: 'Username already exist!',
-        path: ['username'],
-    });
+    .refine(
+        async (data) =>
+            await checkAvailabilityUsername(data.username, { axios }),
+        {
+            message: 'Username already exist!',
+            path: ['username'],
+        },
+    );

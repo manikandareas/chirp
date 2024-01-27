@@ -17,7 +17,7 @@ type Props = {
 
 export default function PostDetailImage({ images }: Props) {
     const [open, setOpen] = useState(false);
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState<number>(0);
 
     const slides = images.map((item) => ({
         src: item.url,
@@ -35,7 +35,7 @@ export default function PostDetailImage({ images }: Props) {
     return (
         <figure className="flex flex-wrap justify-center gap-1">
             {images.length === 1
-                ? images.map((img) => (
+                ? images.map((img, idx) => (
                       <Image
                           key={img.id}
                           src={img.url}
@@ -47,12 +47,12 @@ export default function PostDetailImage({ images }: Props) {
                           loading="lazy"
                           onClick={() => {
                               setOpen(true);
-                              setImage(img.url);
+                              setImage(idx);
                           }}
                       />
                   ))
                 : images.length === 2
-                  ? images.map((img) => (
+                  ? images.map((img, idx) => (
                         <Image
                             key={img.id}
                             src={img.url}
@@ -64,7 +64,7 @@ export default function PostDetailImage({ images }: Props) {
                             loading="lazy"
                             onClick={() => {
                                 setOpen(true);
-                                setImage(img.url);
+                                setImage(idx);
                             }}
                         />
                     ))
@@ -83,7 +83,7 @@ export default function PostDetailImage({ images }: Props) {
                                       loading="lazy"
                                       onClick={() => {
                                           setOpen(true);
-                                          setImage(img.url);
+                                          setImage(idx);
                                       }}
                                   />
                               );
@@ -100,7 +100,7 @@ export default function PostDetailImage({ images }: Props) {
                                   loading="lazy"
                                   onClick={() => {
                                       setOpen(true);
-                                      setImage(img.url);
+                                      setImage(idx);
                                   }}
                               />
                           );
@@ -119,7 +119,7 @@ export default function PostDetailImage({ images }: Props) {
                                       loading="lazy"
                                       onClick={() => {
                                           setOpen(true);
-                                          setImage(img.url);
+                                          setImage(idx);
                                       }}
                                   />
                               );
@@ -137,13 +137,14 @@ export default function PostDetailImage({ images }: Props) {
                                   loading="lazy"
                                   onClick={() => {
                                       setOpen(true);
-                                      setImage(img.url);
+                                      setImage(idx);
                                   }}
                               />
                           );
                       })}
             <Lightbox
                 open={open}
+                index={image}
                 close={() => setOpen(false)}
                 plugins={[Zoom]}
                 slides={slides}

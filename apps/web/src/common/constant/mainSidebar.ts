@@ -35,12 +35,12 @@ export const mainSidebarMenus = [
         icon: Bookmark,
     },
     {
-        href: '/profile',
+        href: '/',
         label: 'Profile',
         icon: User,
     },
     {
-        href: '/settings',
+        href: '/settings/profile',
         label: 'Settings',
         icon: Settings,
     },

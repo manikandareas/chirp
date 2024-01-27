@@ -1,3 +1,4 @@
+'use client';
 import SearchBar from '@/common/components/elements/SearchBar';
 import TrendingAside from '@/common/components/elements/TrendingAside';
 

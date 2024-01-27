@@ -1,30 +1,43 @@
 import { CreateUserDto } from '@chirp/dto';
-import axios from 'axios';
+import { useMutation } from '@tanstack/react-query';
+import defaultAxios, { AxiosPromise } from 'axios';
 
+import { ApiFn, ApiFnOptions, MutationConfig } from '../../lib';
+import { useApiClient } from '../../providers';
 import { ApiResponse } from '../../typings';
 
-const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8000/api',
-});
+export const registerUser: ApiFn<Omit<CreateUserDto, 'bio'>, AxiosPromise> = (
+    payload,
+    { axios = defaultAxios },
+) => {
+    return axios.post('/auth/register', payload);
+};
+type MutationFnType = typeof registerUser;
 
-export const registerUser = async (
-    payload: Omit<CreateUserDto, 'bio'>,
-): Promise<ApiResponse | undefined> => {
-    try {
-        const response = await axiosInstance.post('/auth/register', payload);
-        return response.data as ApiResponse;
-    } catch (error) {
-        throw new Error('Error registering user');
-    }
+export const useRegisterUserMutation = (
+    config: MutationConfig<MutationFnType> = {},
+) => {
+    const { axios } = useApiClient();
+
+    return useMutation({
+        mutationFn: (body: Omit<CreateUserDto, 'bio'>) =>
+            registerUser(body, { axios }),
+        ...config,
+    });
 };
 
-export const checkAvailabilityEmail = async (
-    email: string,
-): Promise<boolean> => {
-    const url = '/auth/checkAvailability';
+type CheckAvaibilityFn<ParamsType, ResponseType> = (
+    params: ParamsType,
+    config: ApiFnOptions,
+) => ResponseType;
 
+export const checkAvailabilityEmail: CheckAvaibilityFn<
+    string,
+    Promise<boolean>
+> = async (email, { axios = defaultAxios }) => {
+    const url = '/auth/checkAvailability';
     try {
-        const response = await axiosInstance.get(`${url}?email=${email}`);
+        const response = await axios.get(`${url}?email=${email}`);
 
         if ((response.data as ApiResponse).statusCode !== 200) {
             return false;
@@ -35,13 +48,13 @@ export const checkAvailabilityEmail = async (
     }
 };
 
-export const checkAvailabilityUsername = async (
-    username: string,
-): Promise<boolean> => {
+export const checkAvailabilityUsername: CheckAvaibilityFn<
+    string,
+    Promise<boolean>
+> = async (username, { axios = defaultAxios }) => {
     const url = '/auth/checkAvailability';
     try {
-        const response = await axiosInstance.get(`${url}?username=${username}`);
-
+        const response = await axios.get(`${url}?username=${username}`);
         if ((response.data as ApiResponse).statusCode !== 200) {
             return false;
         }
