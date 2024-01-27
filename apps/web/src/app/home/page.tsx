@@ -6,13 +6,15 @@ import {
 import PostLoading from '@/common/components/elements/post/PostLoading';
 import Container from '@/common/components/ui/Container';
 
-import HomeLayout from './components/HomeLayout';
+import HomeSidebarColumn from './components/HomeSidebarColumn';
+import HomeNavbar from './components/HomeNavbar';
 import HomeTimeline from './components/HomeTimeline';
 
 export default function HomePage() {
     return (
-        <HomeLayout>
+        <>
             <Container>
+                <HomeNavbar />
                 <FormPostProvider>
                     <FormCreatePost />
                 </FormPostProvider>
@@ -20,6 +22,7 @@ export default function HomePage() {
                     <HomeTimeline />
                 </Suspense>
             </Container>
-        </HomeLayout>
+            <HomeSidebarColumn />
+        </>
     );
 }

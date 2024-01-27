@@ -2,21 +2,21 @@
 
 import { UserProfile, useGetProfileByUsernameQuery } from '@chirp/api';
 import { UseQueryResult } from '@tanstack/react-query';
+import { notFound, useParams } from 'next/navigation';
 import React from 'react';
 
 export type ProfileUserQuery = UseQueryResult<UserProfile, unknown>;
 
 const ProfileUserContext = React.createContext<ProfileUserQuery | null>(null);
 
-export const ProfileUserProvider: React.FC<
-    React.PropsWithChildren<{
-        username: string;
-    }>
-> = ({ username, children }) => {
-    const userQueryResult = useGetProfileByUsernameQuery(username);
+export const ProfileUserProvider: React.FC<React.PropsWithChildren> = ({
+    children,
+}) => {
+    const params: { username: string } = useParams();
+    const userQueryResult = useGetProfileByUsernameQuery(params.username);
 
-    if (!userQueryResult.data && !userQueryResult.isLoading) {
-        throw new Error('ProfileUserProvider: userQueryResult.data is null');
+    if (userQueryResult.isError) {
+        notFound();
     }
 
     return (

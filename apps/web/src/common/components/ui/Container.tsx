@@ -5,7 +5,10 @@ export default function Container(props: ContainerProps) {
     return (
         <main
             {...props}
-            className={cn('overflow-clip border-x', props.className)}
+            className={cn(
+                'relative w-full border-x sm:max-w-[37.5rem]',
+                props.className,
+            )}
         >
             {props.children}
         </main>

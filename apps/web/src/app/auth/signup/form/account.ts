@@ -1,5 +1,6 @@
 import { checkAvailabilityEmail } from '@chirp/api';
 import { z } from 'zod';
+import { axios } from '@/common/lib/axios';
 
 export const accountSchema = z
     .object({
@@ -19,7 +20,10 @@ export const accountSchema = z
         message: 'Please use strong password!',
         path: ['password'],
     })
-    .refine(async (data) => await checkAvailabilityEmail(data.email), {
-        message: 'Email already exist!',
-        path: ['email'],
-    });
+    .refine(
+        async (data) => await checkAvailabilityEmail(data.email, { axios }),
+        {
+            message: 'Email already exist!',
+            path: ['email'],
+        },
+    );

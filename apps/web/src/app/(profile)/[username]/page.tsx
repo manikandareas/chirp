@@ -1,11 +1,12 @@
 import Container from '@/common/components/ui/Container';
 
-import ProfileLayout from './components/ProfileLayout';
-import { ProfileUserProvider } from './context/ProfileProvider';
 import Profile from './components/Profile';
 import ProfileNavigationTimelines from './components/ProfileNavigationTimelines';
 import ProfileTimeline from './components/ProfileTimeline';
 import { Metadata } from 'next';
+import ProfileNavbar from './components/ProfileNavbar';
+import ProfileSidebarColumn from './components/ProfileSidebarColumn';
+import { ProfileUserProvider } from './context/ProfileProvider';
 
 type ProfilePageProps = {
     params: { username: string };
@@ -21,16 +22,16 @@ export async function generateMetadata({
     };
 }
 
-const ProfilePage: React.FC<ProfilePageProps> = (props) => {
+const ProfilePage: React.FC<ProfilePageProps> = () => {
     return (
-        <ProfileUserProvider username={props.params.username}>
-            <ProfileLayout>
-                <Container>
-                    <Profile />
-                    <ProfileNavigationTimelines />
-                    <ProfileTimeline />
-                </Container>
-            </ProfileLayout>
+        <ProfileUserProvider>
+            <Container>
+                <ProfileNavbar />
+                <Profile />
+                <ProfileNavigationTimelines />
+                <ProfileTimeline />
+            </Container>
+            <ProfileSidebarColumn />
         </ProfileUserProvider>
     );
 };

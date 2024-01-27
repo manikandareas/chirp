@@ -5,7 +5,7 @@ export default function HomeNavbar() {
     const activStyle = 'border-b-4 border-primary text-white';
 
     return (
-        <header className="sticky top-0 z-50 h-[53px] w-full border bg-background/50 backdrop-blur-sm">
+        <header className="sticky top-0 z-50 h-[53px] w-full border-b bg-background/50 backdrop-blur-sm">
             <div className="flex h-full text-base text-muted-foreground">
                 <Link
                     href={'#'}

@@ -9,7 +9,7 @@ export default function HomeTimeline() {
         <>
             {!isLoading
                 ? data?.data.data.map((post) => (
-                      <Post key={post.id} post={post} />
+                      <Post key={post.id} post={post} asLink={true} />
                   ))
                 : Array(6)
                       .fill(0)

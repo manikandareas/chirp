@@ -18,6 +18,7 @@ import {
 } from '@/common/components/ui/form';
 import { RadioGroup, RadioGroupItem } from '@/common/components/ui/radio-group';
 import { toast } from '@/common/components/ui/use-toast';
+import { useTheme } from 'next-themes';
 
 const appearanceFormSchema = z.object({
     theme: z.enum(['light', 'dark'], {
@@ -32,17 +33,20 @@ const appearanceFormSchema = z.object({
 type AppearanceFormValues = z.infer<typeof appearanceFormSchema>;
 
 // This can come from your database or API.
-const defaultValues: Partial<AppearanceFormValues> = {
-    theme: 'dark',
-};
 
 export function AppearanceForm() {
+    const { setTheme, theme } = useTheme();
+
+    const defaultValues: Partial<AppearanceFormValues> = {
+        theme: (theme as 'dark' | 'light') ?? 'dark ',
+    };
     const form = useForm<AppearanceFormValues>({
         resolver: zodResolver(appearanceFormSchema),
         defaultValues,
     });
 
     function onSubmit(data: AppearanceFormValues) {
+        setTheme(data.theme);
         toast({
             title: 'You submitted the following values:',
             description: (

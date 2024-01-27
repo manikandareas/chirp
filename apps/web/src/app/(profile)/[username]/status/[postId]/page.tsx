@@ -4,16 +4,17 @@ import { axios } from '@/common/lib/axios';
 import { getPostById } from '@chirp/api';
 
 import PostDetail from './components/PostDetail';
-import PostDetailLayout from './components/PostDetailLayout';
 import { PostDetailProvider } from './context/PostDetailProvider';
+import PostDetailNavbar from './components/PostDetailNavbar';
+import PostDetailSidebarColumn from './components/PostDetailSidebarColumn';
 
 type PostDetailPageProps = {
     params: { postId: string };
 };
 
-export async function generateMetadata({
+export const generateMetadata = async ({
     params,
-}: PostDetailPageProps): Promise<Metadata> {
+}: PostDetailPageProps): Promise<Metadata> => {
     const postId = params.postId;
     const postQueryResult = await getPostById(postId, {
         axios,
@@ -21,20 +22,17 @@ export async function generateMetadata({
     return {
         title: postQueryResult.data?.data.content || 'Post Detail',
     };
-}
+};
 
-export default function PostDetailPage({
-    params,
-}: {
-    params: { postId: string };
-}) {
+const PostDetailPage: React.FC = () => {
     return (
-        <PostDetailProvider postId={params.postId}>
-            <PostDetailLayout>
-                <Container className="overflow-visible">
-                    <PostDetail />
-                </Container>
-            </PostDetailLayout>
+        <PostDetailProvider>
+            <Container>
+                <PostDetailNavbar />
+                <PostDetail />
+            </Container>
+            <PostDetailSidebarColumn />
         </PostDetailProvider>
     );
-}
+};
+export default PostDetailPage;

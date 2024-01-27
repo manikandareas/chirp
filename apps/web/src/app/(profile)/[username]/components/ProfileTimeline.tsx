@@ -30,7 +30,7 @@ export default function ProfileTimeline() {
         <>
             {!isLoading
                 ? posts.map((post) => (
-                      <Post key={post.id} post={{ ...post, author }} />
+                      <Post key={post.id} post={{ ...post, author }} asLink />
                   ))
                 : null}
         </>

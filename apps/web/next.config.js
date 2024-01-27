@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     env: {
-        NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || 'NEXTAUTH_SECRET',
-        BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:8000',
+        NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+        BACKEND_URL: process.env.BACKEND_URL ,
     },
     transpilePackages: ['@chirp/dto', '@chirp/api'],
     reactStrictMode: true,
@@ -25,7 +25,7 @@ const nextConfig = {
                 source: "/api/:path*",
                 headers: [
                     { key: "Access-Control-Allow-Credentials", value: "true" },
-                    { key: "Access-Control-Allow-Origin", value: "http://localhost:8000" }, // replace this your actual origin
+                    { key: "Access-Control-Allow-Origin", value: this.env.BACKEND_URL }, // replace this your actual origin
                     { key: "Access-Control-Allow-Methods", value: "GET,DELETE,PATCH,POST,PUT" },
                     { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" },
                 ]
@@ -37,6 +37,11 @@ const nextConfig = {
             {
                 source: "/settings",
                 destination: "/settings/profile",
+                permanent: true
+            },
+            {
+                source: "/",
+                destination: '/home',
                 permanent: true
             }
         ]
